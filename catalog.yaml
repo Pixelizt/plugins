@@ -35,6 +35,7 @@ modules:
   - { name: table-booking, status: stable, version: 0.1.0,     required: false, origin: new,           depends_on: [booking-core] }
   - { name: space-booking, status: stable, version: 0.1.0,     required: false, origin: new,           depends_on: [booking-core] }
   - { name: meal-plans,    status: stable, version: 0.1.0,     required: false, origin: reference-project, depends_on: [menu, forms] }
+  - { name: whatsapp,      status: stable, version: 0.1.0,     required: false, origin: new,           depends_on: [] }
   - { name: payments,      status: later,       required: false, origin: new,           depends_on: [], blocked_by: Q1 }
   - { name: i18n,          status: later,       required: false, origin: reference-project, depends_on: [] }
 
@@ -55,6 +56,7 @@ registry:                    # seed set 2026-11-05 (agency-owned, brand-neutral,
   - { name: gallery, type: ui, path: registry/ui/gallery, deps: [lightbox] }
   - { name: instagram-feed, type: ui, path: registry/ui/instagram-feed, deps: [] }
   - { name: book-bar, type: ui, path: registry/ui/book-bar, deps: [] }
+  - { name: whatsapp-link, type: ui, path: registry/ui/whatsapp-link, deps: [] }
   - { name: reveal, type: motion, path: registry/motion/reveal, motion_level: subtle, deps: [] }
   - { name: marquee, type: motion, path: registry/motion/marquee, motion_level: subtle, deps: [] }
   - { name: float, type: motion, path: registry/motion/float, motion_level: subtle, deps: [] }

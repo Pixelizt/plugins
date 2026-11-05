@@ -14,6 +14,8 @@ import { checkDate, slotsFor, type DateProblem } from "../lib/slots.ts";
 import { detailFields, type Ask, type BookingCoreConfig, type BookingType, type Details, type Resolved } from "../lib/schema.ts";
 import { loadBlocks, loadOccupancy, recentFromIp, recordDelivery, rpc, type CreateArgs, type CreateResult } from "./db.ts";
 import { customerMail, reference, teamMail, type MailBooking } from "./emails.ts";
+import { formatSpan } from "../lib/time.ts";
+import { alertsEnabled, alertBody, sendBookingAlert } from "../../../kit/whatsapp.ts";
 import { cancelToken, cancelUrl, tokenHash, tokenSecret } from "./token.ts";
 
 export interface BookingCtx {
@@ -177,6 +179,16 @@ export async function place(
   const siteUrl = siteUrlOf(ctx.cfg);
   const mb: MailBooking = { id, label: type.label, starts_at: slot.start, ends_at: slot.end, status, hold_until: hold, facts: r.facts };
   const attempt = (name: string, fn: () => Promise<string>) => attemptStep("booking-core", name, fn);
+  const whatsapp = alertsEnabled(ctx.cfg.modules)
+    ? await attempt("whatsapp", () => sendBookingAlert(alertBody({
+        reference: reference(id),
+        label: type.label,
+        when: formatSpan(slot.start, slot.end, ctx.cfg.client.timezone),
+        status,
+        name: d.name ?? "",
+        phone: d.phone ?? "",
+      }), env))
+    : undefined;
   const [team_email, customer_email] = await Promise.all([
     attempt("team email", async () => {
       if (!o.notifyTeam) return "off";
@@ -191,7 +203,12 @@ export async function place(
       return sendMail({ to: [d.email], ...m }, env);
     }),
   ]);
-  await recordDelivery(id, {}, { team_email, customer_email, cancel_link: token ? "on" : "off: BOOKING_TOKEN_SECRET not set" }, env);
+  await recordDelivery(id, {}, {
+    team_email,
+    customer_email,
+    cancel_link: token ? "on" : "off: BOOKING_TOKEN_SECRET not set",
+    ...(whatsapp ? { whatsapp } : {}),
+  }, env);
   return { status: 200, body: { ok: true, id, reference: reference(id), status }, headers: NO_STORE };
 }
 

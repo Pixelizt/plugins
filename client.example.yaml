@@ -15,7 +15,7 @@ client:
   contact:
     email: hello@example-cafe.com    # public contact address shown on the site
     phone: "+44 20 0000 0000"
-    whatsapp: ""                     # optional; click-to-chat link only, forms never go to WhatsApp
+    whatsapp: ""                     # optional click-to-chat number. Booking alerts are a separate opt-in: modules.whatsapp.booking_alerts
     address: "TODO"
     map_url: ""
   hours:                             # shown on the site + JSON-LD; bookings use module rules
@@ -120,6 +120,9 @@ modules:                # each key = a module folder. Omit a key to disable that
       - { id: back-room, name: "Back Room", capacity: 12, min_hours: 2, price_per_hour: 120 }
     occasions: [Birthday, Corporate, Private dining, Other]
     addons: [Cake, Decorations, Set menu]   # request fields only, no payment (D3)
+
+  # whatsapp:                     # optional. Click-to-chat uses client.contact.whatsapp and needs no module.
+  #   booking_alerts: false       # true plus WHATSAPP_* env sends a Cloud API ping to the business. Off by default.
 
   meal-plans:                     # the reference project-style priced meal-plan requests, no payment
     slots: [breakfast, lunch, dinner]
