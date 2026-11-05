@@ -80,7 +80,9 @@ Lighthouse and axe-core. Install commands and what we deliberately skipped: [`do
 
 | Command | Purpose |
 |---|---|
-| `node scripts/new-client.mjs <slug> [dir]` | Create a client site from `clients/<slug>/client.yaml` (what `/new-client` runs) |
+| `node scripts/new-client.mjs <slug> [dir]` | Create a client site from `clients/<slug>/client.yaml` (what `/new-client` runs). Optional, off by default: `--supabase --resend --vercel --analytics --guide` with `--yes` (no TTY) or `--dry-run`. npm, not pnpm (D14) |
+| `node scripts/kit-diff.mjs <client-dir> [--apply]` | Report drift in frozen kit files. `--apply` copies those files only. Never touches content, sections or migrations |
+| `node scripts/admin-guide.mjs <client.yaml>` | Write an admin guide from the brief. Also `--guide` on new-client |
 | `node scripts/install-module.mjs <client-dir> <module…>` | Install modules into a client site (deps first, migrations, env vars, agent rules) |
 | `node scripts/playground.mjs [module…]` | Throwaway site in `.playground/` with the starter + modules, to check/test/build module code |
 | `cd .playground && npm run check && npm test && npm run build` | Verify modules before committing them |

@@ -7,9 +7,14 @@ import { join, resolve, dirname, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { execFileSync } from "node:child_process";
+import readline from "node:readline/promises";
+import { adminGuide } from "./admin-guide.mjs";
+import { formatPlan, namedSteps, redact, resendDomain, runCommand, shouldRun, stepsToOffer, supabasePlan, vercelPlan } from "./provision.mjs";
 
 const KIT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const [slug, targetArg] = process.argv.slice(2);
+const argv = process.argv.slice(2);
+const positional = argv.filter((arg) => !arg.startsWith("--"));
+const [slug, targetArg] = positional;
 if (!slug) {
   console.error("Usage: node scripts/new-client.mjs <slug> [target-dir]");
   process.exit(1);
@@ -118,4 +123,48 @@ ${migrations.map((m) => `       supabase/migrations/${m}`).join("\n")}
   3. Vercel → Settings → Git → Deploy Hooks: create one, set DEPLOY_HOOK_URL (the admin's Publish button).
   4. Email: verify the sending subdomain in Resend (SPF/DKIM); set RESEND_API_KEY and EMAIL_FROM.
   5. Domain + DNS, Google Business Profile, Search Console (see the /setup Launch playbook).
+
+Optional, and off unless you ask: node scripts/new-client.mjs <slug> --yes --supabase --resend --vercel --analytics --guide
+  Each cloud step shells out to the official CLI (token stays in the environment). --dry-run prints the plan.
+  Without a TTY, pass --yes and the step names. --yes by itself does not create anything.
 `);
+
+// Cloud setup is opt-in. A non-interactive run without --yes does nothing here.
+const offered = stepsToOffer({ argv, tty: Boolean(process.stdin.isTTY) });
+const yes = argv.includes("--yes");
+const dryRun = argv.includes("--dry-run");
+if (namedSteps(argv).length && !offered.length) {
+  console.log("Provisioning skipped. Pass --yes as well as the step flags when there is no prompt.");
+}
+for (const step of offered) {
+  let confirmed = yes || dryRun;
+  if (!confirmed && process.stdin.isTTY) {
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const answer = (await rl.question(`Set up ${step}? [y/N] `)).trim().toLowerCase();
+    rl.close();
+    confirmed = answer === "y" || answer === "yes";
+  }
+  if (!shouldRun(step, { offered, yes: yes || dryRun, confirmed })) continue;
+  console.log(`\n▶ ${dryRun ? "Dry run" : "Provision"}: ${step}`);
+  for (const line of formatPlan(step, slug)) console.log(`  ${line}`);
+  if (dryRun) continue;
+  if (step === "analytics") {
+    const file = join(T, "client.yaml");
+    const y = readFileSync(file, "utf8");
+    const next = /analytics:\s*false/.test(y) ? y.replace(/analytics:\s*false/, "analytics: true") : y.replace(/tier:\s*\S+/, (line) => `${line}\n  analytics: true`);
+    writeFileSync(file, next);
+    console.log("  hosting.analytics is true in client.yaml. Deploy to turn on Web Analytics.");
+    continue;
+  }
+  if (step === "resend") {
+    const result = await resendDomain({ name: cfg.email?.from_domain ?? "", key: process.env.RESEND_API_KEY, dryRun: false });
+    console.log(`  ${redact(JSON.stringify(result))}`);
+    continue;
+  }
+  const actions = (step === "supabase" ? supabasePlan(slug) : vercelPlan(slug)).run;
+  for (const action of actions) runCommand(action, { dryRun: false });
+}
+if (argv.includes("--guide") || argv.includes("--handover")) {
+  writeFileSync(join(T, "ADMIN-GUIDE.md"), adminGuide(cfg, wanted));
+  console.log(`Wrote ${join(T, "ADMIN-GUIDE.md")}`);
+}
