@@ -1,0 +1,40 @@
+---
+// ScrollDrift: a decorative element (a cup, a leaf, a sticker) that floats down the page in the side gutter,
+// bobbing and rotating as you scroll, swapping sides every few screens. It only shows when the gutter beside
+// the content column is wide enough to hold it, so it never overlaps text. Hidden for reduced motion.
+// Put the element in the default slot (an <img> or inline <svg>). It is decorative: aria-hidden.
+interface Props {
+  /** Selector of the content column whose side gutters host the element. The widest match is used. */
+  column?: string;
+  /** Appear once this much of the first screen has scrolled by (0 = immediately, 1 = one viewport). */
+  startAfter?: number;
+  /** Screens between swapping sides. */
+  swapEvery?: number;
+  /** Vertical bob in px and rotation in degrees. */
+  bob?: number;
+  rotate?: number;
+  class?: string;
+}
+const { column = "#main .wrap", startAfter = 0.55, swapEvery = 2.2, bob = 40, rotate = 16, class: className } = Astro.props;
+---
+<div
+  data-scroll-drift
+  data-column={column}
+  data-start={startAfter}
+  data-swap={swapEvery}
+  data-bob={bob}
+  data-rotate={rotate}
+  aria-hidden="true"
+  class:list={["scroll-drift pointer-events-none fixed start-0 top-[40vh] z-0 hidden w-20 opacity-0 transition-opacity duration-500 lg:block motion-reduce:hidden!", className]}
+>
+  <slot />
+</div>
+
+<style>
+  .scroll-drift[data-on] { opacity: 1; }
+  .scroll-drift { will-change: transform; }
+</style>
+
+<script>
+  import "./script.ts";
+</script>

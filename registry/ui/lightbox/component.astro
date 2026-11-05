@@ -1,0 +1,65 @@
+---
+// Lightbox on the native <dialog>: modal focus containment, Esc to close, focus returns to the opener.
+// Progressive enhancement: thumbnails are plain links to the full image, so without JS they still open it.
+// Pass `images` to render a thumbnail grid, or mark your own links: <a href="full.jpg" data-lightbox="group">.
+interface Image { src: string; alt: string; thumb?: string; caption?: string; width?: number; height?: number }
+interface Props {
+  /** Links with data-lightbox="<group>" open the dialog with the same group. Unique per dialog on a page. */
+  group?: string;
+  images?: Image[];
+  cols?: 2 | 3 | 4;
+  /** Accessible names. */
+  label?: string;
+  closeLabel?: string;
+  prevLabel?: string;
+  nextLabel?: string;
+  class?: string;
+}
+const { group = "gallery", images = [], cols = 3, label = "Image viewer", closeLabel = "Close", prevLabel = "Previous image", nextLabel = "Next image", class: className } = Astro.props;
+const colClass = { 2: "grid-cols-2", 3: "grid-cols-2 md:grid-cols-3", 4: "grid-cols-2 md:grid-cols-4" };
+const btn = "grid size-11 place-items-center rounded-full bg-background/15 text-background transition-colors hover:bg-background/30 focus-visible:outline-background";
+---
+{images.length > 0 && (
+  <ul class:list={["m-0 grid list-none gap-3 p-0", colClass[cols], className]}>
+    {images.map((img) => (
+      <li>
+        <a href={img.src} data-lightbox={group} data-caption={img.caption} class="group block overflow-hidden rounded-md">
+          <img src={img.thumb ?? img.src} alt={img.alt} width={img.width} height={img.height} loading="lazy" decoding="async"
+            class="aspect-square size-full object-cover transition-transform duration-500 motion-safe:group-hover:scale-105" />
+        </a>
+      </li>
+    ))}
+  </ul>
+)}
+
+<dialog data-lightbox-dialog={group} aria-label={label} class="lightbox fixed inset-0 m-0 size-full max-h-none max-w-none place-items-center border-0 bg-transparent p-0 text-background open:grid">
+  <figure class="m-0 grid max-h-full max-w-full justify-items-center gap-3 p-4 md:p-10">
+    <img data-lightbox-img alt="" class="max-h-[80dvh] max-w-full rounded-md object-contain" />
+    <figcaption class="flex flex-col items-center gap-1 text-center text-sm">
+      <span data-lightbox-caption></span>
+      <span data-lightbox-count class="text-xs opacity-70" aria-live="polite"></span>
+    </figcaption>
+  </figure>
+  <button type="button" data-lightbox-close autofocus aria-label={closeLabel} class:list={[btn, "absolute end-4 top-4"]}>
+    <svg viewBox="0 0 16 16" class="size-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+  </button>
+  <button type="button" data-lightbox-prev aria-label={prevLabel} class:list={[btn, "absolute start-3 top-1/2 -translate-y-1/2 rtl:-scale-x-100"]}>
+    <svg viewBox="0 0 16 16" class="size-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg>
+  </button>
+  <button type="button" data-lightbox-next aria-label={nextLabel} class:list={[btn, "absolute end-3 top-1/2 -translate-y-1/2 rtl:-scale-x-100"]}>
+    <svg viewBox="0 0 16 16" class="size-5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 3 5 5-5 5" /></svg>
+  </button>
+</dialog>
+
+<style is:global>
+  dialog.lightbox::backdrop { background: color-mix(in oklab, var(--foreground) 92%, transparent); }
+  html:has(dialog.lightbox[open]) { overflow: hidden; }
+  @media (prefers-reduced-motion: no-preference) {
+    dialog.lightbox[open] { animation: kit-lightbox-in 0.2s ease-out; }
+    @keyframes kit-lightbox-in { from { opacity: 0; } }
+  }
+</style>
+
+<script>
+  import "./script.ts";
+</script>

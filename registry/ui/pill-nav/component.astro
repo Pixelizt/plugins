@@ -1,0 +1,109 @@
+---
+// Floating pill navigation: sticky rounded bar, mobile menu behind an accessible toggle.
+// - Links are plain <a>; the current page gets aria-current="page".
+// - Without JS (`scripting: none`) the toggle is hidden and the links are always shown, so nothing is lost.
+// - `overlay` lets the page content (a hero) sit underneath the bar instead of below it.
+interface NavItem { label: string; href: string }
+interface Props {
+  items: NavItem[];
+  /** Brand name (text). Use the `brand` slot for a logo instead. */
+  brand?: string;
+  brandHref?: string;
+  cta?: NavItem;
+  /** Path to compare against for aria-current. Defaults to the current URL. */
+  current?: string;
+  overlay?: boolean;
+  /** Accessible names. */
+  label?: string;
+  menuLabel?: string;
+  class?: string;
+}
+const { items, brand, brandHref = "/", cta, current, overlay = false, label = "Main", menuLabel = "Menu", class: className } = Astro.props;
+const path = (current ?? Astro.url.pathname).replace(/\/$/, "") || "/";
+const isCurrent = (href: string) => {
+  const h = href.replace(/\/$/, "") || "/";
+  return h === path || (h !== "/" && path.startsWith(h + "/"));
+};
+const panelId = `pill-nav-${Math.random().toString(36).slice(2, 8)}`;
+---
+<header class:list={["pointer-events-none sticky top-0 z-50 px-3 pt-3", overlay && "-mb-17", className]} data-pill-nav>
+  <div class="pill-nav-bar pointer-events-auto relative mx-auto flex h-14 max-w-6xl items-center gap-2 rounded-full border border-border bg-background/95 ps-5 pe-2 text-foreground shadow-md shadow-foreground/10 backdrop-blur transition-shadow duration-300 data-[scrolled]:shadow-xl">
+    <a href={brandHref} class="me-auto flex items-center gap-2 font-heading text-lg font-bold no-underline">
+      <slot name="brand">{brand}</slot>
+    </a>
+    <nav id={panelId} aria-label={label} data-pill-nav-panel class="pill-nav-panel">
+      <ul class="m-0 flex list-none flex-col gap-1 p-0 md:flex-row md:items-center">
+        {items.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={isCurrent(item.href) ? "page" : undefined}
+              class="block rounded-full px-4 py-2 text-sm font-medium no-underline transition-colors hover:bg-muted hover:text-muted-foreground aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground"
+            >{item.label}</a>
+          </li>
+        ))}
+      </ul>
+      {cta && (
+        <a href={cta.href} class="mt-2 block rounded-full bg-primary px-5 py-2.5 text-center text-sm font-semibold text-primary-foreground no-underline transition-opacity hover:opacity-90 md:mt-0 md:ms-1">{cta.label}</a>
+      )}
+    </nav>
+    <button
+      type="button"
+      data-pill-nav-toggle
+      aria-expanded="false"
+      aria-controls={panelId}
+      aria-label={menuLabel}
+      class="pill-nav-toggle ms-auto grid size-10 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground md:hidden"
+    >
+      <span class="grid gap-1.5" aria-hidden="true">
+        <span class="bar block h-0.5 w-5 rounded-full bg-current transition-transform duration-200"></span>
+        <span class="bar block h-0.5 w-5 rounded-full bg-current transition-opacity duration-200"></span>
+        <span class="bar block h-0.5 w-5 rounded-full bg-current transition-transform duration-200"></span>
+      </span>
+    </button>
+  </div>
+</header>
+
+<style>
+  /* Below md the panel is a dropdown under the pill; from md up it is inline in the bar. */
+  .pill-nav-panel {
+    display: none;
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: calc(100% + 0.5rem);
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) * 2);
+    background: var(--background);
+    box-shadow: 0 12px 32px color-mix(in oklab, var(--foreground) 14%, transparent);
+  }
+  .pill-nav-panel[data-open] { display: block; }
+  @media (min-width: 48rem) {
+    .pill-nav-panel {
+      display: flex;
+      align-items: center;
+      position: static;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+  }
+  /* Menu icon morphs to a cross while open. */
+  .pill-nav-toggle[aria-expanded="true"] .bar:nth-child(1) { transform: translateY(0.5rem) rotate(45deg); }
+  .pill-nav-toggle[aria-expanded="true"] .bar:nth-child(2) { opacity: 0; }
+  .pill-nav-toggle[aria-expanded="true"] .bar:nth-child(3) { transform: translateY(-0.5rem) rotate(-45deg); }
+  /* No JS: the toggle cannot work, so show the links as a stacked list instead. */
+  @media (scripting: none) {
+    .pill-nav-toggle { display: none; }
+    .pill-nav-panel { display: block; position: static; border: 0; box-shadow: none; padding: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar { transition: none; }
+  }
+</style>
+
+<script>
+  import "./script.ts";
+</script>

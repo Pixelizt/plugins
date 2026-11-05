@@ -1,0 +1,10 @@
+{
+  "title": "Book a table",
+  "intro": "Pick a day, tell us how many you are, and choose a time.",
+  "small_print": "",
+  "success_confirmed": "You're booked in. We've emailed you the details and a link to cancel if your plans change.",
+  "success_pending": "Thank you, we've received your request. It is NOT confirmed yet: we'll email you once we've checked it.",
+  "large_party": "Booking for a bigger group? We'd love to have you: send us an enquiry and we'll find the best table.",
+  "enquiry_link": "Send us an enquiry",
+  "no_js": "To book a table, call us or send us an enquiry."
+}

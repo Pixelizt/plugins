@@ -1,0 +1,47 @@
+# Demo brief for the starter itself. /new-client replaces this with clients/<slug>/client.yaml.
+# Schema: src/kit/config/schema.ts · Full example with every module: kit's client.example.yaml
+client:
+  name: "Demo Café"
+  slug: demo-cafe
+  domain: demo-cafe.example.com
+  type: cafe
+  locale: en
+  currency: USD
+  timezone: Europe/London
+  contact:
+    email: hello@demo-cafe.example.com
+    phone: "+44 20 0000 0000"
+    address: "1 Example Street, London"
+    map_url: "https://maps.google.com/?q=London"
+  hours:
+    mon-fri: "08:00-18:00"
+    sat-sun: "09:00-17:00"
+
+brand:
+  vibe: "warm, calm, modern"
+  colors:
+    primary: "#7A4B2A"
+    secondary: "#E9C46A"
+    accent: "#2A9D8F"
+    background: "#FBF7F1"
+    foreground: "#1C1917"
+    muted: "#F1E8DC"
+  fonts:
+    heading: "Fraunces"
+    body: "Inter"
+  radius: md
+
+motion:
+  level: subtle
+
+hosting:
+  tier: free
+
+pages:
+  - path: /
+    sections: [hero, highlights, cta]
+  - path: /about
+    title: Our story
+    sections: [about, cta]
+  - path: /visit
+    sections: [visit]

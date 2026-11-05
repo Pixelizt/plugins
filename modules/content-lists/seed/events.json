@@ -1,0 +1,11 @@
+{
+  "title": "Events",
+  "intro": "Sample events. Replace them with the client's own, then delete these.",
+  "past_title": "Past events",
+  "items": [
+    { "title": "Open mic evening", "type": "Music", "start": "2026-11-21", "end": "", "time": "7:00 pm to 10:00 pm", "price": "Free entry", "text": "Local performers take the stage. Sign up on the night.", "videos": [], "sample": true },
+    { "title": "Seasonal tasting weekend", "type": "Tasting", "start": "2026-12-12", "end": "2026-12-13", "time": "11:00 am to 4:00 pm", "price": "Tickets on the door", "text": "Small plates built around the season's produce.", "videos": [], "sample": true },
+    { "title": "Neighbourhood pop-up market", "type": "Market", "start": "2026-10-10", "end": "", "time": "9:00 am to 2:00 pm", "price": "", "text": "", "videos": [], "sample": true },
+    { "title": "Community quiz night", "type": "Games", "start": "2026-09-19", "end": "", "time": "8:00 pm", "price": "", "text": "", "videos": [], "sample": true }
+  ]
+}

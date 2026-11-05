@@ -1,0 +1,18 @@
+{
+  "title": "Book a space",
+  "intro": "Celebrating something or bringing a team together? Choose a space and a time, and we'll take it from there.",
+  "small_print": "",
+  "success_confirmed": "You're booked in. We've emailed you the details and a link to cancel if your plans change.",
+  "success_pending": "Thank you, we've received your request. It is NOT confirmed yet and nothing has been paid: we'll email you once we've checked it.",
+  "price_note": "Prices are a guide. Nothing is paid online.",
+  "enquiry_link": "Send us an enquiry",
+  "no_js": "To book a space, call us or send us an enquiry.",
+  "spaces": [
+    {
+      "id": "demo-room",
+      "description": "Invented demo text: a quiet room for small gatherings. Replace with the client's own description and photos.",
+      "images": [],
+      "sample": true
+    }
+  ]
+}

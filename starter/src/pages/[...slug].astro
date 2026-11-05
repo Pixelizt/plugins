@@ -1,0 +1,16 @@
+---
+// Every page in client.yaml → pages is built from its section list.
+// A hand-written file in src/pages/ for the same path takes priority over this route.
+import config from "virtual:kit/config";
+import Base from "../layouts/Base.astro";
+import Sections from "../components/Sections.astro";
+import { pageTitle, slugParam } from "../kit/pages";
+
+export function getStaticPaths() {
+  return config.pages.map((page) => ({ params: { slug: slugParam(page.path) }, props: { page } }));
+}
+const { page } = Astro.props;
+---
+<Base title={pageTitle(page)} description={page.description}>
+  <Sections ids={page.sections} path={page.path} />
+</Base>

@@ -1,0 +1,7 @@
+{
+  "eyebrow": "Neighbourhood café",
+  "headline": "Good coffee, slow mornings.",
+  "text": "Demo content for the kit starter. Replace with the client's own words.",
+  "primary": { "label": "Our story", "href": "/about" },
+  "secondary": { "label": "Visit us", "href": "/visit" }
+}

@@ -1,0 +1,25 @@
+---
+// The contact-details step shared by the booking sections: name, email, phone, notes + the honeypot.
+// Field names and ids are what lib/client/ui.ts reads: keep them if you restyle (copy into src/components/).
+import { detailFields } from "../lib/schema.ts";
+
+interface Props { prefix: string; phoneRequired: boolean }
+const { prefix, phoneRequired } = Astro.props;
+const fields = detailFields({ phoneRequired });
+const input = "mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-[invalid=true]:border-red-600";
+---
+<div class="grid gap-4 sm:grid-cols-2">
+  {fields.map((f) => (
+    <div class:list={[f.full ? "sm:col-span-2" : ""]}>
+      <label for={`${prefix}-${f.key}`} class="text-sm font-medium">{f.label}{f.required && <span aria-hidden="true"> *</span>}</label>
+      {f.type === "textarea" ? (
+        <textarea id={`${prefix}-${f.key}`} name={f.key} rows={3} maxlength={1000} class={input} aria-describedby={`${prefix}-${f.key}-error`} />
+      ) : (
+        <input id={`${prefix}-${f.key}`} name={f.key} type={f.type === "select" ? "text" : f.type} required={f.required} autocomplete={f.autocomplete} class={input} aria-describedby={`${prefix}-${f.key}-error`} />
+      )}
+      <small id={`${prefix}-${f.key}-error`} class="mt-1 block text-sm text-red-700" aria-live="polite"></small>
+    </div>
+  ))}
+  <!-- honeypot: hidden from people, filled by bots -->
+  <div aria-hidden="true" class="absolute -start-[9999px] h-0 w-0 overflow-hidden"><label>Leave empty <input name="_gotcha" tabindex="-1" autocomplete="off" /></label></div>
+</div>

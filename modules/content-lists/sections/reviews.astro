@@ -1,0 +1,27 @@
+---
+// Section "reviews". Only real reviews ship (samples are dropped in production). Copy to src/sections/reviews.astro to restyle.
+import { listsConfig, loadList } from "../lib/load.ts";
+import { formatDay, starsText } from "../lib/format.ts";
+
+const doc = await loadList("reviews");
+const items = doc.items.slice(0, listsConfig().reviews.limit);
+---
+{items.length > 0 && (
+  <section class="wrap py-20">
+    <h2 class="text-4xl font-bold">{doc.title}</h2>
+    {doc.intro && <p class="mt-3 max-w-2xl text-lg text-muted-text">{doc.intro}</p>}
+    <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {items.map((r) => (
+        <figure class="flex flex-col gap-3 rounded-lg border border-border bg-background p-5">
+          <p role="img" aria-label={`${r.stars} out of 5 stars`} class="text-xl text-primary"><span aria-hidden="true">{starsText(r.stars)}</span></p>
+          <blockquote class="flex-1"><p>{r.text}</p></blockquote>
+          <figcaption class="text-sm text-muted-text">
+            <span class="font-semibold text-foreground">{r.name}</span>
+            {r.date && <span> · <time datetime={r.date}>{formatDay(r.date)}</time></span>}
+            {r.source && <span> · {r.source}</span>}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+)}

@@ -1,0 +1,8 @@
+{
+  "title": "Why people come back",
+  "items": [
+    { "title": "Roasted locally", "text": "Demo item. Visible in dev only, hidden in production builds.", "sample": true },
+    { "title": "All-day breakfast", "text": "Demo item.", "sample": true },
+    { "title": "Space for groups", "text": "Demo item.", "sample": true }
+  ]
+}

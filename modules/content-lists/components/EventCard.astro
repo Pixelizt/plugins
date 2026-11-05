@@ -1,0 +1,29 @@
+---
+// One event card. `past` cards drop the price and description. The expiry script (lib/client/expire.ts) relies on
+// data-event, data-end / data-ended and data-upcoming-only: keep them if you copy this to src/components to restyle.
+import { dateRange } from "../lib/format.ts";
+import { lastDay } from "../lib/dates.ts";
+import type { EventItem } from "../lib/schema.ts";
+import VideoItem from "./VideoItem.astro";
+interface Props { event: EventItem; past?: boolean }
+const { event: e, past = false } = Astro.props;
+const last = lastDay(e);
+const when = dateRange(e.start, e.end);
+---
+<article data-event data-end={!past && last ? last : undefined} data-end-time={!past && e.end_time ? e.end_time : undefined} data-ended={past && last ? last : undefined} data-past={past ? "" : undefined}
+  class="flex flex-col gap-4 rounded-lg border border-border bg-background p-5 data-[past]:opacity-80">
+  {e.image && <img src={e.image.src} alt={e.image.alt} loading="lazy" class="aspect-[4/3] w-full rounded-md object-cover" />}
+  <div class="flex flex-col gap-2">
+    {e.type && <span class="w-fit rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">{e.type}</span>}
+    <h3 class="text-2xl font-bold">{e.title}</h3>
+    {when && <p class="font-medium"><time datetime={e.start || e.end}>{when}</time>{e.time && <span class="text-muted-text"> · {e.time}</span>}</p>}
+    {!when && e.time && <p class="text-muted-text">{e.time}</p>}
+    {!past && (e.text || e.price) && (
+      <div data-upcoming-only class="flex flex-col gap-2">
+        {e.text && <p class="text-muted-text">{e.text}</p>}
+        {e.price && <p class="font-semibold text-primary">{e.price}</p>}
+      </div>
+    )}
+  </div>
+  {e.videos.length > 0 && <div class="grid gap-4">{e.videos.map((video) => <VideoItem video={video} />)}</div>}
+</article>

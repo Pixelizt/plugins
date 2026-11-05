@@ -1,0 +1,6 @@
+{
+  "name": "meal-plans",
+  "version": "0.1.0",
+  "dependsOn": ["menu", "forms"],
+  "description": "Priced meal-plan requests (no payment): a plan builder over the menu, set menus with choices, a rate card, and server re-pricing through the forms pipeline"
+}

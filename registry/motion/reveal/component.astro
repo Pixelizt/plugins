@@ -1,0 +1,48 @@
+---
+// Reveal: fade/slide content in as it scrolls into view. A single shared IntersectionObserver drives every
+// [data-reveal] element on the page (this wrapper, or the attribute on any element, e.g. <Card reveal>).
+// Content is fully visible without JS and with reduced motion: the hidden state is applied by the script,
+// only to elements that start below the fold.
+interface Props {
+  as?: "div" | "section" | "article" | "li" | "ul" | "p" | "figure";
+  variant?: "up" | "fade" | "zoom";
+  /** Extra delay in ms (on top of any stagger). */
+  delay?: number;
+  /** Stagger direct [data-reveal] children instead of revealing this element itself. */
+  stagger?: boolean;
+  class?: string;
+}
+const { as: Tag = "div", variant = "up", delay = 0, stagger = false, class: className } = Astro.props;
+---
+<Tag
+  data-reveal={stagger ? undefined : ""}
+  data-reveal-stagger={stagger ? "" : undefined}
+  data-reveal-variant={variant === "up" ? undefined : variant}
+  data-reveal-delay={delay || undefined}
+  class={className}
+>
+  <slot />
+</Tag>
+
+<style is:global>
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal][data-reveal-state] {
+      transition:
+        opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+        transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+      transition-delay: calc(var(--reveal-i, 0) * 70ms + var(--reveal-delay, 0ms));
+    }
+    [data-reveal][data-reveal-state="hidden"] { opacity: 0; transform: translateY(1.5rem); }
+    [data-reveal][data-reveal-variant="fade"][data-reveal-state="hidden"] { transform: none; }
+    [data-reveal][data-reveal-variant="zoom"][data-reveal-state="hidden"] { transform: scale(0.94); }
+    [data-reveal][data-reveal-state="shown"] { opacity: 1; transform: none; }
+  }
+  /* Never leave content hidden in print. */
+  @media print {
+    [data-reveal][data-reveal-state] { opacity: 1 !important; transform: none !important; transition: none !important; }
+  }
+</style>
+
+<script>
+  import "./script.ts";
+</script>

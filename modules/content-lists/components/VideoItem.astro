@@ -1,0 +1,23 @@
+---
+// One video: an uploaded clip (plays muted while on screen) or an embed (iframe loads near the viewport).
+// The embed address is rebuilt from the stored id (lib/video.ts); content never supplies a URL for it.
+// Needs client.yaml → csp.frame_src for embeds (see AGENTS.md). Copy to src/components to restyle; keep the data-* attributes.
+import { embedUrl, type VideoLike } from "../lib/video.ts";
+interface Props { video: VideoLike }
+const { video: v } = Astro.props;
+const src = v.type === "file" ? v.src : embedUrl(v);
+const title = v.caption || "Video";
+---
+{src && (
+  <figure class:list={["w-full", v.vertical ? "max-w-xs" : ""]}>
+    <div class:list={["overflow-hidden rounded-md bg-muted", v.vertical ? "aspect-[9/16]" : "aspect-video"]}>
+      {v.type === "file" ? (
+        <video src={v.src} poster={v.poster || undefined} muted loop playsinline controls preload="none" data-autoplay aria-label={title} class="size-full object-cover" />
+      ) : (
+        <iframe data-src={src} data-platform={v.type} title={title} loading="lazy" referrerpolicy="strict-origin-when-cross-origin"
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen" class="size-full" />
+      )}
+    </div>
+    {v.caption && <figcaption class="mt-2 text-sm text-muted-text">{v.caption}</figcaption>}
+  </figure>
+)}

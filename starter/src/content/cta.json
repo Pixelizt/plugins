@@ -1,0 +1,5 @@
+{
+  "title": "Planning something?",
+  "text": "Demo call to action.",
+  "action": { "label": "Get in touch", "href": "/visit" }
+}

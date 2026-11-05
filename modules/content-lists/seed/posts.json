@@ -1,0 +1,22 @@
+{
+  "title": "From the blog",
+  "intro": "",
+  "items": [
+    {
+      "title": "A sample post about the season",
+      "slug": "sample-post-about-the-season",
+      "date": "2026-10-20",
+      "excerpt": "A short sample summary that shows how a post looks in a list and in search results.",
+      "body": "This is sample text. Write posts in plain paragraphs, with a blank line between them.\n\n## A heading\n\nUse **bold** and *italic* sparingly, and add a [link](https://example.com) when it helps.\n\n- A bullet\n- Another bullet\n\n> A short quote.",
+      "sample": true
+    },
+    {
+      "title": "Another sample post",
+      "slug": "another-sample-post",
+      "date": "2026-09-30",
+      "excerpt": "A second sample post, so the list has more than one card.",
+      "body": "Sample text for the second post.\n\n### A smaller heading\n\n1. First step\n2. Second step",
+      "sample": true
+    }
+  ]
+}

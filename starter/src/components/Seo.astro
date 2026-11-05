@@ -1,0 +1,23 @@
+---
+// Kit component: canonical, Open Graph, JSON-LD. Restyle-free (head only).
+import config from "virtual:kit/config";
+import { businessJsonLd, jsonLdString } from "../kit/seo/jsonld";
+interface Props { title: string; description?: string; image?: string; noindex?: boolean }
+const { title, description = "", image, noindex = false } = Astro.props;
+const site = Astro.site!.toString().replace(/\/$/, "");
+const canonical = new URL(Astro.url.pathname, Astro.site).toString().replace(/\/$/, "") || site;
+const fullTitle = title === "Home" ? config.client.name : `${title} | ${config.client.name}`;
+const jsonld = jsonLdString(businessJsonLd(config, site));
+---
+<title>{fullTitle}</title>
+{description && <meta name="description" content={description} />}
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex" />}
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={config.client.name} />
+<meta property="og:title" content={fullTitle} />
+{description && <meta property="og:description" content={description} />}
+<meta property="og:url" content={canonical} />
+{image && <meta property="og:image" content={new URL(image, Astro.site).toString()} />}
+<meta name="twitter:card" content="summary_large_image" />
+<script type="application/ld+json" set:html={jsonld} />

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "kit",
+  "version": "0.1.0",
+  "description": "Website kit skills for restaurants, caf\u00e9s and food businesses: /setup entry point with playbooks, guided setup, help, diagrams, copy clean-up, brief sharpening, catch-up, reskin, components, motion, modules, harvest and retro.",
+  "author": {
+    "name": "Pixelizt"
+  },
+  "homepage": "https://github.com/Pixelizt/plugins",
+  "repository": "https://github.com/Pixelizt/plugins",
+  "license": "MIT",
+  "keywords": [
+    "website",
+    "restaurant",
+    "cafe",
+    "astro",
+    "supabase",
+    "agent-skills",
+    "unslop"
+  ]
+}

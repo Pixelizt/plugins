@@ -1,0 +1,84 @@
+{
+  "notes": ["Demo menu: replace it in the admin. Prices include tax."],
+  "categories": [
+    { "id": "drinks", "name": "Drinks", "blurb": "Hot and cold, made to order." },
+    { "id": "bites", "name": "Bites", "blurb": "Small plates and sweets." },
+    { "id": "sides", "name": "Sides" }
+  ],
+  "items": [
+    {
+      "id": "demo-latte",
+      "category": "drinks",
+      "group": "Coffee",
+      "name": "Demo Latte",
+      "description": "Smooth espresso with steamed milk.",
+      "prices": [{ "size": "Regular", "price": 4.5 }, { "size": "Large", "price": 5.2 }],
+      "allergens": ["Milk"],
+      "tags": ["popular"],
+      "nutrition": { "calories": 150 },
+      "available": true,
+      "sample": true
+    },
+    {
+      "id": "demo-cold-brew",
+      "category": "drinks",
+      "group": "Coffee",
+      "name": "Demo Cold Brew",
+      "description": "Slow-steeped and served over ice.",
+      "prices": [{ "price": 4 }],
+      "allergens": [],
+      "tags": ["vegan"],
+      "available": true,
+      "sample": true
+    },
+    {
+      "id": "demo-mint-tea",
+      "category": "drinks",
+      "group": "Tea",
+      "name": "Demo Mint Tea",
+      "description": "Fresh mint leaves, nothing else.",
+      "prices": [{ "price": 3.25 }],
+      "allergens": [],
+      "tags": ["vegan"],
+      "available": false,
+      "sample": true
+    },
+    {
+      "id": "demo-croissant",
+      "category": "bites",
+      "name": "Demo Croissant",
+      "description": "Buttery and flaky, baked this morning.",
+      "prices": [{ "price": 3.75 }],
+      "allergens": ["Gluten", "Milk"],
+      "tags": ["popular"],
+      "available": true,
+      "sample": true
+    },
+    {
+      "id": "demo-oat-cookie",
+      "category": "bites",
+      "name": "Demo Oat Cookie",
+      "description": "Chewy oats and raisins.",
+      "prices": [{ "price": 2.5 }],
+      "allergens": ["Gluten"],
+      "tags": ["vegan"],
+      "available": true,
+      "sample": true
+    },
+    {
+      "id": "demo-side-salad",
+      "category": "sides",
+      "name": "Demo Side Salad",
+      "description": "Leaves, cucumber and a lemon dressing.",
+      "prices": [{ "price": 4.25 }],
+      "allergens": [],
+      "tags": ["vegan"],
+      "available": true,
+      "sample": true
+    }
+  ],
+  "addons": [
+    { "name": "Extra shot", "prices": [{ "price": 0.8 }], "sample": true },
+    { "name": "Oat milk", "prices": [{ "price": 0.6 }], "sample": true }
+  ]
+}

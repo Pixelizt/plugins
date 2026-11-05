@@ -1,0 +1,51 @@
+---
+// Section "gallery": a photo grid; with `lightbox: true` (default) a photo opens in an accessible dialog
+// (Esc closes, arrow keys move, focus is trapped, focus returns to the photo). Copy to src/sections/gallery.astro to restyle.
+import { listsConfig, loadList } from "../lib/load.ts";
+
+const doc = await loadList("gallery");
+const conf = listsConfig().gallery;
+const items = doc.items.slice(0, conf.limit);
+const btn = "grid size-11 place-items-center rounded-full bg-background text-xl text-foreground focus-visible:outline-2 focus-visible:outline-ring";
+---
+{items.length > 0 && (
+  <section class="wrap py-20" data-kit-list="gallery">
+    <h2 class="text-4xl font-bold">{doc.title}</h2>
+    {doc.intro && <p class="mt-3 max-w-2xl text-lg text-muted-text">{doc.intro}</p>}
+    <ul class="mt-8 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+      {items.map((g) => (
+        <li>
+          {conf.lightbox ? (
+            <a href={g.src} data-lightbox data-alt={g.alt} data-caption={g.caption || undefined} class="block overflow-hidden rounded-md">
+              <img src={g.src} alt={g.alt} loading="lazy" class="aspect-square w-full object-cover transition-transform hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100" />
+              <span class="sr-only">(opens larger)</span>
+            </a>
+          ) : (
+            <figure class="overflow-hidden rounded-md">
+              <img src={g.src} alt={g.alt} loading="lazy" class="aspect-square w-full object-cover" />
+            </figure>
+          )}
+        </li>
+      ))}
+    </ul>
+    {conf.lightbox && (
+      <dialog data-lightbox-dialog aria-label="Photo viewer"
+        class="m-auto max-h-dvh w-full max-w-5xl overflow-visible bg-transparent p-4 text-background backdrop:bg-foreground/90">
+        <div class="relative flex flex-col items-center gap-3">
+          <img data-lb-img alt="" class="max-h-[75dvh] w-auto max-w-full rounded-md object-contain" />
+          <p data-lb-caption class="text-center" hidden></p>
+          <p data-lb-count class="sr-only" aria-live="polite"></p>
+          <div class="flex gap-3">
+            <button type="button" data-lb-prev aria-label="Previous photo" class={btn}>‹</button>
+            <button type="button" data-lb-close aria-label="Close" class={btn}>×</button>
+            <button type="button" data-lb-next aria-label="Next photo" class={btn}>›</button>
+          </div>
+        </div>
+      </dialog>
+    )}
+  </section>
+)}
+
+<script>
+  import "../lib/client/lightbox.ts";
+</script>

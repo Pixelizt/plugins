@@ -1,0 +1,132 @@
+---
+// Search + filter controls and the vanilla script that drives them. Put it inside an element with data-kit-menu
+// (see sections/menu-full.astro). Without JavaScript the full menu is still there: the controls stay hidden.
+// Copy to src/components/ to restyle; keep the data-* attributes, the script relies on them.
+import type { Category, MenuConfig } from "../lib/schema.ts";
+
+interface Props { categories: Category[]; conf: MenuConfig; usedTags: string[]; currency: string }
+const { categories, conf, usedTags, currency } = Astro.props;
+const filterTags = conf.tags.filter((t) => t.filterable && usedTags.includes(t.key));
+const pill = "rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground";
+---
+<div data-controls hidden class="mb-8 grid gap-4">
+  <div>
+    <label for="menu-search" class="text-sm font-medium">Search the menu</label>
+    <input id="menu-search" data-search type="search" autocomplete="off" placeholder="Try a dish, an ingredient or a tag"
+      class="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-foreground" />
+  </div>
+  {categories.length > 1 && (
+    <div role="group" aria-label="Category" class="flex flex-wrap gap-2">
+      <button type="button" data-cat="" aria-pressed="true" class={pill}>All</button>
+      {categories.map((c) => <button type="button" data-cat={c.id} aria-pressed="false" class={pill}>{c.name}</button>)}
+    </div>
+  )}
+  {filterTags.length > 0 && (
+    <div role="group" aria-label="Filter by tag" class="flex flex-wrap gap-2">
+      {filterTags.map((t) => <button type="button" data-tag={t.key} aria-pressed="false" class={pill}>{t.label}</button>)}
+    </div>
+  )}
+  {conf.price_filter && (
+    <div>
+      <label for="menu-max" class="text-sm font-medium">Max price ({currency})</label>
+      <input id="menu-max" data-max type="number" min="0" step="any" inputmode="decimal"
+        class="mt-1 w-32 rounded-md border border-border bg-background px-3 py-2 text-foreground" />
+    </div>
+  )}
+  <div class="flex flex-wrap items-center gap-4">
+    <p data-count role="status" aria-live="polite" class="text-sm text-muted-text"></p>
+    <button type="button" data-reset hidden class="text-sm underline">Clear filters</button>
+  </div>
+</div>
+
+<script>
+  import { searchItems, type IndexEntry } from "../lib/search";
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-kit-menu]")) {
+    const index = JSON.parse(root.dataset.index ?? "[]") as IndexEntry[];
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s);
+    const controls = q("[data-controls]");
+    const list = q("[data-list]");
+    const results = q("[data-results]");
+    const search = q<HTMLInputElement>("[data-search]");
+    const maxInput = q<HTMLInputElement>("[data-max]");
+    const count = q("[data-count]");
+    const empty = q("[data-empty]");
+    const reset = q("[data-reset]");
+    const addons = q("[data-addons]");
+    if (!controls || !list || !results || !search || !count || !empty) continue;
+    controls.hidden = false;
+
+    const articles = new Map<string, HTMLElement>();
+    for (const a of list.querySelectorAll<HTMLElement>("[data-item]")) articles.set(a.dataset.item!, a);
+    const catButtons = [...root.querySelectorAll<HTMLButtonElement>("[data-cat]")];
+    const tagButtons = [...root.querySelectorAll<HTMLButtonElement>("[data-tag]")];
+
+    const params = new URLSearchParams(location.search);
+    const state = {
+      q: params.get("q") ?? "",
+      cat: params.get("cat") ?? "",
+      tags: (params.get("tag") ?? "").split(",").filter(Boolean),
+      max: params.get("max") ?? "",
+    };
+    search.value = state.q;
+    if (maxInput) maxInput.value = state.max;
+
+    const render = () => {
+      const maxPrice = state.max !== "" && Number.isFinite(Number(state.max)) ? Number(state.max) : undefined;
+      const hits = searchItems(index, state.q, { tags: state.tags, category: state.cat || undefined, maxPrice });
+      const ids = new Set(hits.map((h) => h.id));
+      const searching = state.q.trim() !== "";
+      // Searching shows a flat list in rank order (cloned from the static markup). Otherwise the grouped menu stays, with misses hidden.
+      list.hidden = searching;
+      results.hidden = !searching;
+      if (searching) {
+        results.replaceChildren(...hits.flatMap((h) => {
+          const el = articles.get(h.id)?.cloneNode(true) as HTMLElement | undefined;
+          if (el) el.hidden = false; // the original may be hidden by an earlier filter
+          return el ?? [];
+        }));
+      } else {
+        for (const [id, el] of articles) el.hidden = !ids.has(id);
+        for (const el of list.querySelectorAll<HTMLElement>("[data-group], [data-section]")) el.hidden = !el.querySelector("[data-item]:not([hidden])");
+      }
+      count.textContent = `${hits.length} ${hits.length === 1 ? "item" : "items"}`;
+      empty.hidden = hits.length > 0;
+      const filtered = searching || state.cat !== "" || state.tags.length > 0 || maxPrice !== undefined;
+      if (reset) reset.hidden = !filtered;
+      if (addons) addons.hidden = filtered;
+      for (const b of catButtons) b.setAttribute("aria-pressed", String((b.dataset.cat ?? "") === state.cat));
+      for (const b of tagButtons) b.setAttribute("aria-pressed", String(state.tags.includes(b.dataset.tag!)));
+      const next = new URLSearchParams();
+      if (state.q) next.set("q", state.q);
+      if (state.cat) next.set("cat", state.cat);
+      if (state.tags.length) next.set("tag", state.tags.join(","));
+      if (state.max) next.set("max", state.max);
+      const qs = next.toString();
+      history.replaceState(null, "", location.pathname + (qs ? `?${qs}` : "") + location.hash);
+    };
+
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    search.addEventListener("input", () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { state.q = search.value.trim(); render(); }, 150);
+    });
+    search.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && search.value) { search.value = ""; state.q = ""; render(); }
+    });
+    maxInput?.addEventListener("input", () => { state.max = maxInput.value.trim(); render(); });
+    for (const b of catButtons) b.addEventListener("click", () => { state.cat = b.dataset.cat ?? ""; render(); });
+    for (const b of tagButtons) b.addEventListener("click", () => {
+      const t = b.dataset.tag!;
+      state.tags = state.tags.includes(t) ? state.tags.filter((x) => x !== t) : [...state.tags, t];
+      render();
+    });
+    reset?.addEventListener("click", () => {
+      state.q = ""; state.cat = ""; state.tags = []; state.max = "";
+      search.value = ""; if (maxInput) maxInput.value = "";
+      render();
+      search.focus();
+    });
+    render();
+  }
+</script>

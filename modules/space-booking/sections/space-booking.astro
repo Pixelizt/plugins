@@ -1,0 +1,126 @@
+---
+// Section "space-booking": space → date → length + free start times → guests, occasion, extras → details.
+// Static markup + a bundled vanilla script (no React, no inline JS; data in data-conf). Without JavaScript it
+// shows the "call us / enquiry" fallback instead of the form. Hidden until client.yaml lists
+// spaces (rule 4). Copy to src/sections/space-booking.astro to restyle: keep the data-* attributes, names and ids.
+import config from "virtual:kit/config";
+import { loadDoc } from "../../../kit/content/index.ts";
+import { moduleConfig } from "../../../kit/modules.ts";
+import { formatPrice } from "../../../kit/lib/money.ts";
+import { FormsConfig } from "../../forms/lib/schema.ts";
+import { BookingCoreConfig } from "../../booking-core/lib/schema.ts";
+import Details from "../../booking-core/components/Details.astro";
+import Times from "../../booking-core/components/Times.astro";
+import { SpaceBookingConfig, SpacesDoc, durationsOf, hoursText, spaceWarnings } from "../lib/schema.ts";
+import { spaceType } from "../lib/type.ts";
+import type { SpaceWidgetConf } from "../lib/client/widget.ts";
+
+const conf = moduleConfig("space-booking", SpaceBookingConfig);
+const doc = await loadDoc("spaces", SpacesDoc);
+for (const w of spaceWarnings(conf, doc)) console.warn(`[space-booking] ${w}`);
+const type = spaceType(conf, config.client.hours);
+const shown = new Set(type.describe().spaces?.map((s) => s.id));
+const spaces = conf.spaces.filter((s) => shown.has(s.id)).map((s) => ({ ...s, doc: doc.spaces.find((d) => d.id === s.id) }));
+const core = moduleConfig("booking-core", BookingCoreConfig);
+const prefix = "sb";
+const widget: SpaceWidgetConf = {
+  type: "space", prefix, tz: config.client.timezone, region: moduleConfig("forms", FormsConfig).phone_region,
+  phoneRequired: core.require_phone, maxDaysAhead: conf.max_days_ahead,
+  copy: { confirmed: doc.success_confirmed, pending: doc.success_pending },
+  spaces: spaces.map((s) => ({ id: s.id, capacity: s.capacity, min_guests: s.min_guests, durations: durationsOf(s, conf.slot_minutes).map((m) => ({ value: m, label: hoursText(m) })) })),
+};
+const phone = config.client.contact.phone;
+const tel = `tel:${phone.replace(/[^+\d]/g, "")}`;
+const field = "mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-[invalid=true]:border-red-600";
+---
+{type.configured && (
+  <section class="wrap py-16" aria-labelledby={`${prefix}-title`} data-space-booking data-conf={JSON.stringify(widget)}>
+    <h2 id={`${prefix}-title`} class="font-heading text-3xl font-bold sm:text-4xl">{doc.title}</h2>
+    {doc.intro && <p class="mt-3 max-w-2xl text-muted-text">{doc.intro}</p>}
+
+    <p data-booking-fallback class="mt-6 max-w-2xl">
+      {doc.no_js} <a class="font-semibold underline" href={tel}>{phone}</a> · <a class="font-semibold underline" href={conf.enquiry_url}>{doc.enquiry_link}</a>
+    </p>
+
+    <form data-booking-form hidden novalidate class="mt-8 grid max-w-3xl gap-8">
+      <fieldset class="min-w-0">
+        <legend class="text-sm font-medium">Space <span aria-hidden="true">*</span></legend>
+        <div class="mt-2 grid gap-4 sm:grid-cols-2">
+          {spaces.map((s, i) => (
+            <label class="block cursor-pointer">
+              <input type="radio" name="space" value={s.id} checked={i === 0} class="peer sr-only" />
+              <span class="block h-full overflow-hidden rounded-md border border-border bg-background shadow-sm peer-checked:border-primary peer-checked:outline-2 peer-checked:outline-primary peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring">
+                {s.doc?.images[0] && <img src={s.doc.images[0].src} alt={s.doc.images[0].alt} loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover" />}
+                <span class="block p-4">
+                  <span class="block font-heading text-xl font-bold">{s.name}</span>
+                  <span class="mt-1 block text-sm text-muted-text">Up to {s.capacity} guests · {hoursText(s.min_hours * 60)}{s.max_hours !== s.min_hours ? ` to ${hoursText(s.max_hours * 60)}` : ""}</span>
+                  {s.price_per_hour !== undefined && <span class="mt-1 block text-sm font-semibold">{formatPrice(s.price_per_hour, config.client.currency)} per hour</span>}
+                  {s.doc?.description && <span class="mt-2 block text-sm">{s.doc.description}</span>}
+                </span>
+              </span>
+            </label>
+          ))}
+        </div>
+        {doc.price_note && spaces.some((s) => s.price_per_hour !== undefined) && <p class="mt-2 text-sm text-muted-text">{doc.price_note}</p>}
+      </fieldset>
+
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div>
+          <label for={`${prefix}-date`} class="text-sm font-medium">Date <span aria-hidden="true">*</span></label>
+          <input id={`${prefix}-date`} name="date" type="date" required class={field} />
+        </div>
+        <div>
+          <label for={`${prefix}-duration`} class="text-sm font-medium">How long <span aria-hidden="true">*</span></label>
+          <select id={`${prefix}-duration`} name="duration" required class={field}></select>
+        </div>
+        <div>
+          <label for={`${prefix}-party`} class="text-sm font-medium">Guests <span aria-hidden="true">*</span></label>
+          <input id={`${prefix}-party`} name="party" type="number" inputmode="numeric" required class={field} aria-describedby={`${prefix}-party-error`} />
+          <small id={`${prefix}-party-error`} class="mt-1 block text-sm text-red-700" aria-live="polite"></small>
+        </div>
+      </div>
+
+      <Times prefix={prefix} legend="Free start times" />
+
+      {(conf.occasions.length > 0 || conf.addons.length > 0) && (
+        <div class="grid gap-4 sm:grid-cols-2">
+          {conf.occasions.length > 0 && (
+            <div>
+              <label for={`${prefix}-occasion`} class="text-sm font-medium">Occasion</label>
+              <select id={`${prefix}-occasion`} name="occasion" class={field}>
+                <option value="">Choose…</option>
+                {conf.occasions.map((o) => <option value={o}>{o}</option>)}
+              </select>
+            </div>
+          )}
+          {conf.addons.length > 0 && (
+            <fieldset>
+              <legend class="text-sm font-medium">Extras (requests: we'll confirm them)</legend>
+              <div class="mt-2 grid gap-2">
+                {conf.addons.map((a) => <label class="flex items-center gap-2"><input type="checkbox" name="addons" value={a.key} /> {a.label}</label>)}
+              </div>
+            </fieldset>
+          )}
+        </div>
+      )}
+
+      <Details prefix={prefix} phoneRequired={core.require_phone} />
+      <div>
+        <button type="submit" class="rounded-md bg-primary px-6 py-3 font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60">
+          {conf.mode === "approve" ? "Send booking request" : "Book now"}
+        </button>
+        <p data-status class="mt-3" role="status" aria-live="polite"></p>
+        {doc.small_print && <p class="mt-2 text-sm text-muted-text">{doc.small_print}</p>}
+      </div>
+    </form>
+    <div data-booking-done hidden tabindex="-1" class="mt-8 max-w-2xl rounded-md border border-border p-6" role="status">
+      <p data-done-text class="text-lg font-semibold"></p>
+      <p data-done-ref class="mt-2 text-muted-text"></p>
+    </div>
+  </section>
+)}
+
+<script>
+  import { mountSpace } from "../lib/client/widget";
+  for (const el of document.querySelectorAll<HTMLElement>("[data-space-booking]")) mountSpace(el);
+</script>

@@ -1,0 +1,28 @@
+---
+// Site footer. Reskin freely. Business facts come from client.yaml only (never hardcode).
+import config from "virtual:kit/config";
+const c = config.client;
+const year = new Date().getFullYear();
+---
+<footer class="mt-16 border-t border-border bg-muted text-muted-foreground">
+  <div class="wrap grid gap-8 py-10 sm:grid-cols-3">
+    <div>
+      <p class="font-heading text-lg font-bold">{c.name}</p>
+      <address class="mt-2 not-italic text-sm">{c.contact.address}</address>
+    </div>
+    <div class="text-sm">
+      <p class="font-semibold">Contact</p>
+      <p class="mt-2"><a href={`tel:${c.contact.phone.replace(/\s/g, "")}`}>{c.contact.phone}</a></p>
+      <p><a href={`mailto:${c.contact.email}`}>{c.contact.email}</a></p>
+    </div>
+    {Object.keys(c.hours).length > 0 && (
+      <div class="text-sm">
+        <p class="font-semibold">Hours</p>
+        <dl class="mt-2 grid grid-cols-[auto_1fr] gap-x-4">
+          {Object.entries(c.hours).map(([d, h]) => (<><dt class="capitalize">{d.replace("-", " – ")}</dt><dd>{h.replace("-", " – ")}</dd></>))}
+        </dl>
+      </div>
+    )}
+  </div>
+  <p class="wrap pb-6 text-xs">© {year} {c.name}</p>
+</footer>

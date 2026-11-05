@@ -1,0 +1,37 @@
+---
+// DriftFrame: a cropping frame whose image drifts slowly as the page scrolls (ScrollTrigger scrub).
+// The image is scaled up just enough that the drift never reveals the frame's background.
+// Don't put the LCP image in here without fetchpriority="high" on it; the drift never hides it.
+interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  /** Drift in percent of the image height each way (2 to 8 reads as subtle). */
+  amount?: number;
+  /** The first image on the page: loads eagerly with high priority. */
+  priority?: boolean;
+  /** Aspect ratio class for the frame. */
+  ratio?: "square" | "video" | "portrait" | "wide";
+  class?: string;
+}
+const { src, alt, width, height, amount = 5, priority = false, ratio = "portrait", class: className } = Astro.props;
+const ratios = { square: "aspect-square", video: "aspect-video", portrait: "aspect-[4/5]", wide: "aspect-[21/9]" };
+---
+<div data-drift-frame data-amount={amount} class:list={["overflow-hidden rounded-lg bg-muted", ratios[ratio], className]}>
+  <img
+    data-drift
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={priority ? "eager" : "lazy"}
+    fetchpriority={priority ? "high" : undefined}
+    decoding="async"
+    class="size-full object-cover"
+  />
+</div>
+
+<script>
+  import "./script.ts";
+</script>

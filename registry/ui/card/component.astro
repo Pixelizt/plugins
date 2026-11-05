@@ -1,0 +1,63 @@
+---
+// Card: optional media, eyebrow, title, body (default slot), footer slot. With `href` the whole card is
+// one link (stretched title link), so there is a single tab stop and a single accessible name.
+type Variant = "outline" | "muted" | "raised";
+interface Props {
+  as?: "div" | "li" | "article";
+  variant?: Variant;
+  title?: string;
+  eyebrow?: string;
+  href?: string;
+  image?: { src: string; alt: string; width?: number; height?: number };
+  /** Aspect ratio of the image frame. */
+  ratio?: "square" | "video" | "portrait";
+  /** Fade up on scroll (needs registry/motion/reveal on the page; the script is imported below). */
+  reveal?: boolean;
+  level?: 2 | 3 | 4;
+  class?: string;
+}
+const { as: Tag = "div", variant = "outline", title, eyebrow, href, image, ratio = "video", reveal = false, level = 3, class: className } = Astro.props;
+const Heading = `h${level}` as "h2" | "h3" | "h4";
+const variants: Record<Variant, string> = {
+  outline: "bg-background text-foreground border border-border",
+  muted: "bg-muted text-muted-foreground border border-transparent",
+  raised: "bg-background text-foreground border border-border shadow-lg shadow-foreground/10",
+};
+const ratios = { square: "aspect-square", video: "aspect-video", portrait: "aspect-[4/5]" };
+const hasMedia = Astro.slots.has("media");
+const hasFooter = Astro.slots.has("footer");
+---
+<Tag
+  data-reveal={reveal ? "" : undefined}
+  class:list={[
+    "group relative flex flex-col overflow-hidden rounded-lg",
+    variants[variant],
+    href && "transition-transform duration-300 motion-safe:hover:-translate-y-1 focus-within:ring-2 focus-within:ring-ring",
+    className,
+  ]}
+>
+  {(image || hasMedia) && (
+    <div class:list={["overflow-hidden bg-muted", ratios[ratio]]}>
+      {image ? (
+        <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async"
+          class="size-full object-cover transition-transform duration-500 motion-safe:group-hover:scale-105" />
+      ) : (
+        <slot name="media" />
+      )}
+    </div>
+  )}
+  <div class="flex flex-1 flex-col gap-2 p-5">
+    {eyebrow && <p class="text-xs font-semibold uppercase tracking-widest opacity-70">{eyebrow}</p>}
+    {title && (
+      <Heading class="font-heading text-xl font-bold">
+        {href ? <a href={href} class="no-underline after:absolute after:inset-0 after:content-[''] focus-visible:outline-none">{title}</a> : title}
+      </Heading>
+    )}
+    <div class="flex-1 text-sm opacity-80"><slot /></div>
+    {hasFooter && <div class="mt-2 flex flex-wrap items-center gap-2"><slot name="footer" /></div>}
+  </div>
+</Tag>
+
+<script>
+  import "../../motion/reveal/script.ts";
+</script>

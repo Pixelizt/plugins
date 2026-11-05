@@ -1,0 +1,6 @@
+{
+  "name": "menu",
+  "version": "0.1.0",
+  "dependsOn": ["cms"],
+  "description": "Menu document (categories, items, sizes, tags, allergens, nutrition), static SEO menu, instant search and filters, schema.org markup, CSV column spec"
+}

@@ -1,0 +1,80 @@
+---
+// Section "table-booking": date → guests → free times → details → book. Static markup + a bundled vanilla script
+// (no React, no inline JS; data in data-conf). Without JavaScript it shows the "call us / enquiry" fallback.
+// Hidden until client.yaml gives it capacity and hours (rule 4). Copy to src/sections/table-booking.astro to
+// restyle: keep the data-* attributes, names and ids.
+import config from "virtual:kit/config";
+import { loadDoc } from "../../../kit/content/index.ts";
+import { moduleConfig } from "../../../kit/modules.ts";
+import { FormsConfig } from "../../forms/lib/schema.ts";
+import { BookingCoreConfig } from "../../booking-core/lib/schema.ts";
+import Details from "../../booking-core/components/Details.astro";
+import Times from "../../booking-core/components/Times.astro";
+import { TableBookingConfig, TableBookingDoc, onlineMax, tableWarnings } from "../lib/schema.ts";
+import { tableType } from "../lib/type.ts";
+import type { TableWidgetConf } from "../lib/client/widget.ts";
+
+const conf = moduleConfig("table-booking", TableBookingConfig);
+for (const w of tableWarnings(conf)) console.warn(`[table-booking] ${w}`);
+const type = tableType(conf, config.client.hours);
+const doc = await loadDoc("table_booking", TableBookingDoc);
+const core = moduleConfig("booking-core", BookingCoreConfig);
+const prefix = "tb";
+const max = onlineMax(conf);
+const widget: TableWidgetConf = {
+  type: "table", prefix, tz: config.client.timezone, region: moduleConfig("forms", FormsConfig).phone_region,
+  phoneRequired: core.require_phone, maxDaysAhead: conf.max_days_ahead,
+  copy: { confirmed: doc.success_confirmed, pending: doc.success_pending },
+};
+const phone = config.client.contact.phone;
+const tel = `tel:${phone.replace(/[^+\d]/g, "")}`;
+const parties = Array.from({ length: max - conf.party_size.min + 1 }, (_, i) => conf.party_size.min + i);
+const field = "mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-foreground focus-visible:outline-2 focus-visible:outline-ring";
+---
+{type.configured && (
+  <section class="wrap py-16" aria-labelledby={`${prefix}-title`} data-table-booking data-conf={JSON.stringify(widget)}>
+    <h2 id={`${prefix}-title`} class="font-heading text-3xl font-bold sm:text-4xl">{doc.title}</h2>
+    {doc.intro && <p class="mt-3 max-w-2xl text-muted-text">{doc.intro}</p>}
+
+    <p data-booking-fallback class="mt-6 max-w-2xl">
+      {doc.no_js} <a class="font-semibold underline" href={tel}>{phone}</a> · <a class="font-semibold underline" href={conf.enquiry_url}>{doc.enquiry_link}</a>
+    </p>
+
+    <form data-booking-form hidden novalidate class="mt-8 grid max-w-3xl gap-8">
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label for={`${prefix}-date`} class="text-sm font-medium">Date <span aria-hidden="true">*</span></label>
+          <input id={`${prefix}-date`} name="date" type="date" required class={field} />
+        </div>
+        <div>
+          <label for={`${prefix}-party`} class="text-sm font-medium">Guests <span aria-hidden="true">*</span></label>
+          <select id={`${prefix}-party`} name="party" required class={field}>
+            {parties.map((n) => <option value={String(n)} selected={n === Math.min(Math.max(2, conf.party_size.min), max)}>{n} {n === 1 ? "guest" : "guests"}</option>)}
+            <option value="more">More than {max}</option>
+          </select>
+        </div>
+      </div>
+      <div data-large hidden class="rounded-md bg-muted p-4" role="note">
+        {doc.large_party} <a class="font-semibold underline" href={conf.enquiry_url}>{doc.enquiry_link}</a>
+      </div>
+      <Times prefix={prefix} />
+      <Details prefix={prefix} phoneRequired={core.require_phone} />
+      <div>
+        <button type="submit" class="rounded-md bg-primary px-6 py-3 font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60">
+          {conf.mode === "approve" ? "Send booking request" : "Book now"}
+        </button>
+        <p data-status class="mt-3" role="status" aria-live="polite"></p>
+        {doc.small_print && <p class="mt-2 text-sm text-muted-text">{doc.small_print}</p>}
+      </div>
+    </form>
+    <div data-booking-done hidden tabindex="-1" class="mt-8 max-w-2xl rounded-md border border-border p-6" role="status">
+      <p data-done-text class="text-lg font-semibold"></p>
+      <p data-done-ref class="mt-2 text-muted-text"></p>
+    </div>
+  </section>
+)}
+
+<script>
+  import { mountTable } from "../lib/client/widget";
+  for (const el of document.querySelectorAll<HTMLElement>("[data-table-booking]")) mountTable(el);
+</script>

@@ -1,0 +1,59 @@
+---
+// Button: renders <a> when `href` is set, <button> otherwise. Token utilities only.
+// `arrow` adds a circular arrow affordance that rotates on hover (pure CSS, no JS).
+type Variant = "primary" | "secondary" | "ghost";
+type Size = "sm" | "md" | "lg";
+interface Props {
+  variant?: Variant;
+  size?: Size;
+  /** Circular arrow affordance on the inline-end side. */
+  arrow?: boolean;
+  /** "token" follows brand.radius; "pill" is fully rounded regardless of the brand radius. */
+  shape?: "token" | "pill";
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  full?: boolean;
+  class?: string;
+  /** Anything else (target, rel, disabled, aria-*, data-*) is passed to the element. */
+  [attr: string]: unknown;
+}
+const { variant = "primary", size = "md", arrow = false, shape = "token", href, type = "button", full = false, class: className, ...rest } = Astro.props;
+
+const variants: Record<Variant, string> = {
+  primary: "bg-primary text-primary-foreground border-primary hover:bg-primary/90",
+  secondary: "bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/90",
+  ghost: "bg-transparent text-foreground border-border hover:bg-muted hover:text-muted-foreground",
+};
+const bubble: Record<Variant, string> = {
+  primary: "bg-primary-foreground text-primary",
+  secondary: "bg-secondary-foreground text-secondary",
+  ghost: "bg-foreground text-background",
+};
+const sizes: Record<Size, { box: string; plain: string; withArrow: string; bubble: string }> = {
+  sm: { box: "min-h-10 text-sm", plain: "px-4", withArrow: "ps-4 pe-1", bubble: "size-8" },
+  md: { box: "min-h-12 text-base", plain: "px-6", withArrow: "ps-6 pe-1.5", bubble: "size-9" },
+  lg: { box: "min-h-14 text-lg", plain: "px-8", withArrow: "ps-8 pe-2", bubble: "size-10" },
+};
+const s = sizes[size];
+const radius = shape === "pill" ? "rounded-full" : "rounded-md";
+const Tag = href ? "a" : "button";
+const attrs = href ? { href, ...rest } : { type, ...rest };
+---
+<Tag
+  class:list={[
+    "group inline-flex items-center justify-center gap-3 border font-semibold no-underline whitespace-nowrap select-none",
+    "transition-[transform,background-color,color,border-color] duration-200 motion-safe:hover:-translate-y-0.5",
+    "disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50",
+    variants[variant], s.box, arrow ? s.withArrow : s.plain, radius, full && "w-full", className,
+  ]}
+  {...attrs}
+>
+  <slot />
+  {arrow && (
+    <span aria-hidden="true" class:list={["grid shrink-0 place-items-center rtl:-scale-x-100", bubble[variant], s.bubble, radius]}>
+      <svg viewBox="0 0 16 16" class="size-4 transition-transform duration-300 motion-safe:group-hover:-rotate-45" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 8h10M9 4l4 4-4 4" />
+      </svg>
+    </span>
+  )}
+</Tag>

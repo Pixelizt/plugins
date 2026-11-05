@@ -1,0 +1,21 @@
+---
+// HeroStagger: entrance stagger for the direct children of the hero copy (eyebrow, title, text, buttons).
+// GSAP is loaded only on pages that render this component, and only for visitors without reduced motion.
+// Pair with <DriftFrame> (./drift-frame.astro) for the scroll-scrubbed image drift.
+interface Props {
+  as?: "div" | "section" | "header";
+  /** Seconds between children. */
+  stagger?: number;
+  /** Seconds before the sequence starts. */
+  delay?: number;
+  class?: string;
+}
+const { as: Tag = "div", stagger = 0.07, delay = 0.05, class: className } = Astro.props;
+---
+<Tag data-hero-stagger data-stagger={stagger} data-delay={delay} class={className}>
+  <slot />
+</Tag>
+
+<script>
+  import "./script.ts";
+</script>

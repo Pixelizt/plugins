@@ -1,0 +1,9 @@
+{
+  "title": "What guests say",
+  "intro": "",
+  "items": [
+    { "name": "Sample guest A", "stars": 5, "date": "2026-10-02", "text": "Sample review text. Replace with a real review the client has permission to show.", "source": "Sample", "sample": true },
+    { "name": "Sample guest B", "stars": 4, "date": "2026-09-14", "text": "Another sample review, to see how a row of reviews looks.", "source": "Sample", "sample": true },
+    { "name": "Sample guest C", "stars": 5, "date": "", "text": "A third sample review with no date.", "source": "", "sample": true }
+  ]
+}

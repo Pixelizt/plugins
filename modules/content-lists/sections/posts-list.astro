@@ -1,0 +1,26 @@
+---
+// Section "posts-list": blog post cards, newest first, each linking to /blog/<slug> (routes/blog/[slug].astro).
+// Put it on the /blog page in client.yaml. Copy to src/sections/posts-list.astro to restyle.
+import { listsConfig, loadList } from "../lib/load.ts";
+import { formatDay } from "../lib/format.ts";
+
+const doc = await loadList("posts");
+const items = [...doc.items].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0)).slice(0, listsConfig().posts.limit);
+---
+{items.length > 0 && (
+  <section class="wrap py-20">
+    <h2 class="text-4xl font-bold">{doc.title}</h2>
+    {doc.intro && <p class="mt-3 max-w-2xl text-lg text-muted-text">{doc.intro}</p>}
+    <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {items.map((p) => (
+        <article class="flex flex-col gap-3 rounded-lg border border-border bg-background p-5">
+          {p.image && <img src={p.image.src} alt={p.image.alt} loading="lazy" class="aspect-[4/3] w-full rounded-md object-cover" />}
+          <p class="text-sm text-muted-text"><time datetime={p.date}>{formatDay(p.date)}</time></p>
+          <h3 class="text-2xl font-bold"><a href={`/blog/${p.slug}`} class="hover:text-primary">{p.title}</a></h3>
+          <p class="text-muted-text">{p.excerpt}</p>
+          <a href={`/blog/${p.slug}`} class="mt-auto font-semibold text-primary">Read more<span class="sr-only"> about {p.title}</span></a>
+        </article>
+      ))}
+    </div>
+  </section>
+)}

@@ -1,0 +1,13 @@
+---
+// Section "about". Content: src/content/about.json. Use the client's own words (rule 34).
+import { loadDoc } from "../kit/content";
+import { AboutDoc } from "../kit/content/docs";
+const d = await loadDoc("about", AboutDoc);
+---
+<section class="wrap grid gap-10 py-20 md:grid-cols-2">
+  {d.image && <img src={d.image.src} alt={d.image.alt} loading="lazy" class="w-full rounded-lg object-cover" />}
+  <div>
+    <h2 class="text-4xl font-bold">{d.title}</h2>
+    {d.paragraphs.map((p) => <p class="mt-4 text-lg text-muted-text">{p}</p>)}
+  </div>
+</section>

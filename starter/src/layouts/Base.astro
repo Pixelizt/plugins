@@ -1,0 +1,32 @@
+---
+// Base layout. Reskin freely (structure, classes), but keep: Seo, Font, skip link, <main id="main">.
+import { Font } from "astro:assets";
+import config from "virtual:kit/config";
+import Seo from "../components/Seo.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+interface Props { title: string; description?: string; image?: string; noindex?: boolean }
+const props = Astro.props;
+const f = config.brand.fonts;
+// The accent font is optional, so its variable isn't always in Astro's generated types.
+const accentVar = "--kit-font-accent" as Parameters<typeof Font>[0]["cssVariable"];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <Font cssVariable="--kit-font-heading" preload />
+    <Font cssVariable="--kit-font-body" preload />
+    {f.accent && <Font cssVariable={accentVar} />}
+    <Seo {...props} />
+  </head>
+  <body class="min-h-dvh flex flex-col">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:bg-background focus:px-4 focus:py-2">Skip to content</a>
+    <Header />
+    <main id="main" class="flex-1"><slot /></main>
+    <Footer />
+  </body>
+</html>

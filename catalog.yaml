@@ -1,0 +1,87 @@
+# catalog.yaml: machine-readable index of everything in the kit.
+# Mirrors README.md §5. Agents: update BOTH whenever you add/change/remove an entry.
+# Status values: planned | in-progress | stable | needs-work | later
+
+updated: 2026-11-04
+
+stack:                       # decided, see docs/DECISIONS.md
+  confirmed: true
+  framework: astro           # static-first, Vercel adapter for endpoints (D1)
+  language: typescript-strict
+  validation: zod            # D9
+  styling: [tailwind-v4, css-variable-tokens, shadcn-ui]   # D10
+  islands: react
+  motion: [gsap, motion, lenis]
+  three_d: [three, react-three-fiber, drei]
+  db: supabase-postgres      # one project per client (D2), real migrations (D11)
+  auth: supabase-auth
+  storage: supabase-storage
+  hosting: vercel            # tier configurable (D5)
+  email: resend              # Q5 open
+  payments: none             # D3
+  languages: [en]            # D4
+  package_manager: npm
+  tests: [vitest, playwright]
+
+modules:
+  - { name: starter,       status: stable, version: 0.1.0, required: true,  origin: reference-project, depends_on: [] }
+  - { name: cms,           status: stable, version: 0.1.0,     required: true,  origin: reference-project, depends_on: [starter] }
+  - { name: admin,         status: stable, version: 0.2.0,     required: true,  origin: redesigned,    depends_on: [cms] }
+  - { name: forms,         status: stable, version: 0.2.0,     required: true,  origin: reference-project, depends_on: [cms] }
+  - { name: menu,          status: stable, version: 0.1.0,     required: false, origin: reference-project, depends_on: [cms, admin] }
+  - { name: content-lists, status: stable, version: 0.1.0,     required: false, origin: reference-project, depends_on: [cms, admin] }
+  - { name: booking-core,  status: stable, version: 0.1.0,     required: false, origin: new,           depends_on: [forms, admin] }
+  - { name: table-booking, status: stable, version: 0.1.0,     required: false, origin: new,           depends_on: [booking-core] }
+  - { name: space-booking, status: stable, version: 0.1.0,     required: false, origin: new,           depends_on: [booking-core] }
+  - { name: meal-plans,    status: stable, version: 0.1.0,     required: false, origin: reference-project, depends_on: [menu, forms] }
+  - { name: payments,      status: later,       required: false, origin: new,           depends_on: [], blocked_by: Q1 }
+  - { name: i18n,          status: later,       required: false, origin: reference-project, depends_on: [] }
+
+registry:                    # seed set 2026-11-05 (agency-owned, brand-neutral, token-driven)
+  - { name: pill-nav, type: ui, path: registry/ui/pill-nav, deps: [] }
+  - { name: button, type: ui, path: registry/ui/button, deps: [] }
+  - { name: card, type: ui, path: registry/ui/card, deps: [] }
+  - { name: card-grid, type: ui, path: registry/ui/card-grid, deps: [] }
+  - { name: section, type: ui, path: registry/ui/section, deps: [] }
+  - { name: section-head, type: ui, path: registry/ui/section-head, deps: [] }
+  - { name: announcement-strip, type: ui, path: registry/ui/announcement-strip, deps: [] }
+  - { name: mobile-action-bar, type: ui, path: registry/ui/mobile-action-bar, deps: [] }
+  - { name: lightbox, type: ui, path: registry/ui/lightbox, deps: [] }
+  - { name: chip, type: ui, path: registry/ui/chip, deps: [] }
+  - { name: reveal, type: motion, path: registry/motion/reveal, motion_level: subtle, deps: [] }
+  - { name: marquee, type: motion, path: registry/motion/marquee, motion_level: subtle, deps: [] }
+  - { name: float, type: motion, path: registry/motion/float, motion_level: subtle, deps: [] }
+  - { name: scroll-drift, type: motion, path: registry/motion/scroll-drift, motion_level: expressive, deps: [] }
+  - { name: hero-stagger, type: motion, path: registry/motion/hero-stagger, motion_level: expressive, deps: [gsap] }
+# - name: menu-tabs
+#   type: ui                 # ui | motion
+#   path: registry/ui/menu-tabs
+#   vibe: [playful, warm]
+#   motion_level: expressive
+#   deps: [motion]
+#   origin: original         # or source URL
+#   license: MIT
+#   used_by: [client-slug]
+
+clients: []                  # client briefs live in clients/<slug>/ (git-ignored, never published)
+
+skills: [setup, help-me, setup-guide, sharpen-brief, new-client, reskin, add-ui, add-motion, add-module, unslop, diagram, catch-up, harvest, retro]
+
+docs:
+  rules: AGENTS.md
+  decisions: docs/DECISIONS.md
+  architecture: docs/ARCHITECTURE.md
+  modules: docs/MODULES.md
+  boundaries: docs/BOILERPLATE-BOUNDARIES.md
+  rules_learned: docs/agents/rules-learned.md
+  workflow: docs/agents/new-client-workflow.md
+  reskin: docs/agents/reskinning-guide.md
+  ui_sources: docs/agents/ui-sources.md
+  motion: docs/agents/motion-and-3d.md
+  module_guide: docs/agents/adding-a-module.md
+  registry: docs/agents/component-registry.md
+  learnings: docs/agents/LEARNINGS.md
+  feedback: docs/agents/FEEDBACK.md
+  changelog: docs/agents/CHANGELOG.md
+  skill_sources: docs/agents/skill-sources.md
+  prompts: prompts/README.md

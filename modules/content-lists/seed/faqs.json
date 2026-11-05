@@ -1,0 +1,9 @@
+{
+  "title": "Questions and answers",
+  "intro": "",
+  "items": [
+    { "q": "Do I need to book ahead?", "a": "Walk-ins are welcome. For larger groups, get in touch and we will hold a table.", "sample": true },
+    { "q": "Can I bring my own cake?", "a": "Sample answer. Replace with the venue's actual policy.", "sample": true },
+    { "q": "Is there step-free access?", "a": "Sample answer. Replace with the venue's actual access details.", "sample": true }
+  ]
+}

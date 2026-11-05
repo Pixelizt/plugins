@@ -1,0 +1,4 @@
+#!/bin/sh
+# Refuses a commit that would add a secret or a .env file.
+# Enable once per clone: git config core.hooksPath .githooks
+node scripts/secret-scan.mjs . || exit 1

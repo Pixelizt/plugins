@@ -1,0 +1,10 @@
+{
+  "title": "Gallery",
+  "intro": "",
+  "items": [
+    { "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='100%25' height='100%25' fill='tan'/%3E%3C/svg%3E", "alt": "Sample photo one (a plain tan placeholder)", "caption": "Sample photo one", "sample": true },
+    { "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='100%25' height='100%25' fill='slategray'/%3E%3C/svg%3E", "alt": "Sample photo two (a plain grey placeholder)", "caption": "", "sample": true },
+    { "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='100%25' height='100%25' fill='darkseagreen'/%3E%3C/svg%3E", "alt": "Sample photo three (a plain green placeholder)", "caption": "Sample photo three", "sample": true },
+    { "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='100%25' height='100%25' fill='rosybrown'/%3E%3C/svg%3E", "alt": "Sample photo four (a plain pink placeholder)", "caption": "", "sample": true }
+  ]
+}

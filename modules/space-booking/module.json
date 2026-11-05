@@ -1,0 +1,6 @@
+{
+  "name": "space-booking",
+  "version": "0.1.0",
+  "dependsOn": ["booking-core"],
+  "description": "Space / private-hire booking: space, date, start and length, guests, occasion and extras. Buffers between bookings, display-only prices (no payment), usually approve mode"
+}

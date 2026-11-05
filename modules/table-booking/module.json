@@ -1,0 +1,6 @@
+{
+  "name": "table-booking",
+  "version": "0.1.0",
+  "dependsOn": ["booking-core"],
+  "description": "Real table booking: date, party size, live free times, details. Covers or table-group capacity, auto or approve mode, large parties to an enquiry"
+}

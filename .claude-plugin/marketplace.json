@@ -1,0 +1,14 @@
+{
+  "name": "pixelizt",
+  "owner": {
+    "name": "Pixelizt"
+  },
+  "description": "Pixelizt's agent skills and website kit for restaurants, caf\u00e9s and food businesses.",
+  "plugins": [
+    {
+      "name": "kit",
+      "source": "./",
+      "description": "Website kit skills for restaurants and caf\u00e9s: /setup entry point, playbooks, help, copy de-slopping and more. Full kit (starter + modules) in the same repo."
+    }
+  ]
+}

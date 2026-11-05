@@ -1,0 +1,55 @@
+---
+// Fixed bottom action bar for phones: up to 4 actions (call, directions, book, order, or a plain link).
+// Hidden from the `md` breakpoint up. Honors the iOS/Android safe-area inset. Renders a spacer so the
+// bar never covers the end of the page: place the component as the LAST child of <body>.
+type Kind = "call" | "directions" | "book" | "order" | "link";
+interface Action {
+  kind: Kind;
+  label: string;
+  href: string;
+  /** Opens in a new tab (adds rel="noopener"). Use for maps/ordering platforms. */
+  external?: boolean;
+  /** Draw attention to the primary action (usually "book" or "order"). */
+  highlight?: boolean;
+  /** Passed to data-track so analytics can hook clicks (the site decides what to do with it). */
+  track?: string;
+}
+interface Props { actions: Action[]; label?: string }
+const { actions, label = "Quick actions" } = Astro.props;
+const list = actions.slice(0, 4); // more than four does not fit a phone width
+if (actions.length > 4) console.warn("[mobile-action-bar] only the first 4 actions are shown");
+const cols = { 1: "grid-cols-1", 2: "grid-cols-2", 3: "grid-cols-3", 4: "grid-cols-4" } as const;
+const icons: Record<Kind, string> = {
+  call: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  directions: '<path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>',
+  book: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  order: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  link: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+};
+---
+{list.length > 0 && (
+  <>
+    <div class="h-[calc(4.5rem+env(safe-area-inset-bottom))] md:hidden" aria-hidden="true"></div>
+    <nav aria-label={label} class="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur md:hidden">
+      <ul class:list={["mx-auto grid max-w-xl list-none gap-1 px-2", cols[list.length as 1 | 2 | 3 | 4]]}>
+        {list.map((a) => (
+          <li>
+            <a
+              href={a.href}
+              data-track={a.track}
+              target={a.external ? "_blank" : undefined}
+              rel={a.external ? "noopener" : undefined}
+              class:list={[
+                "flex min-h-14 flex-col items-center justify-center gap-1 rounded-md px-1 text-[0.7rem] font-semibold uppercase tracking-wider no-underline",
+                a.highlight ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted active:bg-muted",
+              ]}
+            >
+              <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={icons[a.kind]} />
+              <span>{a.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </>
+)}

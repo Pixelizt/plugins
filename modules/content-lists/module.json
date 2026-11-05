@@ -1,0 +1,6 @@
+{
+  "name": "content-lists",
+  "version": "0.1.0",
+  "dependsOn": ["cms"],
+  "description": "Small editable lists: events (with past events and videos), offers, FAQs, reviews, gallery, blog posts"
+}

@@ -1,0 +1,45 @@
+---
+// Chip / pill: small label, tag or filter. Renders <span>, <a> (href) or <button> (as="button").
+type Variant = "outline" | "solid" | "muted" | "primary";
+interface Props {
+  variant?: Variant;
+  size?: "sm" | "md";
+  /** Leading dot, in the current text color. */
+  dot?: boolean;
+  as?: "span" | "button";
+  href?: string;
+  /** Toggle state for filter chips (aria-pressed on buttons, aria-current on links). */
+  selected?: boolean;
+  class?: string;
+  [attr: string]: unknown;
+}
+const { variant = "outline", size = "sm", dot = false, as = "span", href, selected, class: className, ...rest } = Astro.props;
+const variants: Record<Variant, string> = {
+  outline: "border-border bg-background text-foreground",
+  solid: "border-foreground bg-foreground text-background",
+  muted: "border-transparent bg-muted text-muted-foreground",
+  primary: "border-primary bg-primary text-primary-foreground",
+};
+const interactive = Boolean(href) || as === "button";
+const Tag = href ? "a" : as;
+const aria: Record<string, string | undefined> = href
+  ? { href, "aria-current": selected ? "true" : undefined }
+  : as === "button"
+    ? { type: "button", "aria-pressed": selected === undefined ? undefined : String(selected) }
+    : {};
+---
+<Tag
+  class:list={[
+    "inline-flex items-center gap-1.5 rounded-full border font-semibold uppercase tracking-wider no-underline whitespace-nowrap",
+    size === "sm" ? "px-3 py-1 text-[0.7rem]" : "px-4 py-1.5 text-xs",
+    variants[variant],
+    selected && "ring-2 ring-ring ring-offset-1 ring-offset-background",
+    interactive && "cursor-pointer transition-opacity hover:opacity-80",
+    className,
+  ]}
+  {...aria}
+  {...rest}
+>
+  {dot && <span class="size-1.5 rounded-full bg-current" aria-hidden="true"></span>}
+  <slot />
+</Tag>

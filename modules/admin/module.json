@@ -1,0 +1,1 @@
+{ "name": "admin", "version": "0.2.0", "dependsOn": ["cms"], "description": "Schema-driven dashboard at /admin: login, roles, generated editors, CSV, history, publish, tables" }

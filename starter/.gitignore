@@ -1,0 +1,21 @@
+# build output
+dist/
+.astro/
+.vercel/
+# dependencies
+node_modules/
+# generated from client.yaml at dev/build start (src/kit/integration.ts)
+src/styles/tokens.css
+# secrets: names go in .env.example, values in Vercel + local .env only
+.env
+.env.*
+!.env.example
+# local agent state and notes
+.claude/settings.local.json
+docs/previews/
+*.local.md
+# logs / OS
+npm-debug.log*
+.DS_Store
+.idea/
+supabase/.temp/

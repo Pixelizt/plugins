@@ -1,0 +1,3 @@
+#!/bin/sh
+# Kit repo: refuse commits containing secrets or .env files. Enable: git config core.hooksPath .githooks
+node starter/scripts/secret-scan.mjs . || exit 1

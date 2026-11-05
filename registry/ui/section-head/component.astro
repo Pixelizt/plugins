@@ -1,0 +1,36 @@
+---
+// Section heading block: eyebrow + title + optional accent word in the script font + lede (default slot).
+// `overlap` drops the accent word onto its own line, tucked into the title (the "script over serif" look).
+interface Props {
+  title: string;
+  eyebrow?: string;
+  /** Rendered as <em> in the accent font (falls back to the heading font). */
+  accent?: string;
+  overlap?: boolean;
+  align?: "start" | "center";
+  level?: 1 | 2 | 3 | 4;
+  class?: string;
+}
+const { title, eyebrow, accent, overlap = false, align = "start", level = 2, class: className } = Astro.props;
+const Heading = `h${level}` as "h1" | "h2" | "h3" | "h4";
+const hasLede = Astro.slots.has("default");
+---
+<header class:list={["flex max-w-2xl flex-col gap-3", align === "center" && "mx-auto items-center text-center", className]}>
+  {eyebrow && (
+    <p class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest">
+      <span class="size-1.5 rounded-full bg-current" aria-hidden="true"></span>{eyebrow}
+    </p>
+  )}
+  <Heading class="font-heading text-4xl font-bold md:text-5xl">
+    {title}
+    {accent && (
+      <em
+        class:list={[
+          "font-accent font-normal not-italic text-(--section-em,var(--primary))",
+          overlap ? "-mt-[0.2em] block -rotate-2 text-[1.25em] leading-none ms-[0.6em]" : "ms-[0.25em]",
+        ]}
+      >{accent}</em>
+    )}
+  </Heading>
+  {hasLede && <div class="text-lg opacity-80"><slot /></div>}
+</header>

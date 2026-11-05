@@ -1,0 +1,45 @@
+/* Site styles. Brand values come from tokens.css (generated from client.yaml); never hardcode them here. */
+@import "tailwindcss";
+@import "./tokens.css";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted-text: var(--muted-text);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.5);
+  --radius-xl: calc(var(--radius) * 2);
+  --shadow-sm: var(--kit-shadow-sm);
+  --shadow-md: var(--kit-shadow-md);
+  --shadow-lg: var(--kit-shadow-lg);
+  --font-heading: var(--kit-font-heading), serif;
+  --font-sans: var(--kit-font-body), sans-serif;
+  --font-accent: var(--kit-font-accent, var(--kit-font-heading)), cursive;
+}
+
+@layer base {
+  html { background: var(--background); color: var(--foreground); }
+  body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, h4 { font-family: var(--font-heading); line-height: 1.1; text-wrap: balance; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  }
+}
+
+@utility wrap {
+  margin-inline: auto;
+  max-width: 72rem;
+  padding-inline: 1.25rem;
+}

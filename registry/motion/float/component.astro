@@ -1,0 +1,37 @@
+---
+// Float: a gentle vertical bob for hero cards, badges and stickers. Pure CSS, transform only.
+// Stagger several floats with `delay` so they do not move in lockstep. Off entirely for reduced motion.
+interface Props {
+  as?: "div" | "a" | "span" | "aside";
+  /** Bob distance: sm 6px, md 10px, lg 16px. */
+  distance?: "sm" | "md" | "lg";
+  /** Cycle time: slow 9s, normal 7s, fast 5s. */
+  speed?: "slow" | "normal" | "fast";
+  /** Start offset in whole seconds (0-3) to desynchronise neighbours. */
+  delay?: 0 | 1 | 2 | 3;
+  class?: string;
+  [attr: string]: unknown;
+}
+const { as: Tag = "div", distance = "md", speed = "normal", delay = 0, class: className, ...rest } = Astro.props;
+---
+<Tag data-float data-distance={distance} data-speed={speed} data-delay={delay} class={className} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  [data-float] { --float-distance: 10px; --float-duration: 7s; --float-delay: 0s; }
+  [data-float][data-distance="sm"] { --float-distance: 6px; }
+  [data-float][data-distance="lg"] { --float-distance: 16px; }
+  [data-float][data-speed="slow"] { --float-duration: 9s; }
+  [data-float][data-speed="fast"] { --float-duration: 5s; }
+  [data-float][data-delay="1"] { --float-delay: 1s; }
+  [data-float][data-delay="2"] { --float-delay: 2s; }
+  [data-float][data-delay="3"] { --float-delay: 3s; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [data-float] { animation: float-bob var(--float-duration) ease-in-out var(--float-delay) infinite; will-change: transform; }
+  }
+  @keyframes float-bob {
+    50% { transform: translateY(calc(var(--float-distance) * -1)); }
+  }
+</style>

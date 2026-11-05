@@ -1,0 +1,42 @@
+---
+// Section "events". Content: CMS document / src/content/events.json. Copy to src/sections/events.astro to restyle.
+// Upcoming events first, finished ones under "Past events" (the newest `past_max`). Nothing to show = nothing rendered.
+import config from "virtual:kit/config";
+import { listsConfig, loadList } from "../lib/load.ts";
+import { nowIn } from "../../../kit/lib/time.ts";
+import { splitEvents } from "../lib/dates.ts";
+import EventCard from "../components/EventCard.astro";
+
+const doc = await loadList("events");
+const conf = listsConfig().events;
+const today = nowIn(config.client.timezone, new Date());
+const { upcoming, past } = splitEvents(doc.items, today, conf.show_past ? conf.past_max : 0);
+const showPast = conf.show_past && conf.past_max > 0;
+const show = upcoming.length > 0 || (showPast && past.length > 0);
+---
+{show && (
+  <section class="wrap py-20" data-kit-list="events" data-tz={config.client.timezone}>
+    {upcoming.length > 0 && (
+      <div data-events-upcoming>
+        <h2 class="text-4xl font-bold">{doc.title}</h2>
+        {doc.intro && <p class="mt-3 max-w-2xl text-lg text-muted-text">{doc.intro}</p>}
+        <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {upcoming.map((event) => <EventCard event={event} />)}
+        </div>
+      </div>
+    )}
+    {showPast && (upcoming.length > 0 || past.length > 0) && (
+      <div data-events-past-wrap hidden={past.length === 0} class:list={[upcoming.length > 0 ? "mt-16" : ""]}>
+        <h2 class="text-3xl font-bold">{doc.past_title}</h2>
+        <div data-events-past data-max={conf.past_max} class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {past.map((event) => <EventCard event={event} past />)}
+        </div>
+      </div>
+    )}
+  </section>
+)}
+
+<script>
+  import "../lib/client/expire.ts";
+  import "../lib/client/video.ts";
+</script>

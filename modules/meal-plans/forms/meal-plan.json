@@ -1,0 +1,25 @@
+{
+  "meal-plan": {
+    "name": "Meal plan",
+    "submit": "Send my plan request",
+    "success": "Thanks! We've got your plan request and will contact you to confirm it. Nothing has been paid.",
+    "note": "This is a request, not an order. Nothing is paid online.",
+    "quote": "meal-plans",
+    "team_next_step": "Contact the customer to confirm the plan, its price, the start date and payment.",
+    "customer_email": {
+      "subject": "We've got your meal plan request",
+      "heading": "Thanks for your meal plan request",
+      "body": [
+        "We've received your request and will contact you soon to confirm it.",
+        "Nothing has been paid yet, and your plan isn't confirmed until we've spoken."
+      ]
+    },
+    "fields": [
+      { "key": "name", "label": "Your name", "required": true, "autocomplete": "name" },
+      { "key": "email", "label": "Email", "type": "email", "required": true },
+      { "key": "phone", "label": "Phone", "type": "tel", "required": true },
+      { "key": "plan", "label": "Your plan", "type": "textarea", "required": true },
+      { "key": "notes", "label": "Allergies or anything else we should know", "type": "textarea" }
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "contact": {
+    "name": "Contact",
+    "submit": "Send message",
+    "success": "Thanks! We've got your message and will reply soon.",
+    "subject_from": "topic",
+    "team_next_step": "Reply to the customer within one working day.",
+    "customer_email": {
+      "subject": "We've got your message",
+      "heading": "Thanks for getting in touch",
+      "body": ["We've received your message and will reply soon, usually within one working day."]
+    },
+    "fields": [
+      { "key": "name", "label": "Your name", "required": true, "autocomplete": "name" },
+      { "key": "email", "label": "Email", "type": "email", "required": true },
+      { "key": "phone", "label": "Phone", "type": "tel" },
+      { "key": "topic", "label": "Topic", "type": "select", "options": ["General question", "Feedback", "Events & groups", "Work with us"] },
+      { "key": "message", "label": "Message", "type": "textarea", "required": true }
+    ]
+  },
+  "feedback": {
+    "name": "Feedback",
+    "submit": "Send feedback",
+    "success": "Thank you for the feedback.",
+    "team_next_step": "Read it and reply if the customer asked for an answer.",
+    "fields": [
+      { "key": "name", "label": "Your name" },
+      { "key": "email", "label": "Email (if you'd like a reply)", "type": "email" },
+      { "key": "visit_date", "label": "Date of your visit", "type": "date" },
+      { "key": "message", "label": "Your feedback", "type": "textarea", "required": true }
+    ]
+  },
+  "newsletter": {
+    "name": "Newsletter",
+    "submit": "Sign up",
+    "success": "You're on the list.",
+    "team_next_step": "Add them to the mailing list.",
+    "fields": [
+      { "key": "email", "label": "Email", "type": "email", "required": true, "full": true },
+      { "key": "consent", "label": "I agree to receive occasional emails. I can unsubscribe any time.", "type": "checkbox", "required": true }
+    ]
+  }
+}

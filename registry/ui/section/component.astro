@@ -1,0 +1,25 @@
+---
+// Section wrapper with tone variants and logical padding. Sets --section-em (the accent color used by
+// section-head's <em>) and --ring so focus outlines stay visible on the dark tones.
+type Tone = "default" | "muted" | "inverse" | "primary";
+interface Props {
+  as?: "section" | "div" | "article" | "aside" | "footer";
+  tone?: Tone;
+  pad?: "none" | "sm" | "md" | "lg";
+  /** Wrap children in the site's `wrap` container (max width + side padding). Default true. */
+  wrap?: boolean;
+  class?: string;
+  [attr: string]: unknown;
+}
+const { as: Tag = "section", tone = "default", pad = "md", wrap = true, class: className, ...rest } = Astro.props;
+const tones: Record<Tone, string> = {
+  default: "bg-background text-foreground [--section-em:var(--primary)]",
+  muted: "bg-muted text-muted-foreground [--section-em:var(--primary)]",
+  inverse: "bg-foreground text-background [--section-em:currentColor] [--ring:var(--background)]",
+  primary: "bg-primary text-primary-foreground [--section-em:currentColor] [--ring:var(--primary-foreground)]",
+};
+const pads = { none: "", sm: "py-10 md:py-14", md: "py-16 md:py-24", lg: "py-24 md:py-36" };
+---
+<Tag data-tone={tone} class:list={[tones[tone], pads[pad], className]} {...rest}>
+  {wrap ? <div class="wrap"><slot /></div> : <slot />}
+</Tag>

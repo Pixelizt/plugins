@@ -1,0 +1,98 @@
+---
+// Marquee: an endless, CSS-only horizontal ticker. Pauses on hover/focus and while off-screen (tiny script),
+// the duplicate copy is aria-hidden, and with reduced motion it becomes a static, wrapping list.
+// Put the repeating items in the default slot; they are rendered twice for a seamless loop.
+interface Props {
+  /** Loop duration: slow 60s, normal 40s, fast 20s. */
+  speed?: "slow" | "normal" | "fast";
+  reverse?: boolean;
+  /** Dot between items. */
+  separator?: boolean;
+  /** Accessible name for the region (the first copy is the readable one). */
+  label?: string;
+  class?: string;
+}
+const { speed = "normal", reverse = false, separator = true, label, class: className } = Astro.props;
+---
+<div
+  data-marquee
+  data-speed={speed}
+  data-reverse={reverse ? "" : undefined}
+  role={label ? "group" : undefined}
+  aria-label={label}
+  class:list={["marquee overflow-hidden", className]}
+>
+  <div class="track">
+    <ul class:list={["group-list", separator && "with-sep"]}><slot /></ul>
+    <ul class:list={["group-list", "copy", separator && "with-sep"]} aria-hidden="true"><slot /></ul>
+  </div>
+</div>
+
+<style>
+  .track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll var(--marquee-duration, 40s) linear infinite;
+  }
+  [data-speed="slow"] .track { --marquee-duration: 60s; }
+  [data-speed="fast"] .track { --marquee-duration: 20s; }
+  [data-reverse] .track { animation-direction: reverse; }
+  :global([dir="rtl"]) .track { animation-direction: reverse; }
+  :global([dir="rtl"]) [data-reverse] .track { animation-direction: normal; }
+  .marquee:hover .track,
+  .marquee:focus-within .track,
+  .marquee[data-offscreen] .track { animation-play-state: paused; }
+
+  .group-list {
+    display: flex;
+    flex: none;
+    align-items: center;
+    min-width: 100%;
+    margin: 0;
+    padding: 0;
+    padding-inline-end: 3rem;
+    list-style: none;
+    gap: 3rem;
+    white-space: nowrap;
+  }
+  /* separator dot sits in the gap, in the current text color */
+  .with-sep > :global(*)::after {
+    content: "";
+    display: inline-block;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    margin-inline-start: 3rem;
+    border-radius: 9999px;
+    background: currentColor;
+    opacity: 0.6;
+    vertical-align: middle;
+  }
+  .with-sep > :global(*) { display: inline-flex; align-items: center; }
+
+  @keyframes marquee-scroll {
+    to { transform: translateX(-50%); }
+  }
+
+  /* Reduced motion: no movement; show one static, wrapping copy. */
+  @media (prefers-reduced-motion: reduce) {
+    .track { animation: none; width: auto; }
+    .group-list { flex-wrap: wrap; justify-content: center; min-width: 0; padding-inline-end: 0; row-gap: 0.5rem; }
+    .copy { display: none; }
+    .with-sep > :global(*):last-child::after { display: none; }
+  }
+</style>
+
+<script>
+  // Pause the loop while the marquee is off-screen (saves main-thread/compositor work).
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) (e.target as HTMLElement).toggleAttribute("data-offscreen", !e.isIntersecting);
+  });
+  function init() {
+    document.querySelectorAll<HTMLElement>("[data-marquee]:not([data-observed])").forEach((el) => {
+      el.setAttribute("data-observed", "");
+      io.observe(el);
+    });
+  }
+  init();
+  document.addEventListener("astro:page-load", init);
+</script>

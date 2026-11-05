@@ -1,0 +1,31 @@
+---
+// /blog/<slug>: one page per post (auto-mounted from this module's routes/). The /blog list itself is the
+// `posts-list` section on a page you add in client.yaml. Posts switched off or empty = no pages.
+// Copy to src/pages/blog/[slug].astro to restyle (a file in src/pages wins over a module route).
+import config from "virtual:kit/config";
+import Base from "../../../../layouts/Base.astro";
+import { isListEnabled, loadList } from "../../lib/load.ts";
+import { formatDay } from "../../lib/format.ts";
+import { renderMarkdown } from "../../lib/markdown.ts";
+import { jsonLdString } from "../../../../kit/seo/jsonld.ts";
+import { articleJsonLd } from "../../lib/jsonld.ts";
+
+export async function getStaticPaths() {
+  if (!isListEnabled("posts")) return [];
+  const doc = await loadList("posts");
+  return doc.items.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+const { post } = Astro.props;
+const site = Astro.site!.toString().replace(/\/$/, "");
+const ld = articleJsonLd({ ...post, image: post.image?.src }, { url: site, name: config.client.name });
+---
+<Base title={post.title} description={post.excerpt} image={post.image?.src}>
+  <article class="wrap max-w-3xl py-20">
+    <p><a href="/blog" class="text-sm font-semibold text-primary">← All posts</a></p>
+    <h1 class="mt-4 text-5xl font-bold">{post.title}</h1>
+    <p class="mt-3 text-muted-text"><time datetime={post.date}>{formatDay(post.date)}</time></p>
+    {post.image && <img src={post.image.src} alt={post.image.alt} class="mt-8 aspect-video w-full rounded-lg object-cover" />}
+    <div class="mt-8 text-lg leading-relaxed [&_a]:text-primary [&_a]:underline [&_blockquote]:border-s-4 [&_blockquote]:border-border [&_blockquote]:ps-4 [&_blockquote]:text-muted-text [&_h2]:mt-10 [&_h2]:text-3xl [&_h2]:font-bold [&_h3]:mt-8 [&_h3]:text-2xl [&_h3]:font-bold [&_ol]:ms-6 [&_ol]:list-decimal [&_p]:mt-5 [&_ul]:ms-6 [&_ul]:list-disc [&_li]:mt-2" set:html={renderMarkdown(post.body)} />
+    <script type="application/ld+json" set:html={jsonLdString(ld)} />
+  </article>
+</Base>

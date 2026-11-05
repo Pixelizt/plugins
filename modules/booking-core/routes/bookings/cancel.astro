@@ -1,0 +1,68 @@
+---
+// /bookings/cancel?id=…&t=…: the link in booking emails. Rendered on request (not prerendered). GET shows the
+// booking and a button; the button POSTs here and cancels. Works without JavaScript. noindex.
+import config from "virtual:kit/config";
+import Base from "../../../../layouts/Base.astro";
+import { cancelView, type CancelView } from "../../server/cancel.ts";
+import { bookingCtx } from "../../server/types.ts";
+
+export const prerender = false;
+
+let view: CancelView;
+let id: unknown = Astro.url.searchParams.get("id");
+let t: unknown = Astro.url.searchParams.get("t");
+try {
+  if (Astro.request.method === "POST") {
+    const f = await Astro.request.formData();
+    id = f.get("id");
+    t = f.get("t");
+  }
+  view = await cancelView(Astro.request.method, { id, t }, bookingCtx());
+} catch (e) {
+  console.error(`booking-core: cancel page failed: ${(e as Error).stack ?? e}`);
+  view = { state: "error" };
+}
+Astro.response.headers.set("Cache-Control", "no-store");
+Astro.response.headers.set("X-Robots-Tag", "noindex");
+const phone = config.client.contact.phone;
+const tel = `tel:${phone.replace(/[^+\d]/g, "")}`;
+const s = view.summary;
+const heading: Record<CancelView["state"], string> = {
+  off: "Online cancelling isn't available",
+  invalid: "This link doesn't work",
+  confirm: "Cancel your booking?",
+  done: "Your booking is cancelled",
+  already: "This booking is already cancelled",
+  too_late: "It's too late to cancel online",
+  closed: "This booking can't be cancelled online",
+  error: "Something went wrong",
+};
+---
+<Base title={heading[view.state]} noindex>
+  <section class="wrap py-16">
+    <div class="max-w-xl">
+      <h1 class="font-heading text-3xl font-bold">{heading[view.state]}</h1>
+      {s && (
+        <dl class="mt-6 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 rounded-md border border-border p-4">
+          <dt class="text-muted-text">Reference</dt><dd class="font-semibold">{s.reference}</dd>
+          <dt class="text-muted-text">Booking</dt><dd>{s.label}</dd>
+          <dt class="text-muted-text">When</dt><dd>{s.when}</dd>
+          {s.facts.map(([k, v]) => <><dt class="text-muted-text">{k}</dt><dd>{v}</dd></>)}
+        </dl>
+      )}
+      {view.state === "confirm" && (
+        <form method="post" class="mt-6">
+          <input type="hidden" name="id" value={String(id ?? "")} />
+          <input type="hidden" name="t" value={String(t ?? "")} />
+          <button type="submit" class="rounded-md bg-primary px-6 py-3 font-semibold text-primary-foreground hover:opacity-90">Yes, cancel it</button>
+          <p class="mt-3 text-sm text-muted-text">Nothing changes until you press the button.</p>
+        </form>
+      )}
+      {view.state === "done" && <p class="mt-6">We've emailed you a confirmation. You don't need to do anything else.</p>}
+      {view.state === "invalid" && <p class="mt-6">The link may be incomplete. Open it again from your email, or call us on <a class="underline" href={tel}>{phone}</a>.</p>}
+      {(view.state === "too_late" || view.state === "closed" || view.state === "off" || view.state === "error") && (
+        <p class="mt-6">Please call us on <a class="underline" href={tel}>{phone}</a> and we'll sort it out.</p>
+      )}
+    </div>
+  </section>
+</Base>

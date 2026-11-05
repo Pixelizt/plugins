@@ -1,0 +1,31 @@
+{
+  "title": "Meal plans",
+  "intro": "Demo copy: pick your meals for the week, see the price as you go, and send us the plan. Replace this in the admin.",
+  "sets": [
+    {
+      "id": "demo-easy-week",
+      "name": "Demo Easy Week",
+      "description": "A sample set menu built from the demo menu. Replace it in the admin.",
+      "sample": true,
+      "entries": [
+        { "day": "mon", "slot": "lunch", "item": "demo-croissant" },
+        { "day": "mon", "slot": "lunch", "choice_label": "Drink of your choice", "choice_category": "drinks", "price": 3 },
+        { "day": "mon", "slot": "dinner", "item": "demo-side-salad" },
+        { "day": "tue", "slot": "lunch", "item": "demo-side-salad" },
+        { "day": "tue", "slot": "dinner", "item": "demo-croissant" },
+        { "day": "wed", "slot": "lunch", "item": "demo-croissant" },
+        { "day": "wed", "slot": "lunch", "item": "demo-latte", "size": "Regular" },
+        { "day": "wed", "slot": "dinner", "item": "demo-side-salad" },
+        { "day": "thu", "slot": "lunch", "item": "demo-side-salad" },
+        { "day": "thu", "slot": "dinner", "item": "demo-oat-cookie", "price": 2 },
+        { "day": "fri", "slot": "lunch", "item": "demo-croissant" },
+        { "day": "fri", "slot": "dinner", "item": "demo-side-salad" },
+        { "day": "sat", "slot": "lunch", "item": "demo-side-salad" },
+        { "day": "sat", "slot": "dinner", "item": "demo-croissant" },
+        { "day": "sun", "slot": "lunch", "item": "demo-croissant" },
+        { "day": "sun", "slot": "dinner", "item": "demo-side-salad" }
+      ]
+    }
+  ],
+  "copy": {}
+}

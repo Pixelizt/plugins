@@ -1,0 +1,43 @@
+---
+// One menu item. Used by menu-full and menu-preview. Copy to src/components/ to restyle; keep the data-* attributes
+// (the filter script finds items by data-item and clones them for search results).
+import type { Item, MenuConfig } from "../lib/schema.ts";
+import { formatPrice } from "../../../kit/lib/money.ts";
+import { nutritionLines } from "../lib/format.ts";
+
+interface Props { item: Item; conf: MenuConfig; currency: string; locale: string; level?: 3 | 4 }
+const { item, conf, currency, locale, level = 3 } = Astro.props;
+const H = `h${level}` as "h3" | "h4";
+const label = new Map(conf.tags.map((t) => [t.key, t.label]));
+const tags = item.tags.filter((t) => label.has(t));
+const nutrition = nutritionLines(item.nutrition, conf.nutrition_fields);
+---
+<article data-item={item.id} class:list={["flex gap-4 border-b border-border py-4", !item.available && "opacity-60"]}>
+  {item.image && <img src={item.image.src} alt={item.image.alt} width="72" height="72" loading="lazy" decoding="async" class="size-[4.5rem] shrink-0 rounded-md object-cover" />}
+  <div class="min-w-0 flex-1">
+    <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+      <H class="font-heading text-lg font-semibold">{item.name}</H>
+      {conf.show_prices && (
+        <p class="flex flex-wrap gap-x-3 font-semibold" role="group" aria-label="Prices">
+          {item.prices.map((p) => (
+            <span>{p.size && <small class="me-1 font-normal text-muted-text">{p.size}</small>}{formatPrice(p.price, currency, locale)}</span>
+          ))}
+        </p>
+      )}
+    </div>
+    {item.description && <p class="mt-1 text-muted-text">{item.description}</p>}
+    <ul class="mt-2 flex flex-wrap gap-2 text-sm empty:hidden">
+      {tags.map((t) => <li class="rounded-md bg-muted px-2 py-0.5 text-muted-foreground">{label.get(t)}</li>)}
+      {!item.available && <li class="rounded-md border border-border px-2 py-0.5">Sold out</li>}
+      {conf.allergens && item.allergens.length > 0 && <li class="text-muted-text">Contains: {item.allergens.join(", ")}</li>}
+    </ul>
+    {nutrition.length > 0 && (
+      <details class="mt-2 text-sm text-muted-text">
+        <summary class="cursor-pointer">Nutrition</summary>
+        <dl class="mt-1 flex flex-wrap gap-x-4">
+          {nutrition.map((n) => <div class="flex gap-1"><dt>{n.label}</dt><dd class="font-medium text-foreground">{n.value}</dd></div>)}
+        </dl>
+      </details>
+    )}
+  </div>
+</article>

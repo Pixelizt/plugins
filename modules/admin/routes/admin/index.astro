@@ -1,0 +1,36 @@
+---
+// /admin: the dashboard shell. Prerendered; the React app runs client-only and talks to Supabase with the
+// signed-in user's token (RLS is the real boundary). Only public values and content schemas reach the browser.
+import { z } from "zod";
+import config from "virtual:kit/config";
+import { allDocs, installedModules } from "../../../../kit/modules.ts";
+import { seedOf } from "../../../../kit/content/index.ts";
+import App, { type DocMeta, type TableMeta } from "../../app/App.tsx";
+import { collectViews } from "../../app/views.ts";
+import "../../../../styles/global.css";
+
+const docs: DocMeta[] = Object.entries(allDocs()).map(([key, d]) => ({
+  key,
+  label: d.label,
+  group: d.group ?? "Content",
+  editRole: d.editRole ?? "editor",
+  schema: z.toJSONSchema(d.schema, { unrepresentable: "any", io: "input" }) as DocMeta["schema"],
+  seed: seedOf(key) ?? null,
+})).sort((a, b) => a.group.localeCompare(b.group) || a.label.localeCompare(b.label));
+const tables: TableMeta[] = installedModules().flatMap((m) => Object.entries(m.tables ?? {}).map(([key, t]) => ({ key, ...t })));
+// custom views of enabled modules (app/views.ts)
+const views = collectViews(installedModules().filter((m) => m.name in config.modules));
+const env = import.meta.env;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Dashboard | {config.client.name}</title>
+  </head>
+  <body>
+    <App client:only="react" site={config.client.name} supabaseUrl={env.PUBLIC_SUPABASE_URL ?? ""} anonKey={env.PUBLIC_SUPABASE_ANON_KEY ?? ""} docs={docs} tables={tables} views={views} />
+  </body>
+</html>

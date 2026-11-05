@@ -1,0 +1,60 @@
+---
+// Slim strip above the header: a short message, an optional link, an optional dismiss button.
+// The dismiss button is hidden until the script runs, so it never shows as a dead control.
+interface Props {
+  tone?: "primary" | "inverse" | "muted";
+  href?: string;
+  linkLabel?: string;
+  dismissible?: boolean;
+  /** Remember the dismissal in localStorage under this key (change the key to show a new message). */
+  dismissKey?: string;
+  label?: string;
+  class?: string;
+}
+const { tone = "primary", href, linkLabel = "Learn more", dismissible = false, dismissKey, label = "Announcement", class: className } = Astro.props;
+const tones = {
+  primary: "bg-primary text-primary-foreground [--ring:var(--primary-foreground)]",
+  inverse: "bg-foreground text-background [--ring:var(--background)]",
+  muted: "bg-muted text-muted-foreground",
+};
+---
+<div role="region" aria-label={label} data-announcement data-dismiss-key={dismissKey} class:list={["relative", tones[tone], className]}>
+  <div class:list={["wrap flex flex-wrap items-center justify-center gap-x-3 gap-y-1 py-2 text-center text-sm font-medium", dismissible && "pe-12"]}>
+    <p><slot /></p>
+    {href && <a href={href} class="font-semibold underline underline-offset-4 hover:no-underline">{linkLabel}</a>}
+  </div>
+  {dismissible && (
+    <button
+      type="button"
+      data-announcement-close
+      aria-label="Dismiss announcement"
+      class="absolute inset-y-0 end-2 my-auto hidden size-8 place-items-center rounded-full hover:bg-current/10 data-ready:grid"
+    >
+      <svg viewBox="0 0 16 16" class="size-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+    </button>
+  )}
+</div>
+
+<script>
+  const prefix = "kit-announcement:";
+  const store = {
+    get: (k: string) => { try { return localStorage.getItem(prefix + k); } catch { return null; } },
+    set: (k: string, v: string) => { try { localStorage.setItem(prefix + k, v); } catch { /* private mode: dismissal lasts this page view */ } },
+  };
+  function init() {
+    document.querySelectorAll<HTMLElement>("[data-announcement]").forEach((strip) => {
+      const key = strip.dataset.dismissKey;
+      const close = strip.querySelector<HTMLButtonElement>("[data-announcement-close]");
+      if (!close || strip.dataset.ready) return;
+      strip.dataset.ready = "";
+      if (key && store.get(key) === "1") { strip.hidden = true; return; }
+      close.dataset.ready = "";
+      close.addEventListener("click", () => {
+        strip.hidden = true;
+        if (key) store.set(key, "1");
+      });
+    });
+  }
+  init();
+  document.addEventListener("astro:page-load", init);
+</script>

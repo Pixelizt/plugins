@@ -1,0 +1,64 @@
+---
+// Section "menu-full": the whole menu as static HTML (good for SEO), plus search and filters.
+// Copy to src/sections/menu-full.astro to restyle. Hidden when the menu has no items (rule 4).
+import { loadMenu } from "../lib/load.ts";
+import { buildIndex } from "../lib/search.ts";
+import { jsonLdString } from "../../../kit/seo/jsonld.ts";
+import { menuJsonLd } from "../lib/jsonld.ts";
+import { formatPrice } from "../../../kit/lib/money.ts";
+import MenuItem from "../components/MenuItem.astro";
+import MenuFilter from "../components/MenuFilter.astro";
+
+const { menu, conf, currency, locale, siteName } = await loadMenu();
+const usedTags = [...new Set(menu.items.flatMap((i) => i.tags))];
+const sections = menu.categories
+  .map((c) => {
+    const items = menu.items.filter((i) => i.category === c.id);
+    const groups = [...new Set(items.map((i) => i.group ?? ""))].map((g) => ({ name: g, items: items.filter((i) => (i.group ?? "") === g) }));
+    return { ...c, groups, grouped: groups.length > 1 };
+  })
+  .filter((c) => c.groups.length > 0);
+const index = JSON.stringify(buildIndex(menu.items));
+const ld = menuJsonLd(menu, { name: `${siteName} menu`, url: Astro.url.href, currency, showPrices: conf.show_prices });
+---
+{menu.items.length > 0 && (
+  <section class="wrap py-16" data-kit-menu data-index={index}>
+    {conf.heading && <h1 class="font-heading text-4xl font-bold">{conf.heading}</h1>}
+    <div class="mt-8">
+      <MenuFilter categories={sections} conf={conf} usedTags={usedTags} currency={currency} />
+    </div>
+    <div data-results hidden></div>
+    <p data-empty hidden class="py-8 text-muted-text">Nothing matches. Try fewer words or clear the filters.</p>
+    <div data-list>
+      {sections.map((c) => (
+        <section data-section id={c.id} class="mb-12">
+          <header class="mb-2">
+            <h2 class="font-heading text-2xl font-bold">{c.name}</h2>
+            {c.blurb && <p class="text-muted-text">{c.blurb}</p>}
+          </header>
+          {c.groups.map((g) => (
+            <div data-group>
+              {g.name && c.grouped && <h3 class="mt-6 font-heading text-lg font-semibold text-primary">{g.name}</h3>}
+              {g.items.map((item) => <MenuItem item={item} conf={conf} currency={currency} locale={locale} level={c.grouped && g.name ? 4 : 3} />)}
+            </div>
+          ))}
+        </section>
+      ))}
+    </div>
+    {menu.addons.length > 0 && (
+      <section data-addons class="mt-12">
+        <h2 class="font-heading text-2xl font-bold">Add-ons</h2>
+        <ul class="mt-2">
+          {menu.addons.map((a) => (
+            <li class="flex justify-between gap-4 border-b border-border py-2">
+              <span>{a.name}</span>
+              {conf.show_prices && <b>{a.prices.map((p) => `${p.size ? `${p.size} ` : ""}${formatPrice(p.price, currency, locale)}`).join(" / ")}</b>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+    {menu.notes.length > 0 && <div class="mt-8 space-y-1 text-sm text-muted-text">{menu.notes.map((n) => <p>{n}</p>)}</div>}
+    <script type="application/ld+json" set:html={jsonLdString(ld)} />
+  </section>
+)}

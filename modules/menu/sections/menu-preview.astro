@@ -1,0 +1,22 @@
+---
+// Section "menu-preview": a few highlighted items and a link to the full menu. Hidden when there is nothing to show.
+// Which items: modules.menu.preview.tag (e.g. "popular"), else the first available ones. Copy to src/sections/ to restyle.
+import { loadMenu } from "../lib/load.ts";
+import MenuItem from "../components/MenuItem.astro";
+
+const { menu, conf, currency, locale } = await loadMenu();
+const { tag, count } = conf.preview;
+const pool = menu.items.filter((i) => i.available);
+const picked = (tag ? pool.filter((i) => i.tags.includes(tag)) : pool).slice(0, count);
+---
+{picked.length > 0 && (
+  <section class="bg-muted py-16 text-muted-foreground">
+    <div class="wrap">
+      <h2 class="font-heading text-3xl font-bold">{tag ? (conf.tags.find((t) => t.key === tag)?.label ?? "From the menu") : "From the menu"}</h2>
+      <div class="mt-6 grid gap-x-10 md:grid-cols-2">
+        {picked.map((item) => <MenuItem item={item} conf={conf} currency={currency} locale={locale} />)}
+      </div>
+      <p class="mt-8"><a href={conf.menu_path} class="inline-block rounded-md bg-primary px-6 py-3 font-semibold text-primary-foreground hover:opacity-90">See the full menu</a></p>
+    </div>
+  </section>
+)}

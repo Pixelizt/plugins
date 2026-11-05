@@ -1,0 +1,138 @@
+# client.yaml: one file that fully describes a client build.
+# Copy to clients/<slug>/client.yaml and fill in. Agents treat this as the source of truth.
+# It's validated by zod at build start: invalid values fail the build with a readable message.
+# Secrets NEVER go here; they go in env vars (.env.example lists the names).
+# Anything marked TODO must be filled before /new-client runs.
+
+client:
+  name: "Example Café"
+  slug: example-cafe                 # repo + folder name, kebab-case
+  domain: example-cafe.com
+  type: cafe                         # cafe | restaurant | bar | bakery | food-subscription | other
+  locale: en                         # English only for now (D4)
+  currency: USD                      # ISO 4217
+  timezone: Europe/London            # IANA. All booking/plan dates use this, never server UTC
+  contact:
+    email: hello@example-cafe.com    # public contact address shown on the site
+    phone: "+44 20 0000 0000"
+    whatsapp: ""                     # optional; click-to-chat link only, forms never go to WhatsApp
+    address: "TODO"
+    map_url: ""
+  hours:                             # shown on the site + JSON-LD; bookings use module rules
+    mon-fri: "08:00-22:00"
+    sat-sun: "09:00-23:00"
+  socials: { instagram: "", tiktok: "", facebook: "" }
+  delivery_apps: []                  # e.g. [{ name: Deliveroo, url: "..." }]
+
+brand:
+  vibe: "warm, playful, a bit retro"   # 3-6 words; drives design + motion choices
+  references: []                        # URLs of sites the client likes (inspiration only)
+  colors:                               # → src/styles/tokens.css
+    primary: "#3B2A1A"
+    secondary: "#F2C14E"
+    accent: "#E4572E"
+    background: "#FFF8EE"
+    foreground: "#1A1A1A"
+    muted: "#EDE3D4"
+  fonts:
+    heading: "Fraunces"                 # Google Fonts name or file in assets/fonts
+    body: "Inter"
+    accent: ""                          # optional script/display accent
+  radius: md                            # none | sm | md | lg | full
+  shadow: soft                          # none | soft | strong (cards, menus, dialogs)
+  logo: ./assets/logo.svg
+  dark_mode: false
+  copy_rules: []                        # client wording rules, e.g. ["Say 'private dining', never 'party room'"]
+
+motion:
+  level: expressive     # subtle | expressive | awwwards (see docs/agents/motion-and-3d.md)
+  smooth_scroll: true   # Lenis
+  allow_3d: true
+  hero_concept: ""      # optional idea for the hero
+
+hosting:
+  tier: free            # free | paid (D5). free = keep-alive cron + one combined daily cron
+  vercel_team: TODO
+  production_branch: main
+  preview_branches: [develop]
+
+email:
+  provider: resend      # (Q5 open)
+  from_domain: notify.example-cafe.com    # verified sending subdomain, keeps root-domain mail untouched
+  sign_off: "The Example Café team"
+
+modules:                # each key = a module folder. Omit a key to disable that module.
+  forms:
+    phone_region: GB              # region-aware phone validation (rule 19)
+    retention_days: 100           # (Q3 open) must match the privacy policy
+    rate_limit: { max: 5, window_minutes: 10 }
+    sheets: false                 # Google Sheets sync (Q4 open)
+    forms: [contact]              # which form definitions to ship: contact, feedback, careers, corporate, ...
+
+  menu:
+    show_prices: true
+    sizes: [Regular, Large]
+    tags: [vegetarian, vegan, gluten-free, spicy, new, favourite]
+    nutrition_fields: [kcal, protein]      # [] to hide nutrition
+    allergens: true
+
+  content-lists:
+    enabled: [events, offers, faqs, reviews, gallery]   # also: posts
+    events: { past_max: 6 }
+
+  table-booking:
+    mode: approve                 # auto | approve (D6)
+    hold_minutes: 120             # approve mode: how long a pending request holds capacity
+    capacity_model: covers        # covers (total guests per slot) | tables (table groups)
+    covers_per_slot: 40
+    slot_minutes: 30
+    duration_minutes: 90
+    party_size: { min: 1, max: 10 }
+    large_party_enquiry_over: 10  # bigger groups go to an enquiry form instead
+    lead_time_minutes: 120
+    max_days_ahead: 60
+    opening_hours:                # booking hours (can differ from client.hours)
+      mon-fri: "12:00-21:30"
+      sat-sun: "10:00-22:00"
+    blackout_dates: []            # ["2026-12-25"]
+
+  space-booking:
+    mode: approve
+    hold_minutes: 1440
+    buffer_minutes: 30
+    spaces:
+      - { id: rooftop, name: "Rooftop", capacity: 25, min_hours: 2, price_per_hour: 200 }
+      - { id: back-room, name: "Back Room", capacity: 12, min_hours: 2, price_per_hour: 120 }
+    occasions: [Birthday, Corporate, Private dining, Other]
+    addons: [Cake, Decorations, Set menu]   # request fields only, no payment (D3)
+
+  meal-plans:                     # the reference project-style priced meal-plan requests, no payment
+    slots: [breakfast, lunch, dinner]
+    lengths_days: [5, 7, 20, 30]
+    grids: [weekdays, week]
+    rounding_step: 5
+    tax: { rate: 0.05, label: "VAT" }
+    set_menus: true
+
+pages:                  # order = nav order. Sections render in the order listed.
+  - path: /
+    sections: [hero, highlights, menu-preview, reviews, booking-cta, gallery, footer]
+  - path: /menu
+    sections: [menu-full]
+  - path: /book
+    sections: [table-booking]
+  - path: /events
+    sections: [space-booking, events, faqs]
+  - path: /contact
+    sections: [contact-form, map]
+
+admin:
+  users:                          # created by hand in Supabase Auth; listed here for reference
+    - { email: owner@example-cafe.com, role: admin }
+  notify_on: [new_booking, new_submission, content_published]
+
+licenses:
+  owned: []                       # pro component licenses we own, e.g. [aceternity-pro]
+
+notes: |
+  Free-form notes from the client brief. Agents read this.

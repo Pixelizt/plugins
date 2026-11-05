@@ -1,0 +1,20 @@
+---
+// Section "visit": address, hours, contact, map link. All facts from client.yaml.
+import config from "virtual:kit/config";
+const c = config.client;
+---
+<section class="wrap grid gap-8 py-20 md:grid-cols-2">
+  <div>
+    <h2 class="text-4xl font-bold">Visit us</h2>
+    <address class="mt-4 not-italic text-lg">{c.contact.address}</address>
+    {c.contact.map_url && <a href={c.contact.map_url} class="mt-4 inline-block font-semibold text-primary underline" rel="noopener" target="_blank">Get directions</a>}
+  </div>
+  <div>
+    {Object.keys(c.hours).length > 0 && (
+      <dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-lg">
+        {Object.entries(c.hours).map(([d, h]) => (<><dt class="capitalize font-semibold">{d.replace("-", " – ")}</dt><dd>{h.replace("-", " – ")}</dd></>))}
+      </dl>
+    )}
+    <p class="mt-6"><a href={`tel:${c.contact.phone.replace(/\s/g, "")}`} class="underline">{c.contact.phone}</a> · <a href={`mailto:${c.contact.email}`} class="underline">{c.contact.email}</a></p>
+  </div>
+</section>

@@ -1,0 +1,41 @@
+---
+// Section "meal-plan-rates": the discount rate card (plans × lengths) from client.yaml, static HTML.
+// Hidden when there is no discount to show (rule 4). Copy to src/sections/meal-plan-rates.astro to restyle.
+import { loadPlanData } from "../lib/load.ts";
+import { isConfigured } from "../lib/schema.ts";
+import { discountFor, gridLabel, pctText } from "../lib/engine.ts";
+
+const { conf, copy } = await loadPlanData();
+const show = isConfigured(conf) && conf.rates.some((r) => r.discount > 0);
+---
+{show && (
+  <section class="wrap py-16" aria-labelledby="mp-rates-title">
+    <h2 id="mp-rates-title" class="font-heading text-3xl font-bold">{copy.rates_title}</h2>
+    {copy.rates_intro && <p class="mt-3 max-w-2xl text-muted-text">{copy.rates_intro}</p>}
+    <div class="mt-6 overflow-x-auto">
+      <table class="w-full min-w-[32rem] border-collapse text-start">
+        <caption class="sr-only">{copy.rates_title}: discount by plan and plan length</caption>
+        <thead>
+          <tr class="border-b border-border">
+            <th scope="col" class="py-3 pe-4 text-start font-semibold">{copy.length_label}</th>
+            {conf.plans.map((p) => <th scope="col" class="px-4 py-3 text-end font-semibold">{p.label}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {conf.lengths.map((l) => (
+            <tr class="border-b border-border">
+              <th scope="row" class="py-3 pe-4 text-start font-normal">
+                <span class="font-semibold">{l.group && l.group !== l.label ? `${l.group}: ${l.label}` : l.label}</span>
+                <span class="block text-sm text-muted-text">{gridLabel(conf, l.grid)} · {l.days} days</span>
+              </th>
+              {conf.plans.map((p) => {
+                const d = discountFor(conf, p.key, l.key);
+                return <td class="px-4 py-3 text-end tabular-nums">{d ? `${pctText(d)} off` : <span class="text-muted-text">–</span>}</td>;
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+)}

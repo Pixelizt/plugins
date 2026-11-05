@@ -1,0 +1,24 @@
+---
+// Renders a page's sections in the order listed in client.yaml → pages[].sections.
+// Section ids map to files: src/sections/<id>.astro (site-level, wins) or src/modules/<m>/sections/<id>.astro.
+// To restyle a module section without touching the module, copy it to src/sections/<same id>.astro.
+// Kit component: do not edit in a client project.
+type Mod = { default: (props: Record<string, unknown>) => unknown };
+const moduleSections = import.meta.glob<Mod>("/src/modules/*/sections/*.astro", { eager: true });
+const siteSections = import.meta.glob<Mod>("/src/sections/*.astro", { eager: true });
+const idOf = (p: string) => p.split("/").pop()!.replace(/\.astro$/, "");
+const registry = new Map<string, Mod["default"]>();
+for (const [p, m] of Object.entries(moduleSections)) registry.set(idOf(p), m.default);
+for (const [p, m] of Object.entries(siteSections)) registry.set(idOf(p), m.default);
+
+interface Props { ids: string[]; path: string }
+const { ids, path } = Astro.props;
+const missing = ids.filter((id) => !registry.has(id));
+if (missing.length) {
+  throw new Error(
+    `Page "${path}" lists unknown section(s): ${missing.join(", ")}. Available: ${[...registry.keys()].sort().join(", ")}`,
+  );
+}
+const components = ids.map((id) => ({ id, Component: registry.get(id)! }));
+---
+{components.map(({ id, Component }) => <Component data-section={id} />)}

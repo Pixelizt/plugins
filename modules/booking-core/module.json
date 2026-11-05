@@ -1,0 +1,6 @@
+{
+  "name": "booking-core",
+  "version": "0.1.0",
+  "dependsOn": ["forms", "admin"],
+  "description": "Booking engine for table and space booking: slots in the business time zone, capacity, create_booking with a lock (no double booking), auto/approve modes, emails, signed cancel links, reminders, admin bookings view"
+}

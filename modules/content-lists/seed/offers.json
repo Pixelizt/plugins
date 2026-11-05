@@ -1,0 +1,8 @@
+{
+  "title": "Offers",
+  "intro": "",
+  "items": [
+    { "title": "Weekday set lunch", "text": "A main and a drink at a fixed price, Monday to Friday.", "price": "", "start": "", "end": "2026-12-31", "terms": "Dine in only. Not combined with other offers.", "sample": true },
+    { "title": "Bring a friend", "text": "Order two coffees and the second one is on us.", "price": "", "start": "2026-11-01", "end": "2026-11-30", "terms": "", "sample": true }
+  ]
+}

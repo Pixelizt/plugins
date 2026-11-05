@@ -1,0 +1,18 @@
+---
+// The "available times" step shared by the booking sections. lib/client/ui.ts fills [data-time-list] from the
+// <template> (radio buttons: native keyboard support, one tab stop). Keep the data-* attributes if you restyle.
+interface Props { prefix: string; legend?: string }
+const { prefix, legend = "Available times" } = Astro.props;
+---
+<fieldset data-times class="min-w-0">
+  <legend class="text-sm font-medium">{legend}</legend>
+  <p data-times-status id={`${prefix}-times-status`} class="mt-1 text-sm text-muted-text" aria-live="polite">Choose a date first.</p>
+  <div data-time-list class="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6" aria-describedby={`${prefix}-times-status`}></div>
+  <small id={`${prefix}-time-error`} class="mt-1 block text-sm text-red-700" aria-live="polite"></small>
+  <template data-time-tpl>
+    <label class="block cursor-pointer">
+      <input type="radio" name="time" class="peer sr-only" />
+      <span class="block rounded-full border border-border px-3 py-2 text-center tabular-nums peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring"></span>
+    </label>
+  </template>
+</fieldset>

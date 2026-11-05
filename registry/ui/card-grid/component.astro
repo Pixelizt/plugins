@@ -1,0 +1,21 @@
+---
+// Responsive grid for cards. Use as="ul" with <Card as="li"> for a real list.
+// `stagger` marks the grid so revealing cards (card `reveal`) animate one after another.
+interface Props {
+  as?: "div" | "ul" | "ol";
+  cols?: 2 | 3 | 4;
+  gap?: "sm" | "md" | "lg";
+  stagger?: boolean;
+  class?: string;
+}
+const { as: Tag = "div", cols = 3, gap = "md", stagger = false, class: className } = Astro.props;
+const colClass = {
+  2: "sm:grid-cols-2",
+  3: "sm:grid-cols-2 lg:grid-cols-3",
+  4: "sm:grid-cols-2 lg:grid-cols-4",
+};
+const gapClass = { sm: "gap-3", md: "gap-5", lg: "gap-8" };
+---
+<Tag data-reveal-stagger={stagger ? "" : undefined} class:list={["grid grid-cols-1 list-none p-0", colClass[cols], gapClass[gap], className]}>
+  <slot />
+</Tag>
