@@ -1,0 +1,6 @@
+{
+  "name": "whatsapp",
+  "version": "0.1.0",
+  "dependsOn": [],
+  "description": "Click-to-chat from the public number, and optional booking alerts via the WhatsApp Cloud API. Off by default. No payments."
+}

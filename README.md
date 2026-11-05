@@ -144,6 +144,7 @@ Specs and build order: [`docs/MODULES.md`](docs/MODULES.md). Versions and depend
 | `table-booking` | ✅ v0.1 | Table reservations with live availability |
 | `space-booking` | ✅ v0.1 | Book private spaces for birthdays/events |
 | `meal-plans` | ✅ v0.1 | Priced meal-plan requests with server re-pricing |
+| `whatsapp` | ✅ v0.1 | Click-to-chat from `client.contact.whatsapp`. Optional Cloud API booking alert, off by default |
 | `payments` | ⏸ later | Online payments, waiting on a provider choice (Q1) |
 | `i18n` | ⏸ later | Second language / RTL |
 

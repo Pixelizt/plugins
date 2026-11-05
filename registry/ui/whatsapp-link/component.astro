@@ -1,0 +1,8 @@
+---
+// Prominent click-to-chat link. Pass the href from waMe(); this file does not read client.yaml.
+interface Props { href?: string; label?: string }
+const { href = "", label = "Message us on WhatsApp" } = Astro.props;
+---
+{href && (
+  <a href={href} class="inline-flex min-h-12 items-center justify-center rounded-full bg-primary px-6 font-semibold text-primary-foreground no-underline" rel="noopener noreferrer" target="_blank">{label}</a>
+)}
