@@ -16,6 +16,12 @@ Seen: 1   ← bump this when the same learning happens again
 
 <!-- newest first -->
 
+### 2026-11-05 — kit — admin is custom Tailwind; emails are fetch helpers
+Rule: Do not rebuild `/admin` on shadcn, do not add an `emails/` folder, and do not add `@supabase/supabase-js` or the `resend` package.
+Why: The docs described a shadcn admin and `emails/` templates. The shipped admin is custom Tailwind, and mail is `server/emails.ts` (or cms `server/email.ts`) sent with `fetch` to Resend. The owner treats shadcn, 21st.dev, Aceternity, Magic UI and the rest of `ui-sources.md` as places to pull components from.
+Where it should live: already in AGENTS.md, `docs/agents/ui-sources.md`, `docs/ARCHITECTURE.md`, `docs/DECISIONS.md` D10 and D36
+Seen: 1
+
 ### 2026-11-05 — kit — agent worktrees inside the repo get staged by `git add -A`
 Rule: Keep `.claude/worktrees/` in `.gitignore`; stage specific paths, not `git add -A`, while sub-agents run.
 Why: `git add -A` staged four agent worktrees as embedded repos; the secret scan crashed on them (now skips non-files).

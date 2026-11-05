@@ -12,4 +12,5 @@ jobs:
       - run: node scripts/secret-scan.mjs .
       - run: npm run check
       - run: npm test
+      # Playwright smoke tests are `npm run test:e2e` (Chromium). Kept out of CI so this job stays light.
       - run: npm run build

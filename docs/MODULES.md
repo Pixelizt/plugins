@@ -28,7 +28,7 @@ The site skeleton every client gets.
 - SEO: canonical, Open Graph, JSON-LD (`Restaurant` / `CafeOrCoffeeShop` / `LocalBusiness`), `sitemap.xml`, `robots.txt` (disallows `/admin`), `llms.txt`
 - Security headers + CSP via `vercel.json` (generated)
 - Free tier: `/api/cron/daily` (keep-alive + runs the modules' daily jobs)
-- Tests: secret scan, build smoke, payload budget; CI workflow; pre-commit hook
+- Tests: secret scan, Vitest, Playwright smoke (`npm run test:e2e`: home page renders, key pages load); CI workflow (Vitest, not Playwright); pre-commit hook
 
 ## 1. cms
 - **Tables:** `docs`, `docs_history` (trigger, last 20 per key). RLS: read and write for `admin`/`editor`, no anonymous access (D8)
@@ -37,7 +37,7 @@ The site skeleton every client gets.
 - **Lib:** `diff.ts` (human-readable change lists)
 
 ## 2. admin
-- `/admin`: a client-only React + shadcn app
+- `/admin`: a client-only React app, custom Tailwind (plain, no animation). Not a shadcn app
 - Login, session refresh, role gate (`admin`, `editor`, `demo` = read-only)
 - Generates from module manifests: document editors, list editors (reorder, CSV import with diff, export), table views (filters, detail, CSV/XLSX export)
 - Shared widgets: image upload (→ WebP, Supabase Storage), video link or upload (trim to N seconds), money, date/time, rich text

@@ -6,7 +6,7 @@ Copy rules: `docs/BOILERPLATE-BOUNDARIES.md` §1.
 1. **Intake.** `clients/<slug>/client.yaml` exists and has no `TODO` in required fields. If TODOs remain, list them and stop. (The script in steps 2–4 validates the brief; in a site, `npm run validate` does the same.)
 2–4. **Scaffold, modules, agent files:** `node scripts/new-client.mjs <slug> [target-dir]` does all of it: copies the
    starter outside the kit, installs cms + admin + forms + the brief's modules (dependency order, migrations, env vars,
-   agent rules), copies client-facing docs, skills and registry components, writes the client's `AGENTS.md`
+   agent rules), copies client-facing docs, the client skills into both `.claude/skills/` (Claude Code) and `.cursor/skills/` (Cursor), and registry components, writes the client's `AGENTS.md`
    ("This client" from `client.yaml`), validates the brief and runs `git init` (nothing committed).
 5. **Theme.** Generate `src/styles/tokens.css` from `brand` (see `reskinning-guide.md` §2). Self-host the fonts.
 6. **Pages.** Build each page from `pages[].sections` in order. Sections come from module components,

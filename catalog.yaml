@@ -2,14 +2,15 @@
 # Mirrors README.md §5. Agents: update BOTH whenever you add/change/remove an entry.
 # Status values: planned | in-progress | stable | needs-work | later
 
-updated: 2026-11-04
+updated: 2026-11-05
 
 stack:                       # decided, see docs/DECISIONS.md
   confirmed: true
   framework: astro           # static-first, Vercel adapter for endpoints (D1)
   language: typescript-strict
   validation: zod            # D9
-  styling: [tailwind-v4, css-variable-tokens, shadcn-ui]   # D10
+  styling: [tailwind-v4, css-variable-tokens]   # D10. Admin is custom Tailwind, not a component library
+  ui_sources: docs/agents/ui-sources.md         # approved libraries to pull/adapt from (shadcn, 21st.dev, Astro, GSAP, Aceternity, Magic UI, …)
   islands: react
   motion: [gsap, motion, lenis]
   three_d: [three, react-three-fiber, drei]
@@ -21,7 +22,7 @@ stack:                       # decided, see docs/DECISIONS.md
   payments: none             # D3
   languages: [en]            # D4
   package_manager: npm
-  tests: [vitest, playwright]
+  tests: [vitest, playwright]   # vitest = npm test (CI). playwright = npm run test:e2e in starter/e2e (Chromium smoke)
 
 modules:
   - { name: starter,       status: stable, version: 0.1.0, required: true,  origin: reference-project, depends_on: [] }

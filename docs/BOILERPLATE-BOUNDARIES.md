@@ -24,7 +24,7 @@ rots, so this file is the rule.
 | `docs/agents/LEARNINGS.md`, `FEEDBACK.md`, `CHANGELOG.md` | ❌ no | Kit-level. A client agent writes learnings into its own `docs/LEARNINGS.md`; `/retro` pulls them back into the kit |
 | `docs/DECISIONS.md`, `ARCHITECTURE.md`, this file | ❌ no | Kit-level |
 | `docs/agents/adding-a-module.md`, `component-registry.md` | ❌ no | Kit-level procedures |
-| `skills/` | ✅ `setup`, `help-me`, `setup-guide`, `reskin`, `add-ui`, `add-motion`, `unslop`, `diagram`, `catch-up`, `sharpen-brief` | `new-client`, `add-module`, `harvest`, `retro` run **from the kit** |
+| `skills/` | ✅ `setup`, `help-me`, `setup-guide`, `reskin`, `add-ui`, `add-motion`, `unslop`, `diagram`, `catch-up`, `sharpen-brief`, copied into **both** `.claude/skills/` and `.cursor/skills/` | Cursor reads `.cursor/skills/`. `new-client`, `add-module`, `harvest`, `retro` run **from the kit** |
 | `catalog.yaml`, `README.md` (kit), `prompts/`, `reference/`, `registry/PROVENANCE.md` | ❌ no | Kit-level |
 | `client.example.yaml` | ❌ no | The real `client.yaml` is copied instead |
 

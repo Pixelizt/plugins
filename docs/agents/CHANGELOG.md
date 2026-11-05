@@ -23,3 +23,4 @@
 | 2026-11-05 | whole repo | Old internal prefix replaced by kit everywhere (src/kit, virtual:kit, --kit-*, kit_role(), KIT_ALLOW_TODO…); booking expiry email (notify_expired) | agent |
 | 2026-11-05 | skills/*/SKILL.md | Trimmed token cost: shorter descriptions (566 to ~490 words) and light body trims in setup, setup-guide, diagram; no steps or rules removed | agent |
 | 2026-11-05 | AGENTS.md | Shortened ~28% (1,502 → 1,087 words) (repo map condensed to pointer to README; §7 tightened); no rule changed | agent |
+| 2026-11-05 | AGENTS.md, catalog.yaml, README, ui-sources.md, ARCHITECTURE, MODULES, DECISIONS D10/D14/D36 | Admin is custom Tailwind; external libraries are approved component sources. Emails are TS helpers via Resend `fetch`. No Supabase JS or Resend SDK. Playwright smoke test in the starter. `new-client` also copies skills to `.cursor/skills/` | agent |

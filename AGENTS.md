@@ -10,7 +10,7 @@ configure and reskin** proven pieces. Read this file fully, then the doc for you
 
 - **Astro** (static first) + Vercel adapter; server endpoints only where they must be live (D1)
 - **TypeScript strict + zod**: one schema per content type drives types, admin and validation (D9)
-- **Tailwind CSS v4 + CSS variable tokens**; shadcn/ui for the admin and as a component base (D10)
+- **Tailwind CSS v4 + CSS variable tokens** (D10). The admin is custom Tailwind. Libraries in `docs/agents/ui-sources.md` (shadcn/ui, 21st.dev, Astro components, GSAP, Aceternity, Magic UI, Awwwards, awesome-ui lists, Rare UI, Kobra, EasyUI, Pin UI, Three.js, and the rest of that list) are approved sources to pull and adapt components from, not the admin's implementation
 - **React islands only** for interactive parts (`client:visible` / `client:idle`); static by default
 - **Supabase** (Postgres + Auth + Storage), one project per client, real migrations (D2, D11)
 - Motion: GSAP (+ScrollTrigger, SplitText), Motion, Lenis. 3D: Three.js / React Three Fiber in islands

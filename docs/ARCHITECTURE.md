@@ -41,7 +41,8 @@ The boundary between the two is strict: see [`BOILERPLATE-BOUNDARIES.md`](BOILER
 │       └── tokens.css           # GENERATED from client.yaml → brand (git-ignored)
 ├── supabase/migrations/         # one numbered SQL file per module
 ├── scripts/                     # secret-scan.mjs, validate-config.ts
-├── tests/                       # vitest
+├── tests/                       # vitest (npm test; CI)
+├── e2e/                         # Playwright smoke tests (npm run test:e2e; not in CI)
 ├── docs/LEARNINGS.md            # client-level learnings → pulled into the kit by /retro
 ├── .github/workflows/ci.yml     # scan, typecheck, test, build (D15)
 └── .githooks/pre-commit         # secret scan
@@ -112,11 +113,10 @@ modules/<name>/
 ├── module.ts            # the manifest (below)
 ├── schema.ts            # zod: content documents + client.yaml config block
 ├── migrations/          # SQL, numbered, idempotent
-├── server/              # endpoint handlers + pure business logic (frozen per client)
+├── server/              # endpoint handlers, pure business logic, and email copy (frozen per client)
 ├── lib/                 # pure functions shared by browser and server (one rule, one place)
 ├── components/          # Astro components (static) + islands (interactive): token-themed
 ├── admin/               # optional custom dashboard views (most modules need none, see §6)
-├── emails/              # email templates (team + customer, HTML + text)
 ├── seed/                # demo content
 └── tests/
 ```
@@ -137,9 +137,20 @@ export default defineModule({
 });
 ```
 
+There is no `emails/` folder. Email copy is a pure TypeScript helper that returns `{ subject, html, text }`
+(HTML table layout + a plain-text twin, from `starter/src/kit/email/html.ts`). `sendMail()` in
+`starter/src/kit/email/send.ts` POSTs that payload to `https://api.resend.com/emails` with `fetch`.
+There is no Resend SDK and no `@supabase/supabase-js` (D36). The helpers that exist today:
+
+| Helper | What it sends |
+|---|---|
+| `modules/forms/server/emails.ts` | Enquiry email to the team, and the fixed customer confirmation |
+| `modules/booking-core/server/emails.ts` | Booking received / confirmed / declined / cancelled / reminder |
+| `modules/cms/server/email.ts` | "What changed" email after Publish |
+
 ## 6. Admin dashboard: schema-driven (D7)
 
-- A single React app at `/admin`, rendered client-only, built with shadcn/ui and kept plain (no animation).
+- A single React app at `/admin`, rendered client-only. It is **custom Tailwind** (token utilities, plain on purpose: no animation). It is not a shadcn app. shadcn and the other libraries in `docs/agents/ui-sources.md` are approved sources to pull a widget from when a generated view is not enough.
 - Auth: Supabase Auth email + password. Role in `app_metadata.role`. **RLS is the real boundary**; server
   functions re-check the role (The reference project rule 13).
 - **Generated from module manifests:**

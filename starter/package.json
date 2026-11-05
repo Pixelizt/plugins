@@ -13,6 +13,7 @@
     "check": "astro check",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
     "scan": "node scripts/secret-scan.mjs .",
     "validate": "node --experimental-strip-types scripts/validate-config.ts"
   },
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@playwright/test": "^1.56.1",
     "typescript": "^6.0.3",
     "vitest": "^5.1.0"
   }

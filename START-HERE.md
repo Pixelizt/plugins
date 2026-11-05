@@ -42,7 +42,7 @@ The skills are plain `SKILL.md` folders, so most AI coding assistants that suppo
 
 - **Claude Code:** `/plugin install kit --marketplace Pixelizt/plugins`
   (older versions: `/plugin marketplace add Pixelizt/plugins`, then `/plugin install kit@pixelizt`).
-- **Any other assistant (Cursor and others):** say to it:
+- **Any other assistant (Cursor and others):** a site made with `node scripts/new-client.mjs` already has these skills in `.claude/skills/` and `.cursor/skills/`. For any other project, say to it:
 
   > Install the skills from https://github.com/Pixelizt/plugins: copy every folder inside `skills/` into this
   > project's skills folder for your tool (for example `.cursor/skills/`, `.agents/skills/` or `.claude/skills/`).

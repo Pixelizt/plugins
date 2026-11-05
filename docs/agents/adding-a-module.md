@@ -17,6 +17,7 @@ Module code imports the core with relative paths from its installed location (`s
 - **Rule of two:** generalize a feature into a module once it has been built for 2 clients, or when the owner
   asks. The reference project counts as #1: its code is a first draft to port, not a design to copy.
 - Business logic lives in `server/` + `lib/` (pure, tested), never inside visual components.
+- Email copy is a pure helper in `server/emails.ts` (cms uses `server/email.ts`) that returns `{ subject, html, text }`. Send it with `sendMail` from `src/kit/email/send.ts` (`fetch` to Resend). Do not add an `emails/` folder or the Resend SDK (D36).
 - Everything client-specific goes through the module's config schema in `schema.ts`, validated at build.
   **No client values in module code**: no currency, tax, time zone, phone region, brand color or wording.
 - Content the client edits = a CMS document declared in `module.ts → docs` with a zod schema. The admin
