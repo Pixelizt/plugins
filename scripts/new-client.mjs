@@ -60,8 +60,10 @@ for (const f of ["ui-sources.md", "motion-and-3d.md", "reskinning-guide.md", "ru
   mkdirSync(join(T, "docs", "agents"), { recursive: true });
   cpSync(join(KIT, "docs", "agents", f), join(T, "docs", "agents", f));
 }
+// Claude Code reads .claude/skills/; Cursor reads .cursor/skills/. Same folders, both places.
 for (const s of ["setup", "help-me", "setup-guide", "reskin", "add-ui", "add-motion", "unslop", "diagram", "catch-up", "sharpen-brief"]) {
   cpSync(join(KIT, "skills", s), join(T, ".claude", "skills", s), { recursive: true });
+  cpSync(join(KIT, "skills", s), join(T, ".cursor", "skills", s), { recursive: true });
 }
 for (const kind of ["ui", "motion"]) {
   cpSync(join(KIT, "registry", kind), join(T, "src", "components", "registry", kind), {

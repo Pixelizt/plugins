@@ -6,7 +6,7 @@ fonts, layout, section order, copy, images, animations, which component renders 
 
 ## 2. Theme tokens — the only place brand values live
 - `src/styles/tokens.css` → CSS variables (`--primary`, `--background`, `--radius`, `--font-heading`, ...), **generated from `client.yaml → brand`**. Change `client.yaml`, not the file
-- `src/styles/global.css` maps Tailwind v4 theme utilities to those variables (`@theme inline`, shadcn convention)
+- `src/styles/global.css` maps Tailwind v4 theme utilities to those variables (`@theme inline`)
 - Token utilities and logical properties only: see the client `AGENTS.md` §4 (D12)
 - Generate a full scale from `client.yaml → brand.colors` (foreground pairs must meet WCAG AA 4.5:1)
 - If a color fails contrast, adjust lightness and note it in the summary — don't silently ship it

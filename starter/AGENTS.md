@@ -42,6 +42,7 @@ where needed · Supabase (this client's own project) · Vercel. English only.
 | `npm run dev` | Local dev at http://localhost:4321 |
 | `npm run validate` | Check `client.yaml` without building |
 | `npm run check && npm test && npm run build` | **All must pass before you say you're done** |
+| `npm run test:e2e` | Playwright smoke test (home page + key pages). Once: `npx playwright install chromium` |
 | `npm run scan` | Secret scan (also runs in the pre-commit hook and CI) |
 | `git config core.hooksPath .githooks` | Enable the pre-commit hook (once per clone) |
 

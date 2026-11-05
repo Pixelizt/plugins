@@ -5,7 +5,8 @@ Forms, menu, events, bookings, meal plans and an admin dashboard come ready-made
 filling in one `client.yaml` and reskinning the frontend; agents (Claude Code) do most of it, following the
 rules and skills in this repo. Open source under the [MIT license](LICENSE).
 
-**Stack:** Astro (static first) · TypeScript + zod · Tailwind v4 · React islands · Supabase · Vercel.
+**Stack:** Astro (static first) · TypeScript + zod · Tailwind v4 (admin is custom Tailwind) · React islands · Supabase · Vercel.
+UI comes from the registry, then from approved external libraries you pull and adapt (`docs/agents/ui-sources.md`).
 Why: [`docs/DECISIONS.md`](docs/DECISIONS.md) · How: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 > This README is the **master file**: what the kit is, how to use it, every command, and a catalog of
@@ -89,12 +90,13 @@ Lighthouse and axe-core. Install commands and what we deliberately skipped: [`do
 |---|---|
 | `npm install` | Install dependencies |
 | `npm run dev` | Run locally at http://localhost:4321 |
-| `npm run check && npm test && npm run build` | Must pass before any task is "done" (typecheck + tests + build) |
+| `npm run check && npm test && npm run build` | Must pass before any task is "done" (typecheck + Vitest + build) |
+| `npm run test:e2e` | Playwright smoke test: home page renders and the brief's key pages load. Once per machine: `npx playwright install chromium` |
 | `npm run preview` | Preview the production build |
 | `npm run validate` | Check `client.yaml` without building |
 | `npm run scan` | Secret scan |
 | `npx supabase db push` | Apply migrations to the client's Supabase project (human step) |
-| `npx shadcn@latest add <component>` | Install a shadcn/ui component |
+| `npx shadcn@latest add <component>` | Install a component from a shadcn-compatible registry (one approved source; see `ui-sources.md`) |
 | `npx gltfjsx model.glb --transform` | Compress a 3D model + generate its React component |
 | `git config core.hooksPath .githooks` | Enable the secret-scan pre-commit hook (once per clone) |
 
@@ -160,7 +162,7 @@ Status key: 🔜 planned · 🚧 in progress · ✅ stable · ⚠️ needs work 
 
 ### External sources
 
-The curated list with licenses is [`docs/agents/ui-sources.md`](docs/agents/ui-sources.md).
+Approved places to **pull and adapt** components from, after `registry/`. shadcn/ui is one of them. It is not how the admin is built (the dashboard is custom Tailwind). The list, with what each source is good for and its license: [`docs/agents/ui-sources.md`](docs/agents/ui-sources.md). It includes shadcn/ui, 21st.dev, Astro components, GSAP, Aceternity, Magic UI, Awwwards (inspiration only), awesome-ui style lists, rareui.com, kobra.systems, easyui.site, pinui.xyz and Three.js.
 
 ## 6. Motion levels
 
@@ -184,5 +186,5 @@ Agents add lessons and fix facts as they work; core rules change only with human
 - [x] `/new-client` script (`scripts/new-client.mjs`) + content snapshot (D33)
 - [ ] Answer the open questions in `docs/DECISIONS.md`
 - [ ] First new client built with the kit, then `/retro`
-- [ ] Publish `registry/` as a shadcn-compatible registry (`@kit/...`)
+- [ ] Publish `registry/` as a shadcn-compatible registry (`@kit/...`) — future step; the URL in `ui-sources.md` stays a placeholder until then
 - [ ] Link-check `ui-sources.md`
