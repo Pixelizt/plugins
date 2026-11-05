@@ -152,6 +152,7 @@ Status key: 🔜 planned · 🚧 in progress · ✅ stable · ⚠️ needs work 
 | Name | Type | Vibe | Motion level | Deps | Used by |
 |---|---|---|---|---|---|
 | UI: `pill-nav`, `button`, `card`, `card-grid`, `section`, `section-head`, `announcement-strip`, `mobile-action-bar`, `lightbox`, `chip` | ui | neutral, token-driven | any | none | seed set |
+| UI: `menu-tabs`, `hours-map`, `reviews`, `gallery`, `instagram-feed`, `book-bar` | ui | neutral, token-driven | any | gallery uses lightbox | restaurant blocks |
 | Motion: `reveal`, `marquee`, `float`, `scroll-drift` | motion | any | subtle–expressive | none | seed set |
 | Motion: `hero-stagger` (+ `drift-frame`) | motion | expressive | expressive–awwwards | gsap | seed set |
 

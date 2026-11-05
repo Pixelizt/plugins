@@ -15,6 +15,19 @@ test("home page renders", async ({ page }) => {
   await expect(page.getByRole("link", { name: "Demo Café" })).toBeVisible();
 });
 
+test("registry blocks respond to the keyboard", async ({ page }) => {
+  await page.goto("/kit-blocks");
+  await expect(page.getByRole("heading", { name: "Menu" })).toBeVisible();
+  const lunch = page.getByRole("tab", { name: "Lunch" });
+  await page.getByRole("tab", { name: "Coffee" }).focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(lunch).toBeFocused();
+  await expect(lunch).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByText("A fixture quote for the block preview.")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Book a table" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open profile" })).toHaveAttribute("href", "https://instagram.com/example");
+});
+
 test("robots.txt and llms files are served", async ({ request }) => {
   const robots = await request.get("/robots.txt");
   expect(robots.ok()).toBeTruthy();

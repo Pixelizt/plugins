@@ -1,0 +1,41 @@
+---
+// Address, opening hours and a directions link. No map iframe (that would need a CSP host).
+interface Props {
+  title?: string;
+  address?: string;
+  hours?: Record<string, string>;
+  mapUrl?: string;
+  phone?: string;
+  email?: string;
+}
+const { title = "Visit", address = "", hours = {}, mapUrl = "", phone = "", email = "" } = Astro.props;
+const rows = Object.entries(hours).filter(([, value]) => value);
+const tel = phone.replace(/\s/g, "");
+const has = Boolean(address || rows.length || mapUrl || tel || email);
+---
+{has && (
+  <section class="wrap grid gap-10 py-16 md:grid-cols-2" aria-labelledby="hours-map-title">
+    <div>
+      <h2 id="hours-map-title" class="text-4xl font-bold">{title}</h2>
+      {address && <address class="mt-4 text-lg not-italic">{address}</address>}
+      {(tel || email) && (
+        <p class="mt-4">
+          {tel && <a href={`tel:${tel}`} class="underline">{phone}</a>}
+          {tel && email && " · "}
+          {email && <a href={`mailto:${email}`} class="underline">{email}</a>}
+        </p>
+      )}
+      {mapUrl && <a href={mapUrl} class="mt-4 inline-flex min-h-11 items-center font-semibold text-primary underline" rel="noopener noreferrer" target="_blank">Get directions</a>}
+    </div>
+    {rows.length > 0 && (
+      <dl class="grid grid-cols-[auto_1fr] content-start gap-x-6 gap-y-2 text-lg">
+        {rows.map(([day, value]) => (
+          <>
+            <dt class="font-semibold capitalize">{day.replace("-", " – ")}</dt>
+            <dd>{value.replace("-", " – ")}</dd>
+          </>
+        ))}
+      </dl>
+    )}
+  </section>
+)}

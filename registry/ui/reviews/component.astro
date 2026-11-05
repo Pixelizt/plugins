@@ -1,0 +1,32 @@
+---
+// Quotes the client actually has. Renders nothing when the list is empty. No Review JSON-LD:
+// a business rating itself is the kind of markup search engines discount.
+interface Review { name: string; text: string; stars?: number; source?: string; date?: string }
+interface Props { title?: string; intro?: string; items: Review[] }
+const { title = "Reviews", intro = "", items } = Astro.props;
+const quotes = items.filter((item) => item.text.trim() && item.name.trim());
+const stars = (n: number) => "★★★★★".slice(0, Math.max(0, Math.min(5, Math.round(n))));
+---
+{quotes.length > 0 && (
+  <section class="wrap py-16" aria-labelledby="reviews-title">
+    <h2 id="reviews-title" class="text-4xl font-bold">{title}</h2>
+    {intro && <p class="mt-3 max-w-2xl text-lg text-muted-text">{intro}</p>}
+    <ul class="mt-8 grid list-none gap-6 p-0 md:grid-cols-2 lg:grid-cols-3">
+      {quotes.map((quote) => (
+        <li>
+          <figure class="flex h-full flex-col gap-3 rounded-lg border border-border bg-background p-5">
+            {quote.stars !== undefined && (
+              <p class="text-primary" role="img" aria-label={`${quote.stars} out of 5 stars`}><span aria-hidden="true">{stars(quote.stars)}</span></p>
+            )}
+            <blockquote class="flex-1"><p>{quote.text}</p></blockquote>
+            <figcaption class="text-sm text-muted-text">
+              <span class="font-semibold text-foreground">{quote.name}</span>
+              {quote.date && <span> · <time datetime={quote.date}>{quote.date}</time></span>}
+              {quote.source && <span> · {quote.source}</span>}
+            </figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
