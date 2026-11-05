@@ -7,6 +7,7 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { loadConfig } from "./src/kit/config/load.ts";
 import { kitIntegration } from "./src/kit/integration.ts";
+import { analyticsHosts } from "./src/kit/seo/analytics.ts";
 
 const isBuild = process.argv.includes("build");
 // Production builds refuse TODO values in client.yaml. KIT_ALLOW_TODO=1 relaxes this for local test builds.
@@ -33,6 +34,7 @@ const fontFamilies = (
   }));
 
 const src = (extra: string[]) => ["'self'", ...extra].filter(Boolean).join(" ");
+const analytics = analyticsHosts(client.hosting.analytics);
 
 export default defineConfig({
   site: `https://${client.client.domain}`,
@@ -44,11 +46,14 @@ export default defineConfig({
   security: {
     // Strict CSP (rule 14). Astro hashes its own scripts and styles; hosts come from client.yaml → csp.
     csp: {
+      // scriptDirective.resources replaces Astro's default list, so 'self' is repeated here.
+      // Only set when analytics is on; otherwise leave Astro's hashed script-src alone.
+      ...(analytics.script.length ? { scriptDirective: { resources: analytics.script } } : {}),
       directives: [
         "default-src 'self'",
         `img-src ${src(["data:", "blob:", supabase, ...client.csp.img_src])}`,
         `media-src ${src([supabase, ...client.csp.media_src])}`,
-        `connect-src ${src([supabase, ...client.csp.connect_src])}`,
+        `connect-src ${src([supabase, ...client.csp.connect_src, ...analytics.connect])}`,
         `frame-src ${client.csp.frame_src.length ? client.csp.frame_src.join(" ") : "'none'"}`,
         "font-src 'self'",
         "object-src 'none'",

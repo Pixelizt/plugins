@@ -1,0 +1,6 @@
+---
+// Vercel Web Analytics. Renders nothing unless client.yaml → hosting.analytics is true.
+import Analytics from "@vercel/analytics/astro";
+import config from "virtual:kit/config";
+---
+{config.hosting.analytics && <Analytics />}
