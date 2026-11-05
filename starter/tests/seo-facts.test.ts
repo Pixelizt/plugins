@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { parse } from "yaml";
 import { factFaqs, factLines } from "../src/kit/seo/facts.ts";
 import { businessJsonLd, faqJsonLd } from "../src/kit/seo/jsonld.ts";
+import { analyticsHosts } from "../src/kit/seo/analytics.ts";
 import { AI_CRAWLERS, llmsFullTxt, llmsTxt, robotsTxt } from "../src/kit/seo/public-text.ts";
 import type { ClientConfig } from "../src/kit/config/schema.ts";
 
@@ -47,6 +48,14 @@ describe("factual highlights", () => {
     const text = llmsFullTxt(c, "https://demo-cafe.example.com");
     expect(text).toContain("One free bay on the street");
     expect(text).not.toContain("None supplied.");
+  });
+});
+
+describe("analytics CSP", () => {
+  it("adds the Vercel hosts only when analytics is on", () => {
+    expect(analyticsHosts(false)).toEqual({ script: [], connect: [] });
+    expect(analyticsHosts(true).connect).toEqual(["https://vitals.vercel-insights.com"]);
+    expect(analyticsHosts(true).script).toContain("'self'");
   });
 });
 

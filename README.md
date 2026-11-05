@@ -6,6 +6,7 @@ filling in one `client.yaml` and reskinning the frontend; agents (Claude Code) d
 rules and skills in this repo. Open source under the [MIT license](LICENSE).
 
 **Stack:** Astro (static first) · TypeScript + zod · Tailwind v4 (admin is custom Tailwind) · React islands · Supabase · Vercel.
+Vercel Web Analytics is wired and stays off until `client.yaml → hosting.analytics: true`.
 UI comes from the registry, then from approved external libraries you pull and adapt (`docs/agents/ui-sources.md`).
 Why: [`docs/DECISIONS.md`](docs/DECISIONS.md) · How: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
