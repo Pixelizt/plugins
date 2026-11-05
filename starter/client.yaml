@@ -39,7 +39,7 @@ hosting:
 
 pages:
   - path: /
-    sections: [hero, highlights, cta]
+    sections: [hero, highlights, place-facts, cta]
   - path: /about
     title: Our story
     sections: [about, cta]

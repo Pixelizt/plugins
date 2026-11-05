@@ -24,6 +24,20 @@ client:
   socials: { instagram: "", tiktok: "", facebook: "" }
   delivery_apps: []                  # e.g. [{ name: Deliveroo, url: "..." }]
 
+# Factual selling points. Leave empty until the client gives you the wording.
+# The site, schema.org and llms.txt omit blank fields. Do not invent awards, dietary claims or parking.
+highlights:
+  awards: []          # [{ name: "Best neighbourhood cafe", year: 2024, by: "Local guide" }]
+  specialties: []     # ["wood-fired pizza"]
+  dietary: []         # ["vegetarian", "gluten-free"]
+  ambience: []        # ["quiet mornings", "group tables"]
+  parking: ""
+  other: []           # [{ label: "Step-free", text: "Step-free entrance from the street" }]
+
+seo:
+  ai_crawlers: allow  # allow | block. "allow" still hides /admin and /api from every bot, including AI crawlers
+  share_image: ""     # "/og.png" or an absolute URL. Empty = no Open Graph image
+
 brand:
   vibe: "warm, playful, a bit retro"   # 3-6 words; drives design + motion choices
   references: []                        # URLs of sites the client likes (inspiration only)
@@ -52,6 +66,7 @@ motion:
 
 hosting:
   tier: free            # free | paid (D5). free = keep-alive cron + one combined daily cron
+  analytics: false    # Vercel Web Analytics. Off until the client wants the script
   vercel_team: TODO
   production_branch: main
   preview_branches: [develop]

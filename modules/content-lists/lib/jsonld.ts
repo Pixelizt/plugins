@@ -1,16 +1,8 @@
-// JSON-LD builders (pure). FAQPage for the FAQ list, Article for blog posts.
+// JSON-LD builders (pure). FAQPage lives in the kit (one copy). Article stays here.
+export { faqJsonLd } from "../../../kit/seo/jsonld.ts";
 
 export const absoluteUrl = (site: string, pathOrUrl: string): string =>
   /^https?:\/\//i.test(pathOrUrl) ? pathOrUrl : site.replace(/\/$/, "") + (pathOrUrl.startsWith("/") ? "" : "/") + pathOrUrl;
-
-export function faqJsonLd(items: { q: string; a: string }[]) {
-  if (!items.length) return null;
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: items.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
-  };
-}
 
 export interface ArticleInput {
   title: string;

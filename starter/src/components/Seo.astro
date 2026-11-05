@@ -8,6 +8,8 @@ const site = Astro.site!.toString().replace(/\/$/, "");
 const canonical = new URL(Astro.url.pathname, Astro.site).toString().replace(/\/$/, "") || site;
 const fullTitle = title === "Home" ? config.client.name : `${title} | ${config.client.name}`;
 const jsonld = jsonLdString(businessJsonLd(config, site));
+const share = image || config.seo.share_image;
+const shareUrl = share ? (/^https?:\/\//i.test(share) ? share : new URL(share, Astro.site).toString()) : "";
 ---
 <title>{fullTitle}</title>
 {description && <meta name="description" content={description} />}
@@ -18,6 +20,9 @@ const jsonld = jsonLdString(businessJsonLd(config, site));
 <meta property="og:title" content={fullTitle} />
 {description && <meta property="og:description" content={description} />}
 <meta property="og:url" content={canonical} />
-{image && <meta property="og:image" content={new URL(image, Astro.site).toString()} />}
-<meta name="twitter:card" content="summary_large_image" />
+{shareUrl && <meta property="og:image" content={shareUrl} />}
+<meta name="twitter:card" content={shareUrl ? "summary_large_image" : "summary"} />
+<meta name="twitter:title" content={fullTitle} />
+{description && <meta name="twitter:description" content={description} />}
+{shareUrl && <meta name="twitter:image" content={shareUrl} />}
 <script type="application/ld+json" set:html={jsonld} />

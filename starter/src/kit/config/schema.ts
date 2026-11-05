@@ -91,6 +91,8 @@ export const ClientConfig = z.strictObject({
     vercel_team: z.string().default(""),
     production_branch: z.string().default("main"),
     preview_branches: z.array(z.string()).default([]),
+    // Web Analytics script. Off until a client opts in (it is a third-party request).
+    analytics: z.boolean().default(false),
   }),
 
   email: z
@@ -116,6 +118,28 @@ export const ClientConfig = z.strictObject({
     .default({ users: [], notify_on: [] }),
 
   licenses: z.strictObject({ owned: z.array(z.string()).default([]) }).default({ owned: [] }),
+
+  // Factual, verifiable points the client supplied. Every list defaults empty.
+  // The site, JSON-LD, llms.txt and the facts FAQ omit anything left blank. Never invent a value.
+  highlights: z
+    .strictObject({
+      awards: z.array(z.strictObject({ name: z.string().min(1), year: z.number().int().optional(), by: z.string().default("") })).default([]),
+      specialties: z.array(z.string().min(1)).default([]),
+      dietary: z.array(z.string().min(1)).default([]),
+      ambience: z.array(z.string().min(1)).default([]),
+      parking: z.string().default(""),
+      other: z.array(z.strictObject({ label: z.string().min(1), text: z.string().min(1) })).default([]),
+    })
+    .default({ awards: [], specialties: [], dietary: [], ambience: [], parking: "", other: [] }),
+
+  seo: z
+    .strictObject({
+      // Major AI crawlers. "allow" still hides /admin and /api. "block" disallows the whole site for those bots only.
+      ai_crawlers: z.enum(["allow", "block"]).default("allow"),
+      // Path ("/og.png") or absolute URL. Empty: no Open Graph image, Twitter card is "summary".
+      share_image: z.string().default(""),
+    })
+    .default({ ai_crawlers: "allow", share_image: "" }),
 
   // Extra hosts the CSP must allow (maps, video embeds). Adding one needs owner approval (rule 14).
   csp: z
