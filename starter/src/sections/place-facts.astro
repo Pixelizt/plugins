@@ -1,0 +1,25 @@
+---
+// Factual highlights from client.yaml → highlights. Renders nothing when every field is empty.
+// This is separate from the CMS "highlights" cards (src/content/highlights.json), which are marketing copy.
+import config from "virtual:kit/config";
+import { factFaqs, factLines } from "../kit/seo/facts";
+import { faqJsonLd, jsonLdString } from "../kit/seo/jsonld";
+
+const lines = factLines(config.highlights);
+const faqs = factFaqs(config.highlights);
+const ld = faqJsonLd(faqs);
+---
+{lines.length > 0 && (
+  <section class="wrap py-16" aria-labelledby="place-facts-title">
+    <h2 id="place-facts-title" class="text-3xl font-bold">Good to know</h2>
+    <dl class="mt-8 grid gap-6 sm:grid-cols-2">
+      {lines.map((line) => (
+        <div class="rounded-lg border border-border bg-background p-5">
+          <dt class="text-sm font-semibold uppercase tracking-wide text-primary">{line.label}</dt>
+          <dd class="mt-2 text-lg">{line.text}</dd>
+        </div>
+      ))}
+    </dl>
+    {ld && <script type="application/ld+json" set:html={jsonLdString(ld)} />}
+  </section>
+)}

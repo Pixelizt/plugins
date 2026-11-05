@@ -15,6 +15,17 @@ test("home page renders", async ({ page }) => {
   await expect(page.getByRole("link", { name: "Demo Café" })).toBeVisible();
 });
 
+test("robots.txt and llms files are served", async ({ request }) => {
+  const robots = await request.get("/robots.txt");
+  expect(robots.ok()).toBeTruthy();
+  const body = await robots.text();
+  expect(body).toContain("User-agent: GPTBot");
+  expect(body).toContain("Disallow: /admin");
+  expect(body).toContain("Sitemap:");
+  expect((await request.get("/llms.txt")).ok()).toBeTruthy();
+  expect((await request.get("/llms-full.txt")).ok()).toBeTruthy();
+});
+
 for (const entry of pages) {
   test(`${entry.path} loads`, async ({ page }) => {
     const res = await page.goto(entry.path);
