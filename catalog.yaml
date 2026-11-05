@@ -49,6 +49,12 @@ registry:                    # seed set 2026-11-05 (agency-owned, brand-neutral,
   - { name: mobile-action-bar, type: ui, path: registry/ui/mobile-action-bar, deps: [] }
   - { name: lightbox, type: ui, path: registry/ui/lightbox, deps: [] }
   - { name: chip, type: ui, path: registry/ui/chip, deps: [] }
+  - { name: menu-tabs, type: ui, path: registry/ui/menu-tabs, deps: [] }
+  - { name: hours-map, type: ui, path: registry/ui/hours-map, deps: [] }
+  - { name: reviews, type: ui, path: registry/ui/reviews, deps: [] }
+  - { name: gallery, type: ui, path: registry/ui/gallery, deps: [lightbox] }
+  - { name: instagram-feed, type: ui, path: registry/ui/instagram-feed, deps: [] }
+  - { name: book-bar, type: ui, path: registry/ui/book-bar, deps: [] }
   - { name: reveal, type: motion, path: registry/motion/reveal, motion_level: subtle, deps: [] }
   - { name: marquee, type: motion, path: registry/motion/marquee, motion_level: subtle, deps: [] }
   - { name: float, type: motion, path: registry/motion/float, motion_level: subtle, deps: [] }

@@ -1,0 +1,27 @@
+---
+// A profile link plus photos the client supplied. This does not call Instagram and does not load embed.js
+// (that script needs a CSP change and a Meta app). No profile URL, no block.
+interface Post { src: string; alt: string; href?: string }
+interface Props { profileUrl?: string; handle?: string; posts?: Post[] }
+const { profileUrl = "", handle = "", posts = [] } = Astro.props;
+const shots = posts.filter((post) => post.src && post.alt.trim());
+---
+{(profileUrl || shots.length > 0) && (
+  <section class="wrap py-16" aria-labelledby="instagram-title">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h2 id="instagram-title" class="text-4xl font-bold">{handle ? handle : "Instagram"}</h2>
+      {profileUrl && <a href={profileUrl} class="inline-flex min-h-11 items-center font-semibold text-primary underline" rel="noopener noreferrer" target="_blank">Open profile</a>}
+    </div>
+    {shots.length > 0 && (
+      <ul class="mt-8 grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3">
+        {shots.map((post) => (
+          <li>
+            <a href={post.href || profileUrl || post.src} class="block overflow-hidden rounded-md" rel="noopener noreferrer" target="_blank">
+              <img src={post.src} alt={post.alt} loading="lazy" class="aspect-square w-full object-cover motion-safe:transition-transform motion-safe:hover:scale-105" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+)}

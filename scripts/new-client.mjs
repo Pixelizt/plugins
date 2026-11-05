@@ -3,7 +3,7 @@
 // Usage: node scripts/new-client.mjs <slug> [target-dir]      (default target: ../<slug>-site)
 // Follows docs/BOILERPLATE-BOUNDARIES.md §1: only what a client site needs is copied; kit-only files stay here.
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join, resolve, dirname } from "node:path";
+import { join, resolve, dirname, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { execFileSync } from "node:child_process";
@@ -30,7 +30,7 @@ const step = (s) => console.log(`\n▶ ${s}`);
 step("Copying the starter");
 cpSync(join(KIT, "starter"), T, {
   recursive: true,
-  filter: (src) => !/[/\\](node_modules|dist|\.astro|\.vercel)([/\\]|$)/.test(src) && !src.endsWith("tokens.css"),
+  filter: (src) => !/[/\\](node_modules|dist|\.astro|\.vercel)([/\\]|$)/.test(src) && !src.endsWith("tokens.css") && !src.endsWith(`${sep}kit-blocks.astro`) && !src.endsWith("/kit-blocks.astro"),
 });
 cpSync(brief, join(T, "client.yaml"));
 const assets = join(KIT, "clients", slug, "assets");
@@ -68,7 +68,7 @@ for (const s of ["setup", "help-me", "setup-guide", "reskin", "add-ui", "add-mot
 for (const kind of ["ui", "motion"]) {
   cpSync(join(KIT, "registry", kind), join(T, "src", "components", "registry", kind), {
     recursive: true,
-    filter: (src) => !src.endsWith("README.md") && !src.endsWith(".gitkeep"),
+    filter: (src) => !src.endsWith("README.md") && !src.endsWith(".gitkeep") && !src.endsWith(".test.ts"),
   });
 }
 

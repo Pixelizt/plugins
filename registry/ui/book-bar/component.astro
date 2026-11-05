@@ -1,0 +1,10 @@
+---
+// One sticky action for small screens. Different from mobile-action-bar, which is up to four icons.
+// Hidden from the md breakpoint up. A spacer keeps it from covering the end of the page.
+interface Props { href: string; label?: string }
+const { href, label = "Book a table" } = Astro.props;
+---
+<div class="h-[calc(4.5rem+env(safe-area-inset-bottom))] md:hidden" aria-hidden="true"></div>
+<div class="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
+  <a href={href} class="flex min-h-12 items-center justify-center rounded-full bg-primary px-6 font-semibold text-primary-foreground no-underline">{label}</a>
+</div>
