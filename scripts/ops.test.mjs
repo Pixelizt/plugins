@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { adminGuide } from "./admin-guide.mjs";
+import { shotsFor } from "./handover-capture.mjs";
 import { applyPairs, frozenPairs, report } from "./kit-diff.mjs";
 import { formatPlan, namedSteps, redact, shouldRun, stepsToOffer } from "./provision.mjs";
 
@@ -42,6 +43,13 @@ test("kit-diff copies frozen files and leaves client content alone", () => {
   assert.equal(readFileSync(join(client, "src", "content", "menu.json"), "utf8"), "{\"keep\":true}\n");
   assert.equal(readFileSync(join(client, "client.yaml"), "utf8"), "client: keep\n");
   assert.equal(frozenPairs(kit, client).some((row) => row.rel.includes("client.yaml")), false);
+});
+
+test("handover shots include the public pages and say the admin shot is signed out", () => {
+  const shots = shotsFor({ pages: [{ path: "/", title: "Home" }, { path: "/about", title: "Our story" }] });
+  assert.equal(shots[0].path, "/");
+  assert.equal(shots.at(-1).path, "/admin");
+  assert.match(shots.at(-1).caption, /signed-out/);
 });
 
 test("admin guide repeats client facts and does not invent awards", () => {

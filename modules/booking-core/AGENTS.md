@@ -43,6 +43,7 @@ duration, candidates, units, mode, hold, `facts` (config text only), `fields`; a
 confirmed, declined, cancelled, reminder. They carry fixed wording + reference, date/time and `facts`; **never the
 visitor's name, notes or anything they typed** (rule 9). Team: new booking / request to decide / customer cancelled,
 to `BOOKINGS_EMAIL_TO` (else `FORMS_EMAIL_TO`). Every outcome lands in `delivery` (rule 20).
+When `modules.whatsapp.booking_alerts` is true, a short Cloud API ping is added as `delivery.whatsapp` (see the whatsapp module). It never fails the booking.
 
 **Cancel links**: token = HMAC-SHA256(`BOOKING_TOKEN_SECRET`, booking id); the row keeps sha256(token) only. The
 reminder rebuilds the link from the id. Changing the secret retires all links; no secret = emails say "call us".

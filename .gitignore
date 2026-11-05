@@ -8,6 +8,8 @@ dist/
 .astro/
 .vercel/
 .playground/
+tools/handover/node_modules/
+tools/handover/out/
 .claude/worktrees/
 reference/
 clients/*
