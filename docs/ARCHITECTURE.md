@@ -1,7 +1,7 @@
 # Architecture
 
 How the kit works and how a client site built from it is structured.
-Decisions referenced as D1, D2… are in [`DECISIONS.md`](DECISIONS.md).
+Do not reverse a lock-in in [`AGENTS.md`](../AGENTS.md) §1b. This file is how the pieces fit.
 
 ---
 
@@ -170,16 +170,18 @@ There is no Resend SDK and no `@supabase/supabase-js` (D36). The helpers that ex
   and JSON-LD business data.
 - Secrets never go in it, only in env vars.
 
-## 8. Hosting tiers (D5)
+## 8. Hosting tiers
 
-| | `free` | `paid` |
+Default is `paid` (Vercel Pro) for a paying client. `free` is Hobby and only for demos such as the starter's own `client.yaml`.
+
+| | `free` (Hobby, demos) | `paid` (Pro, the default) |
 |---|---|---|
 | Supabase keep-alive cron (daily) | on | off |
 | Crons | 1 per day, combined into `/api/cron/daily` | per module schedule |
 | Delivery status written on each row | on (logs last 1 hour) | on (still useful) |
 | Booking reminder emails | daily batch | scheduled |
 
-> Note: Vercel's Hobby plan terms are for non-commercial use. Confirm before putting a paying client on it.
+Hobby terms are non-commercial. Do not put a paying client on `free`.
 
 ## 9. Security baseline
 The security rules for every module (CSP, server re-validation and re-pricing, email rules, rate limits, secret

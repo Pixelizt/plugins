@@ -28,6 +28,11 @@ describe("client.yaml validation", () => {
     expect(() => validateConfig(c)).toThrow(/TODO/);
     expect(() => validateConfig(c, { allowTodo: true })).not.toThrow();
   });
+  it("defaults a missing hosting tier to paid", () => {
+    const c = base();
+    delete c.hosting.tier;
+    expect(validateConfig(c, { allowTodo: true }).hosting.tier).toBe("paid");
+  });
   it("requires a home page and unique paths", () => {
     const c = base();
     c.pages = [{ path: "/a", sections: ["hero"] }, { path: "/a", sections: ["hero"] }];

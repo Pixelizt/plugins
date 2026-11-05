@@ -4,7 +4,7 @@
 
 updated: 2026-11-05
 
-stack:                       # decided, see docs/DECISIONS.md
+stack:                       # lock-ins: AGENTS.md §1b
   confirmed: true
   framework: astro           # static-first, Vercel adapter for endpoints (D1)
   language: typescript-strict
@@ -17,9 +17,9 @@ stack:                       # decided, see docs/DECISIONS.md
   db: supabase-postgres      # one project per client (D2), real migrations (D11)
   auth: supabase-auth
   storage: supabase-storage
-  hosting: vercel            # tier configurable (D5)
-  email: resend              # Q5 open
-  payments: none             # D3
+  hosting: vercel            # default tier paid (Pro). free = Hobby, demos only
+  email: resend              # Resend only, plain fetch, no SDK
+  payments: none             # not built. Q1 deferred: Razorpay first, Stripe later. Q2 is unused
   languages: [en]            # D4
   package_manager: npm
   tests: [vitest, playwright]   # vitest = npm test (CI). playwright = npm run test:e2e in starter/e2e (Chromium smoke)
@@ -36,7 +36,7 @@ modules:
   - { name: space-booking, status: stable, version: 0.1.0,     required: false, origin: new,           depends_on: [booking-core] }
   - { name: meal-plans,    status: stable, version: 0.1.0,     required: false, origin: reference-project, depends_on: [menu, forms] }
   - { name: whatsapp,      status: stable, version: 0.1.0,     required: false, origin: new,           depends_on: [] }
-  - { name: payments,      status: later,       required: false, origin: new,           depends_on: [], blocked_by: Q1 }
+  - { name: payments,      status: later,       required: false, origin: new,           depends_on: [], note: "deferred: Razorpay first, Stripe later" }
   - { name: i18n,          status: later,       required: false, origin: reference-project, depends_on: [] }
 
 registry:                    # seed set 2026-11-05 (agency-owned, brand-neutral, token-driven)
@@ -78,7 +78,7 @@ skills: [setup, help-me, setup-guide, sharpen-brief, new-client, reskin, add-ui,
 
 docs:
   rules: AGENTS.md
-  decisions: docs/DECISIONS.md
+  decisions: AGENTS.md       # §1b. docs/DECISIONS.md was folded in and removed
   architecture: docs/ARCHITECTURE.md
   modules: docs/MODULES.md
   boundaries: docs/BOILERPLATE-BOUNDARIES.md

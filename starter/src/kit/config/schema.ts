@@ -87,7 +87,7 @@ export const ClientConfig = z.strictObject({
     .default({ level: "expressive", smooth_scroll: false, allow_3d: false, hero_concept: "" }),
 
   hosting: z.strictObject({
-    tier: z.enum(["free", "paid"]), // D5
+    tier: z.enum(["free", "paid"]).default("paid"), // paid = Vercel Pro (paying clients). free = Hobby, demos only
     vercel_team: z.string().default(""),
     production_branch: z.string().default("main"),
     preview_branches: z.array(z.string()).default([]),
