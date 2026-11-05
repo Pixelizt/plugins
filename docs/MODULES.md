@@ -16,7 +16,7 @@ Status and versions are tracked in `catalog.yaml` and the README catalog, not he
 | 8 | `space-booking` | optional | **new** (The reference project had a party enquiry form) |
 | 9 | `meal-plans` | optional | plans.js engine + plan-quote (the reference project's "subscriptions") |
 | 10 | `whatsapp` | optional, alerts off | click-to-chat plus Cloud API booking ping |
-| (later) | `payments` | | Q1 open |
+| (later) | `payments` | deferred | Razorpay first, Stripe later. Not built |
 | (later) | `i18n` | | The reference project's Arabic system as reference |
 
 ---

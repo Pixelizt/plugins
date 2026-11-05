@@ -5,7 +5,7 @@ argument-hint: [client-slug]
 ---
 
 0. **Get three read-only second opinions** (skip for a tiny project). In one message, start three agents over the
-   client's git log, `docs/decisions.tsv`, `docs/LEARNINGS.md` and the kit's `LEARNINGS.md`/`FEEDBACK.md`:
+   client's git log, `docs/LEARNINGS.md`, and the kit's `AGENTS.md` §1b, `LEARNINGS.md`, and `FEEDBACK.md`:
    - **What hurt** (Sonnet, effort ≤ high): mistakes, slow steps, human corrections, and the rule that would have prevented each.
    - **What to automate** (Haiku): manual or repeated checks that should become a test, lint or script.
    - **What's stale or missing** (Haiku): docs that no longer match the code, unused skills, rules nobody follows.

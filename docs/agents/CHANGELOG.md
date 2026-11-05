@@ -25,3 +25,4 @@
 | 2026-11-05 | AGENTS.md | Shortened ~28% (1,502 → 1,087 words) (repo map condensed to pointer to README; §7 tightened); no rule changed | agent |
 | 2026-11-05 | AGENTS.md, catalog.yaml, README, ui-sources.md, ARCHITECTURE, MODULES, DECISIONS D10/D14/D36 | Admin is custom Tailwind; external libraries are approved component sources. Emails are TS helpers via Resend `fetch`. No Supabase JS or Resend SDK. Playwright smoke test in the starter. `new-client` also copies skills to `.cursor/skills/` | agent |
 | 2026-11-05 | starter SEO, registry blocks, scripts/provision.mjs, scripts/kit-diff.mjs, modules/whatsapp, tools/handover | Factual highlights, optional analytics, restaurant blocks, opt-in provisioning, frozen-file diff, WhatsApp alert, Remotion walkthrough kept out of the client bundle | agent |
+| 2026-11-05 | AGENTS.md §1b, docs/DECISIONS.md (removed) | Lock-ins folded into AGENTS.md. Q3–Q5 closed, Q2 unused, Q1 deferred. Hosting default is paid | agent |

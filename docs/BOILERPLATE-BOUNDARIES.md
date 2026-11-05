@@ -22,7 +22,7 @@ rots, so this file is the rule.
 | `AGENTS.md` (kit) | ❌ no | The client gets a **generated** `AGENTS.md`: client-site rules from `starter/AGENTS.md` + module rules + a "This client" section |
 | `docs/agents/ui-sources.md`, `motion-and-3d.md`, `reskinning-guide.md` | ✅ yes → `docs/agents/` | Agents working on a client need them |
 | `docs/agents/LEARNINGS.md`, `FEEDBACK.md`, `CHANGELOG.md` | ❌ no | Kit-level. A client agent writes learnings into its own `docs/LEARNINGS.md`; `/retro` pulls them back into the kit |
-| `docs/DECISIONS.md`, `ARCHITECTURE.md`, this file | ❌ no | Kit-level |
+| `docs/ARCHITECTURE.md`, this file | ❌ no | Kit-level. Lock-ins live in the kit `AGENTS.md`, which is also not copied |
 | `docs/agents/adding-a-module.md`, `component-registry.md` | ❌ no | Kit-level procedures |
 | `skills/` | ✅ `setup`, `help-me`, `setup-guide`, `reskin`, `add-ui`, `add-motion`, `unslop`, `diagram`, `catch-up`, `sharpen-brief`, copied into **both** `.claude/skills/` and `.cursor/skills/` | Cursor reads `.cursor/skills/`. `new-client`, `add-module`, `harvest`, `retro` run **from the kit** |
 | `catalog.yaml`, `README.md` (kit), `prompts/`, `reference/`, `registry/PROVENANCE.md` | ❌ no | Kit-level |

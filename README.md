@@ -8,7 +8,7 @@ rules and skills in this repo. Open source under the [MIT license](LICENSE).
 **Stack:** Astro (static first) · TypeScript + zod · Tailwind v4 (admin is custom Tailwind) · React islands · Supabase · Vercel.
 Vercel Web Analytics is wired and stays off until `client.yaml → hosting.analytics: true`.
 UI comes from the registry, then from approved external libraries you pull and adapt (`docs/agents/ui-sources.md`).
-Why: [`docs/DECISIONS.md`](docs/DECISIONS.md) · How: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Why: [`AGENTS.md`](AGENTS.md) §1b · How: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 > This README is the **master file**: what the kit is, how to use it, every command, and a catalog of
 > everything inside. Humans read this first. Agents read `AGENTS.md` first and keep this file and
@@ -145,7 +145,7 @@ Specs and build order: [`docs/MODULES.md`](docs/MODULES.md). Versions and depend
 | `space-booking` | ✅ v0.1 | Book private spaces for birthdays/events |
 | `meal-plans` | ✅ v0.1 | Priced meal-plan requests with server re-pricing |
 | `whatsapp` | ✅ v0.1 | Click-to-chat from `client.contact.whatsapp`. Optional Cloud API booking alert, off by default |
-| `payments` | ⏸ later | Online payments, waiting on a provider choice (Q1) |
+| `payments` | ⏸ later | Deferred. Razorpay first, Stripe later. Not built |
 | `i18n` | ⏸ later | Second language / RTL |
 
 Status key: 🔜 planned · 🚧 in progress · ✅ stable · ⚠️ needs work · ⏸ later
@@ -183,13 +183,13 @@ Agents add lessons and fix facts as they work; core rules change only with human
 ## 8. Status & roadmap
 
 - [x] Agent rules, workflows, skills, UI/motion source guides, `client.yaml` template
-- [x] Stack + architecture decided (`docs/DECISIONS.md`, `docs/ARCHITECTURE.md`), boundaries and rules extracted from the first client
+- [x] Stack lock-ins live in `AGENTS.md` §1b; how the pieces fit is `docs/ARCHITECTURE.md`
 - [x] `starter/` and every module in the catalog above (details: each module's `CHANGELOG.md`)
 - [x] Module installer (`scripts/install-module.mjs`) + test playground (`scripts/playground.mjs`)
 - [x] `registry/`: 15 generic UI + motion components
 - [x] `/setup`, `/help-me`, `/setup-guide`, `/unslop`, `/catch-up`, `/sharpen-brief` skills
 - [x] `/new-client` script (`scripts/new-client.mjs`) + content snapshot (D33)
-- [ ] Answer the open questions in `docs/DECISIONS.md`
+- [x] Q3 retention, Q4 Sheets, and Q5 email are closed. Q2 is unused. Q1 payments stays deferred (Razorpay, then Stripe)
 - [ ] First new client built with the kit, then `/retro`
 - [ ] Publish `registry/` as a shadcn-compatible registry (`@kit/...`) — future step; the URL in `ui-sources.md` stays a placeholder until then
 - [ ] Link-check `ui-sources.md`

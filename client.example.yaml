@@ -65,23 +65,23 @@ motion:
   hero_concept: ""      # optional idea for the hero
 
 hosting:
-  tier: free            # free | paid (D5). free = keep-alive cron + one combined daily cron
+  tier: paid            # paid = Vercel Pro, the default for a paying client. free = Hobby, demos only
   analytics: false    # Vercel Web Analytics. Off until the client wants the script
   vercel_team: TODO
   production_branch: main
   preview_branches: [develop]
 
 email:
-  provider: resend      # (Q5 open)
+  provider: resend      # Resend only, called with fetch. Do not add the Resend SDK
   from_domain: notify.example-cafe.com    # verified sending subdomain, keeps root-domain mail untouched
   sign_off: "The Example Café team"
 
 modules:                # each key = a module folder. Omit a key to disable that module.
   forms:
     phone_region: GB              # region-aware phone validation (rule 19)
-    retention_days: 100           # (Q3 open) must match the privacy policy
+    retention_days: 100           # default is 100 days; the privacy policy must match
     rate_limit: { max: 5, window_minutes: 10 }
-    sheets: false                 # Google Sheets sync (Q4 open)
+    sheets: false                 # Google Sheets sync is off unless the client opts in
     forms: [contact]              # which form definitions to ship: contact, feedback, careers, corporate, ...
 
   menu:

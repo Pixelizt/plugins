@@ -60,7 +60,7 @@ argument-hint: <what you want, in plain words>
 
 ## 3. Rules while working
 - **Facts, test them; taste, ask.** If running something answers it (renders, fast, submits), run it. Design, wording and business rules are the owner's or client's call: ask.
-- **Long or unattended runs:** log each real choice in `docs/decisions.tsv` (`when, step, choice, reason, proof, outcome`); proof is a file, commit or screenshot.
+- **Long or unattended runs:** log each real choice in `docs/agents/CHANGELOG.md` (date, file, one line) and, when it is a lesson, in `docs/agents/LEARNINGS.md`. Proof is a file, commit, or screenshot.
 - **Parallel agents:** first write down what blocks, what's independent, and which files each agent owns. One agent writes each shared file.
 - **Repeated lesson?** Encode it as a test, lint or script, not another sentence (AGENTS.md §7).
 
