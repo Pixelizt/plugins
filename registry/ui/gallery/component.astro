@@ -1,0 +1,17 @@
+---
+// Photo grid. Reuses the registry lightbox (native dialog, Esc, arrows). Nothing is drawn when there are no photos.
+import Lightbox from "../lightbox/component.astro";
+interface Image { src: string; alt: string; caption?: string }
+interface Props { title?: string; intro?: string; images: Image[] }
+const { title = "", intro = "", images } = Astro.props;
+const photos = images.filter((image) => image.src && image.alt.trim());
+---
+{photos.length > 0 && (
+  <section class="wrap py-16">
+    {title && <h2 class="text-4xl font-bold">{title}</h2>}
+    {intro && <p class="mt-3 max-w-2xl text-lg text-muted-text">{intro}</p>}
+    <div class="mt-8">
+      <Lightbox images={photos.map((image) => ({ src: image.src, alt: image.alt, caption: image.caption }))} />
+    </div>
+  </section>
+)}

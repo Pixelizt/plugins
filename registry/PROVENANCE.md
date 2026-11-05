@@ -3,6 +3,7 @@
 Every component taken from an external source. Newest first.
 
 | Date | Client | Component | Source URL | License | Modified? | Notes |
+| 2026-11-05 | kit | menu-tabs, hours-map, reviews, gallery, instagram-feed, book-bar | original | agency-owned | n/a | Gallery reuses the registry lightbox. Instagram is a profile link plus supplied photos, not a live embed. Reviews emit no Review JSON-LD |
 |---|---|---|---|---|---|---|
 | 2026-11-05 | reference-project (pattern only) | registry/ui/pill-nav (pill-nav) | original; interaction pattern ported from the reference project `main.js`/`motion.js`/`style.css` | agency-owned | n/a (rewritten brand-neutral, token-driven) | Not a third-party copy. The reference project's visual identity (modelled on a third-party template) deliberately not ported |
 | 2026-11-05 | reference-project (pattern only) | registry/ui/button (button) | original; interaction pattern ported from the reference project `main.js`/`motion.js`/`style.css` | agency-owned | n/a (rewritten brand-neutral, token-driven) | Not a third-party copy. The reference project's visual identity (modelled on a third-party template) deliberately not ported |

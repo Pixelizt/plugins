@@ -26,11 +26,28 @@ export function expandDays(key: string): string[] {
   }
 }
 
+const amenity = (name: string, value: string) => ({ "@type": "LocationFeatureSpecification", name, value });
+
+/**
+ * Most specific type, plus LocalBusiness so generic consumers still match.
+ * On-site testimonials are not emitted as Review or aggregateRating: the business would be
+ * rating itself, which search engines treat as spam. A rating only belongs here when it is
+ * real third-party data the kit can point at, and this kit does not invent that.
+ * Menu JSON-LD is emitted by the menu module from the real menu document, not from this object.
+ */
 export function businessJsonLd(cfg: ClientConfig, siteUrl: string) {
   const c = cfg.client;
+  const h = cfg.highlights;
+  const specific = SCHEMA_TYPE[c.type];
+  const amenities = [
+    ...(h.parking ? [amenity("Parking", h.parking)] : []),
+    ...h.ambience.map((value) => amenity("Ambience", value)),
+    ...h.dietary.map((value) => amenity("Dietary options", value)),
+  ];
+  const awards = h.awards.map((a) => [a.name, a.year, a.by].filter(Boolean).join(", "));
   return {
     "@context": "https://schema.org",
-    "@type": SCHEMA_TYPE[c.type],
+    "@type": specific === "LocalBusiness" ? "LocalBusiness" : [specific, "LocalBusiness"],
     name: c.name,
     url: siteUrl,
     telephone: c.contact.phone,
@@ -43,6 +60,19 @@ export function businessJsonLd(cfg: ClientConfig, siteUrl: string) {
       const [opens, closes] = range.split("-");
       return { "@type": "OpeningHoursSpecification", dayOfWeek: expandDays(days), opens, closes };
     }),
+    ...(awards.length ? { award: awards } : {}),
+    ...(h.specialties.length ? { knowsAbout: h.specialties } : {}),
+    ...(amenities.length ? { amenityFeature: amenities } : {}),
+  };
+}
+
+/** FAQPage from real question/answer pairs. Null when there is nothing to say. */
+export function faqJsonLd(items: { q: string; a: string }[]) {
+  if (!items.length) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
   };
 }
 

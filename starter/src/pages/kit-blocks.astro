@@ -1,0 +1,26 @@
+---
+// Starter-only preview of registry blocks. new-client does not copy this page.
+// The words below are fixtures for the demo café, not claims about a real client.
+import Base from "../layouts/Base.astro";
+import MenuTabs from "../../../registry/ui/menu-tabs/component.astro";
+import HoursMap from "../../../registry/ui/hours-map/component.astro";
+import Reviews from "../../../registry/ui/reviews/component.astro";
+import Gallery from "../../../registry/ui/gallery/component.astro";
+import Instagram from "../../../registry/ui/instagram-feed/component.astro";
+import BookBar from "../../../registry/ui/book-bar/component.astro";
+---
+<Base title="Block preview" description="Starter-only preview of registry blocks." noindex>
+  <p class="wrap pt-8 text-sm text-muted-text">Starter preview. These words are fixtures, not a client's facts.</p>
+  <MenuTabs
+    title="Menu"
+    categories={[
+      { id: "coffee", label: "Coffee", items: [{ name: "Filter", description: "Preview item", price: "4" }] },
+      { id: "lunch", label: "Lunch", items: [{ name: "Soup", description: "Preview item", price: "8" }] },
+    ]}
+  />
+  <HoursMap title="Hours" address="1 Example Street, London" hours={{ "mon-fri": "08:00-18:00" }} mapUrl="https://maps.example.com" phone="+44 20 0000 0000" />
+  <Reviews items={[{ name: "Preview guest", text: "A fixture quote for the block preview.", stars: 5, source: "Fixture" }]} />
+  <Gallery title="Gallery" images={[{ src: "/favicon.svg", alt: "Preview mark", caption: "Fixture" }]} />
+  <Instagram profileUrl="https://instagram.com/example" handle="@example" posts={[{ src: "/favicon.svg", alt: "Preview post" }]} />
+  <BookBar href="/visit" />
+</Base>

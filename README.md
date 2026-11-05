@@ -6,6 +6,7 @@ filling in one `client.yaml` and reskinning the frontend; agents (Claude Code) d
 rules and skills in this repo. Open source under the [MIT license](LICENSE).
 
 **Stack:** Astro (static first) · TypeScript + zod · Tailwind v4 (admin is custom Tailwind) · React islands · Supabase · Vercel.
+Vercel Web Analytics is wired and stays off until `client.yaml → hosting.analytics: true`.
 UI comes from the registry, then from approved external libraries you pull and adapt (`docs/agents/ui-sources.md`).
 Why: [`docs/DECISIONS.md`](docs/DECISIONS.md) · How: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
@@ -79,7 +80,9 @@ Lighthouse and axe-core. Install commands and what we deliberately skipped: [`do
 
 | Command | Purpose |
 |---|---|
-| `node scripts/new-client.mjs <slug> [dir]` | Create a client site from `clients/<slug>/client.yaml` (what `/new-client` runs) |
+| `node scripts/new-client.mjs <slug> [dir]` | Create a client site from `clients/<slug>/client.yaml` (what `/new-client` runs). Optional, off by default: `--supabase --resend --vercel --analytics --guide` with `--yes` (no TTY) or `--dry-run`. npm, not pnpm (D14) |
+| `node scripts/kit-diff.mjs <client-dir> [--apply]` | Report drift in frozen kit files. `--apply` copies those files only. Never touches content, sections or migrations |
+| `node scripts/admin-guide.mjs <client.yaml>` | Write an admin guide from the brief. Also `--guide` on new-client |
 | `node scripts/install-module.mjs <client-dir> <module…>` | Install modules into a client site (deps first, migrations, env vars, agent rules) |
 | `node scripts/playground.mjs [module…]` | Throwaway site in `.playground/` with the starter + modules, to check/test/build module code |
 | `cd .playground && npm run check && npm test && npm run build` | Verify modules before committing them |
@@ -141,6 +144,7 @@ Specs and build order: [`docs/MODULES.md`](docs/MODULES.md). Versions and depend
 | `table-booking` | ✅ v0.1 | Table reservations with live availability |
 | `space-booking` | ✅ v0.1 | Book private spaces for birthdays/events |
 | `meal-plans` | ✅ v0.1 | Priced meal-plan requests with server re-pricing |
+| `whatsapp` | ✅ v0.1 | Click-to-chat from `client.contact.whatsapp`. Optional Cloud API booking alert, off by default |
 | `payments` | ⏸ later | Online payments, waiting on a provider choice (Q1) |
 | `i18n` | ⏸ later | Second language / RTL |
 
@@ -151,6 +155,7 @@ Status key: 🔜 planned · 🚧 in progress · ✅ stable · ⚠️ needs work 
 | Name | Type | Vibe | Motion level | Deps | Used by |
 |---|---|---|---|---|---|
 | UI: `pill-nav`, `button`, `card`, `card-grid`, `section`, `section-head`, `announcement-strip`, `mobile-action-bar`, `lightbox`, `chip` | ui | neutral, token-driven | any | none | seed set |
+| UI: `menu-tabs`, `hours-map`, `reviews`, `gallery`, `instagram-feed`, `book-bar` | ui | neutral, token-driven | any | gallery uses lightbox | restaurant blocks |
 | Motion: `reveal`, `marquee`, `float`, `scroll-drift` | motion | any | subtle–expressive | none | seed set |
 | Motion: `hero-stagger` (+ `drift-frame`) | motion | expressive | expressive–awwwards | gsap | seed set |
 

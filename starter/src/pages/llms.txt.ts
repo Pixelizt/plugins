@@ -1,20 +1,9 @@
-// A plain-text summary for AI assistants and search tools.
+// A plain-text summary for AI assistants and search tools. Facts from client.yaml only.
 import type { APIRoute } from "astro";
 import config from "virtual:kit/config";
-import { pageTitle } from "../kit/pages";
-export const GET: APIRoute = ({ site }) => {
-  const c = config.client;
-  const lines = [
-    `# ${c.name}`,
-    "",
-    `> ${c.type} · ${c.contact.address}`,
-    "",
-    `- Phone: ${c.contact.phone}`,
-    `- Email: ${c.contact.email}`,
-    ...Object.entries(c.hours).map(([d, h]) => `- Hours ${d}: ${h}`),
-    "",
-    "## Pages",
-    ...config.pages.map((p) => `- [${pageTitle(p)}](${new URL(p.path, site)})`),
-  ];
-  return new Response(lines.join("\n") + "\n");
-};
+import { llmsTxt } from "../kit/seo/public-text";
+
+export const GET: APIRoute = ({ site }) =>
+  new Response(llmsTxt(config, site ?? `https://${config.client.domain}`), {
+    headers: { "Content-Type": "text/plain; charset=utf-8" },
+  });

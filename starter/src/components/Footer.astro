@@ -1,7 +1,9 @@
 ---
 // Site footer. Reskin freely. Business facts come from client.yaml only (never hardcode).
 import config from "virtual:kit/config";
+import { waMe } from "../kit/whatsapp";
 const c = config.client;
+const whatsapp = waMe(c.contact.whatsapp);
 const year = new Date().getFullYear();
 ---
 <footer class="mt-16 border-t border-border bg-muted text-muted-foreground">
@@ -14,6 +16,7 @@ const year = new Date().getFullYear();
       <p class="font-semibold">Contact</p>
       <p class="mt-2"><a href={`tel:${c.contact.phone.replace(/\s/g, "")}`}>{c.contact.phone}</a></p>
       <p><a href={`mailto:${c.contact.email}`}>{c.contact.email}</a></p>
+      {whatsapp && <p class="mt-2"><a href={whatsapp} rel="noopener noreferrer" target="_blank">WhatsApp</a></p>}
     </div>
     {Object.keys(c.hours).length > 0 && (
       <div class="text-sm">

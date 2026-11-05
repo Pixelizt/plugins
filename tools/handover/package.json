@@ -1,0 +1,15 @@
+{
+  "name": "kit-handover",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts Walkthrough out/walkthrough.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.372",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.372"
+  }
+}

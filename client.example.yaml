@@ -15,7 +15,7 @@ client:
   contact:
     email: hello@example-cafe.com    # public contact address shown on the site
     phone: "+44 20 0000 0000"
-    whatsapp: ""                     # optional; click-to-chat link only, forms never go to WhatsApp
+    whatsapp: ""                     # optional click-to-chat number. Booking alerts are a separate opt-in: modules.whatsapp.booking_alerts
     address: "TODO"
     map_url: ""
   hours:                             # shown on the site + JSON-LD; bookings use module rules
@@ -23,6 +23,20 @@ client:
     sat-sun: "09:00-23:00"
   socials: { instagram: "", tiktok: "", facebook: "" }
   delivery_apps: []                  # e.g. [{ name: Deliveroo, url: "..." }]
+
+# Factual selling points. Leave empty until the client gives you the wording.
+# The site, schema.org and llms.txt omit blank fields. Do not invent awards, dietary claims or parking.
+highlights:
+  awards: []          # [{ name: "Best neighbourhood cafe", year: 2024, by: "Local guide" }]
+  specialties: []     # ["wood-fired pizza"]
+  dietary: []         # ["vegetarian", "gluten-free"]
+  ambience: []        # ["quiet mornings", "group tables"]
+  parking: ""
+  other: []           # [{ label: "Step-free", text: "Step-free entrance from the street" }]
+
+seo:
+  ai_crawlers: allow  # allow | block. "allow" still hides /admin and /api from every bot, including AI crawlers
+  share_image: ""     # "/og.png" or an absolute URL. Empty = no Open Graph image
 
 brand:
   vibe: "warm, playful, a bit retro"   # 3-6 words; drives design + motion choices
@@ -52,6 +66,7 @@ motion:
 
 hosting:
   tier: free            # free | paid (D5). free = keep-alive cron + one combined daily cron
+  analytics: false    # Vercel Web Analytics. Off until the client wants the script
   vercel_team: TODO
   production_branch: main
   preview_branches: [develop]
@@ -105,6 +120,9 @@ modules:                # each key = a module folder. Omit a key to disable that
       - { id: back-room, name: "Back Room", capacity: 12, min_hours: 2, price_per_hour: 120 }
     occasions: [Birthday, Corporate, Private dining, Other]
     addons: [Cake, Decorations, Set menu]   # request fields only, no payment (D3)
+
+  # whatsapp:                     # optional. Click-to-chat uses client.contact.whatsapp and needs no module.
+  #   booking_alerts: false       # true plus WHATSAPP_* env sends a Cloud API ping to the business. Off by default.
 
   meal-plans:                     # the reference project-style priced meal-plan requests, no payment
     slots: [breakfast, lunch, dinner]

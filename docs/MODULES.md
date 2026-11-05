@@ -15,6 +15,7 @@ Status and versions are tracked in `catalog.yaml` and the README catalog, not he
 | 7 | `table-booking` | optional | **new** (The reference project had an enquiry form) |
 | 8 | `space-booking` | optional | **new** (The reference project had a party enquiry form) |
 | 9 | `meal-plans` | optional | plans.js engine + plan-quote (the reference project's "subscriptions") |
+| 10 | `whatsapp` | optional, alerts off | click-to-chat plus Cloud API booking ping |
 | (later) | `payments` | | Q1 open |
 | (later) | `i18n` | | The reference project's Arabic system as reference |
 
@@ -25,7 +26,7 @@ The site skeleton every client gets.
 - Astro + Vercel adapter + React + Tailwind v4; TypeScript strict
 - `client.yaml` loader + zod validation; `tokens.css` generated from `brand`
 - Base layout: header and nav from `pages`, footer, mobile action bar (call / directions / book), skip link
-- SEO: canonical, Open Graph, JSON-LD (`Restaurant` / `CafeOrCoffeeShop` / `LocalBusiness`), `sitemap.xml`, `robots.txt` (disallows `/admin`), `llms.txt`
+- SEO: canonical, Open Graph and Twitter (image only when `seo.share_image` is set), JSON-LD (specific type + `LocalBusiness`, `OpeningHoursSpecification`; awards and amenities only from `highlights`). `sitemap.xml` via the sitemap integration. `robots.txt` hides `/admin` and `/api` and allows major AI crawlers unless `seo.ai_crawlers: block`. `llms.txt` and `llms-full.txt` list client.yaml facts only. Menu JSON-LD stays in the menu module. Review `aggregateRating` is not emitted (self-serving markup)
 - Security headers + CSP via `vercel.json` (generated)
 - Free tier: `/api/cron/daily` (keep-alive + runs the modules' daily jobs)
 - Tests: secret scan, Vitest, Playwright smoke (`npm run test:e2e`: home page renders, key pages load); CI workflow (Vitest, not Playwright); pre-commit hook
