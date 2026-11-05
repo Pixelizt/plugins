@@ -16,6 +16,12 @@ Seen: 1   ← bump this when the same learning happens again
 
 <!-- newest first -->
 
+### 2026-11-05 — kit — do not emit self-serve review schema or put provider secrets on argv
+Rule: Do not add Review or aggregateRating JSON-LD from on-site quotes. Do not pass a database password or API token as a CLI argument. Do not add Remotion or pnpm to the starter.
+Why: Search engines treat a business rating itself as spam (content-lists already skipped it). `supabase projects create` wants `--db-password` on argv, which shows up in the process list, so provisioning only runs `db push` and prints the create command. Remotion is a video toolchain, not a page dependency. The kit package manager is npm (D14).
+Where it should live: docs/MODULES.md SEO line, scripts/provision.mjs, tools/handover/README.md
+Seen: 1
+
 ### 2026-11-05 — kit — admin is custom Tailwind; emails are fetch helpers
 Rule: Do not rebuild `/admin` on shadcn, do not add an `emails/` folder, and do not add `@supabase/supabase-js` or the `resend` package.
 Why: The docs described a shadcn admin and `emails/` templates. The shipped admin is custom Tailwind, and mail is `server/emails.ts` (or cms `server/email.ts`) sent with `fetch` to Resend. The owner treats shadcn, 21st.dev, Aceternity, Magic UI and the rest of `ui-sources.md` as places to pull components from.

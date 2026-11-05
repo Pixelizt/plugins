@@ -168,3 +168,8 @@ if (argv.includes("--guide") || argv.includes("--handover")) {
   writeFileSync(join(T, "ADMIN-GUIDE.md"), adminGuide(cfg, wanted));
   console.log(`Wrote ${join(T, "ADMIN-GUIDE.md")}`);
 }
+if (argv.includes("--handover")) {
+  console.log("Walkthrough video is optional and is not rendered here. It is a captioned slideshow of screenshots, and /admin is the signed-out screen.");
+  console.log(`  node scripts/handover-capture.mjs ${T}`);
+  console.log("  Then render from tools/handover (see tools/handover/README.md).");
+}
