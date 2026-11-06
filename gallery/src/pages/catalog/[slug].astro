@@ -1,0 +1,33 @@
+---
+import Base from "../../layouts/Base.astro";
+import Sketch from "../../components/Sketch.astro";
+import { loadCatalog, sketchKind, type CatalogEntry } from "../../lib/catalog.ts";
+
+export function getStaticPaths() {
+  const { entries } = loadCatalog();
+  return entries.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+interface Props { entry: CatalogEntry }
+const { entry } = Astro.props;
+const { entries } = loadCatalog();
+const deps = entry.dependsOn
+  .map((slug) => entries.find((item) => item.slug === slug))
+  .filter((item) => item != null);
+const offered = entry.status !== "later" && entry.kind === "module" && !entry.required;
+---
+<Base title={entry.name} description={entry.description}>
+  <div class="shell">
+    <article class="detail">
+      <div>
+        <h1>{entry.name}</h1>
+        <p class="lede">{entry.description}</p>
+        {deps.length > 0 && (
+          <p class="with">Works with {deps.map((dep, i) => <>{i > 0 && ", "}<a href={`/catalog/${dep.slug}`}>{dep.name}</a></>)}.</p>
+        )}
+        {offered && <p><a class="btn" href="/start#plugins">Add to your site</a></p>}
+      </div>
+      <Sketch kind={sketchKind(entry)} title={entry.name} />
+    </article>
+  </div>
+</Base>

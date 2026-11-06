@@ -1,0 +1,12 @@
+---
+import type { CatalogEntry } from "../lib/catalog.ts";
+
+interface Props { entry: CatalogEntry }
+const { entry } = Astro.props;
+---
+<article class="plugin-card" data-category={entry.category} data-kind={entry.kind} data-search={entry.searchable}>
+  <a href={`/catalog/${entry.slug}`}>
+    <h3>{entry.name}</h3>
+    <p>{entry.description}</p>
+  </a>
+</article>

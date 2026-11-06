@@ -32,6 +32,8 @@ node scripts/new-client.mjs my-cafe                  # creates ../my-cafe-site, 
 cd ../my-cafe-site && npm run dev                    # http://localhost:4321  (admin at /admin)
 ```
 
+Prefer a visual start? The optional gallery in [`gallery/`](gallery/README.md) is a marketplace-style site that writes a `client.yaml` in the browser. Developers can ignore it and keep using the commands below.
+
 Using Claude Code instead: open this folder, type **`/help-me`**, or just **`/setup build a site for <your brief>`**.
 
 **Just want the skills in another project?** Install them as a plugin: see [`START-HERE.md`](START-HERE.md#use-the-skills-in-other-ai-assistants). The site-building commands need this repo cloned.
@@ -187,6 +189,7 @@ Agents add lessons and fix facts as they work; core rules change only with human
 - [x] `starter/` and every module in the catalog above (details: each module's `CHANGELOG.md`)
 - [x] Module installer (`scripts/install-module.mjs`) + test playground (`scripts/playground.mjs`)
 - [x] `registry/`: 15 generic UI + motion components
+- [x] Optional gallery (`gallery/`): browse the catalog and write a `client.yaml`. The git and CLI path is unchanged
 - [x] `/setup`, `/help-me`, `/setup-guide`, `/unslop`, `/catch-up`, `/sharpen-brief` skills
 - [x] `/new-client` script (`scripts/new-client.mjs`) + content snapshot (D33)
 - [ ] Answer the open questions in `docs/DECISIONS.md`

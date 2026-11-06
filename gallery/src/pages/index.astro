@@ -1,0 +1,58 @@
+---
+import Base from "../layouts/Base.astro";
+import PluginCard from "../components/PluginCard.astro";
+import Sketch from "../components/Sketch.astro";
+import { ALWAYS_ON, FEATURED } from "../lib/categories.ts";
+import { loadCatalog } from "../lib/catalog.ts";
+
+const { entries } = loadCatalog();
+const featured = FEATURED.map((slug) => entries.find((entry) => entry.slug === slug)).filter((entry) => entry != null);
+const included = ALWAYS_ON.map((slug) => entries.find((entry) => entry.slug === slug)).filter((entry) => entry != null);
+const sampleBlocks = ["menu-tabs", "book-bar", "reviews", "hero-stagger"]
+  .map((slug) => entries.find((entry) => entry.slug === slug))
+  .filter((entry) => entry != null);
+---
+<Base title="Pixelizt Plugins" description="Plugins for restaurant and café sites. Start with a short brief.">
+  <div class="shell">
+    <section class="hero">
+      <div>
+        <h1>Plugins for restaurant sites.</h1>
+        <p class="lede">Pick what you need, then write a short brief.</p>
+        <div class="actions">
+          <a class="btn" href="/start">Start a site</a>
+          <a class="btn-quiet" href="/catalog">Browse plugins</a>
+        </div>
+      </div>
+      <Sketch kind="page" />
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Featured</h2>
+        <a href="/catalog">All plugins</a>
+      </div>
+      <div class="grid cards">
+        {featured.map((entry) => <PluginCard entry={entry} />)}
+      </div>
+    </section>
+
+    <p class="included-line">Every site includes {included.map((entry, i) => <>{i > 0 && ", "}<a href={`/catalog/${entry.slug}`}>{entry.name}</a></>)}.</p>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Blocks</h2>
+        <a href="/catalog?category=ui">All blocks</a>
+      </div>
+      <div class="grid cards">
+        {sampleBlocks.map((entry) => <PluginCard entry={entry} />)}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="band">
+        <h2>Start a site.</h2>
+        <a class="btn" href="/start">Start a site</a>
+      </div>
+    </section>
+  </div>
+</Base>
