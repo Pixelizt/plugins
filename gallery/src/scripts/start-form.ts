@@ -120,7 +120,7 @@ function paintPreview(form: HTMLFormElement) {
   button.style.color = colors.background;
   const warnings = contrastWarnings({ ...readBrief(form), colors });
   note.hidden = warnings.length === 0;
-  note.textContent = warnings.length ? `The kit would warn: ${warnings.join(" ")} You can still download the file.` : "";
+  note.textContent = warnings.length ? "Some of these colours are hard to read." : "";
 }
 
 export function mountStart() {
@@ -219,8 +219,8 @@ export function mountStart() {
       } else menu.disabled = false;
     }
     const notes: string[] = [];
-    if (tables?.checked || spaces?.checked) notes.push("Booking core is included with table or space booking. Capacity and rooms are still filled in with the business.");
-    if (plans?.checked) notes.push("Meal plans also turn the menu on. The price sheet is not part of this form.");
+    if (tables?.checked || spaces?.checked) notes.push("Table counts and rooms are added later.");
+    if (plans?.checked) notes.push("This also turns the menu on.");
     if (dep) dep.textContent = notes.join(" ");
     for (const box of form.querySelectorAll<HTMLInputElement>('input[name="list"]')) box.disabled = !lists?.checked;
   };
@@ -276,28 +276,10 @@ export function mountStart() {
     yaml = built.result.yaml;
     const out = document.querySelector<HTMLElement>("#yaml-out");
     if (out) out.textContent = yaml;
-    const notes = document.querySelector<HTMLElement>("#note-list");
-    if (notes) {
-      notes.replaceChildren();
-      for (const line of built.result.notes) {
-        const item = document.createElement("li");
-        item.textContent = line;
-        notes.append(item);
-      }
-    }
     const contrast = document.querySelector<HTMLElement>("#contrast-final");
     if (contrast) {
       contrast.hidden = built.result.warnings.length === 0;
-      contrast.textContent = built.result.warnings.join(" ");
-    }
-    const slug = built.result.config.client.slug;
-    const pathSlot = document.querySelector<HTMLElement>("[data-slug-path]");
-    const cmdSlot = document.querySelector<HTMLElement>("[data-slug-cmd]");
-    if (pathSlot) pathSlot.textContent = `clients/${slug}/client.yaml`;
-    if (cmdSlot) cmdSlot.textContent = `node scripts/new-client.mjs ${slug}`;
-    const cli = document.querySelector<HTMLElement>("#cli-out");
-    if (cli) {
-      cli.textContent = `git clone https://github.com/Pixelizt/plugins.git\ncd plugins\nmkdir -p clients/${slug}\n# save the file as clients/${slug}/client.yaml\nnode scripts/new-client.mjs ${slug}`;
+      contrast.textContent = "Some of these colours are hard to read.";
     }
     document.getElementById("review")?.setAttribute("hidden", "");
     document.getElementById("done")?.removeAttribute("hidden");

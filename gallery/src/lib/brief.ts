@@ -27,9 +27,9 @@ export const TYPE_LABEL: Record<BusinessType, string> = {
 };
 
 export const FONT_PAIRS = [
-  { id: "editorial", label: "Editorial", heading: "Fraunces", body: "Figtree" },
+  { id: "plain", label: "Plain", heading: "Host Grotesk", body: "Host Grotesk" },
   { id: "journal", label: "Journal", heading: "Newsreader", body: "Source Sans 3" },
-  { id: "plain", label: "Plain", heading: "Literata", body: "Outfit" },
+  { id: "editorial", label: "Soft", heading: "Fraunces", body: "Source Sans 3" },
 ] as const;
 
 export const PALETTES = [
@@ -190,21 +190,13 @@ function pagesFor(input: BriefInput) {
 }
 
 function notesFor(input: BriefInput, domain: string, domainPending: boolean): string[] {
-  const notes = [
-    "Generated in the browser by the Pixelizt Plugins gallery. It is a brief, not a deployed site.",
-    "No password, API key or payment detail belongs in this file. None were collected.",
-    "CMS, admin and the contact form are included with every site.",
-  ];
-  if (domainPending) notes.push(`No domain yet. client.domain is the placeholder ${domain}. Replace it before launch.`);
-  else notes.push(`email.from_domain is a suggested sending subdomain (${domain ? `notify.${domain}` : "empty"}). It is not verified. A person sets that up in Resend before any mail is sent.`);
-  if (input.tableBooking) notes.push("Table booking is on. The section stays hidden until covers_per_slot or tables, and opening hours, are set with the business. Those numbers were not guessed.");
-  if (input.spaceBooking) notes.push("Space booking is on. Add each room (id, name, capacity) with the business. price_per_hour is a guide only. Nothing is charged online.");
-  if (input.mealPlans) notes.push("Meal plans are on. Fill slots, plans and lengths from the printed price sheet. The meal-plan form definition still has to be merged by a developer, and meal-plan added to modules.forms.forms. The gallery left that form off so the build is not pointed at a form that is not installed yet.");
-  if (input.listsOn && input.lists.includes("events")) notes.push("Events can embed video. YouTube or Instagram embeds need client.yaml csp.frame_src added by a developer. The gallery did not add those hosts.");
-  if (input.whatsappAlerts) notes.push("WhatsApp booking alerts are flagged on. Nothing is sent until WHATSAPP_TOKEN, WHATSAPP_PHONE_NUMBER_ID and WHATSAPP_TO are set in the environment. Those values are not in this file.");
-  else if (input.whatsapp.trim()) notes.push("The WhatsApp number is the public click-to-chat link only. Booking alerts stay off.");
-  if (!input.hoursWeekday && !input.hoursWeekend) notes.push("Opening hours were left blank. Add them before relying on the hours shown on the site.");
-  notes.push(`A developer saves this file to clients/${input.slug}/client.yaml in the plugins repo and runs: node scripts/new-client.mjs ${input.slug}`);
+  const notes = ["A starting brief. The site is not live."];
+  if (domainPending) notes.push(`Domain is a placeholder (${domain}). Replace it before launch.`);
+  if (input.tableBooking) notes.push("Table booking needs a capacity number before it shows.");
+  if (input.spaceBooking) notes.push("Add each room before private hire shows. Nothing is charged.");
+  if (input.mealPlans) notes.push("Meal plans need the price sheet filled in before they show.");
+  if (input.whatsappAlerts) notes.push("WhatsApp alerts stay off until the env vars are set.");
+  if (!input.hoursWeekday && !input.hoursWeekend) notes.push("Opening hours are blank.");
   return notes;
 }
 
@@ -343,7 +335,7 @@ export function contrastWarnings(input: BriefInput): string[] {
       vibe: input.vibe.trim() || "brief",
       references: [],
       colors: input.colors,
-      fonts: { heading: input.headingFont || "Fraunces", body: input.bodyFont || "Figtree", accent: "" },
+      fonts: { heading: input.headingFont || "Host Grotesk", body: input.bodyFont || "Host Grotesk", accent: "" },
       radius: input.radius,
       shadow: input.shadow,
       logo: "",
@@ -355,17 +347,9 @@ export function contrastWarnings(input: BriefInput): string[] {
   }
 }
 
-export function toYaml(config: unknown, slug: string): string {
+export function toYaml(config: unknown, _slug: string): string {
   const body = stringify(config, { lineWidth: 96 });
-  return [
-    "# client.yaml — a brief for the Pixelizt Plugins kit.",
-    "# Written in the browser by the gallery. This file does not deploy a site.",
-    "# Do not put API keys, passwords or tokens in here.",
-    "# Save it to clients/<slug>/client.yaml and run:",
-    `#   node scripts/new-client.mjs ${slug}`,
-    "",
-    body.endsWith("\n") ? body : `${body}\n`,
-  ].join("\n");
+  return body.endsWith("\n") ? body : `${body}\n`;
 }
 
 export function formatSchemaError(error: z.ZodError): string[] {
@@ -416,8 +400,8 @@ export function sampleInput(over: Partial<BriefInput> = {}): BriefInput {
     staffEmail: "",
     phoneRegion: "GB",
     colors: { ...paper.colors },
-    headingFont: "Fraunces",
-    bodyFont: "Figtree",
+    headingFont: "Host Grotesk",
+    bodyFont: "Host Grotesk",
     radius: "md",
     shadow: "soft",
     motion: "expressive",

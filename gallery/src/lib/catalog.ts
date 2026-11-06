@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse } from "yaml";
-import { BRIEF_NOTES, MODULE_CATEGORY, categoryLabel, displayName } from "./categories.ts";
+import { MODULE_CATEGORY, SUMMARY, categoryLabel, displayName } from "./categories.ts";
 
 export interface CatalogEntry {
   slug: string;
@@ -99,6 +99,14 @@ function asList(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 }
 
+function oneLine(slug: string, fallback: string): string {
+  const written = SUMMARY[slug];
+  if (written) return written;
+  const sentence = fallback.split(". ")[0]?.replace(/\.$/, "").trim() ?? "";
+  if (!sentence) return fallback;
+  return sentence.length > 110 ? `${sentence.slice(0, 107).trim()}…` : sentence;
+}
+
 let cached: { root: string; entries: CatalogEntry[] } | null = null;
 
 export function loadCatalog(): { root: string; entries: CatalogEntry[] } {
@@ -126,9 +134,9 @@ export function loadCatalog(): { root: string; entries: CatalogEntry[] } {
       slug,
       kind: "module",
       name: displayName(slug),
-      description,
+      description: oneLine(slug, description),
       body: body || description,
-      briefNote: BRIEF_NOTES[slug] ?? "",
+      briefNote: "",
       status,
       version,
       required: asBool(mod.required),
@@ -158,9 +166,9 @@ export function loadCatalog(): { root: string; entries: CatalogEntry[] } {
       slug,
       kind: "block",
       name: displayName(slug),
-      description: description || "Registry block.",
+      description: oneLine(slug, description),
       body: readme ? firstParagraph(readme) : description,
-      briefNote: "new-client copies the whole registry into the client project. This block is not a switch in the brief.",
+      briefNote: "",
       status: "",
       version: "",
       required: false,

@@ -11,16 +11,8 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
-      name: "Fraunces",
-      cssVariable: "--font-fraunces",
-      weights: [500, 600],
-      styles: ["normal", "italic"],
-      fallbacks: ["Iowan Old Style", "Palatino", "serif"],
-    },
-    {
-      provider: fontProviders.google(),
-      name: "Figtree",
-      cssVariable: "--font-figtree",
+      name: "Host Grotesk",
+      cssVariable: "--font-host",
       weights: [400, 500, 600],
       styles: ["normal"],
       fallbacks: ["Avenir Next", "Segoe UI", "sans-serif"],

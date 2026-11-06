@@ -24,17 +24,15 @@ const listLabel: Record<string, string> = {
 ---
 <Base
   title="Start a site"
-  description="Write a client.yaml brief for a restaurant or café site. The file stays in your browser. Nothing is deployed."
+  description="Answer a few questions and download a brief for your restaurant or café site."
 >
   <div class="shell">
     <header class="page-intro">
-      <p class="eyebrow">Brief</p>
-      <h1>Start a site.</h1>
-      <p class="lede">Five short steps. You get a file, not a launch. A developer still runs the kit.</p>
+      <h1>Start a site</h1>
     </header>
 
     <noscript>
-      <p class="noscript">This form builds the file in your browser, so it needs JavaScript. The catalog can be read without it.</p>
+      <p class="noscript">Turn on JavaScript to create the file.</p>
     </noscript>
 
     <form id="brief-form" class="wizard" novalidate>
@@ -48,8 +46,7 @@ const listLabel: Record<string, string> = {
 
       <div>
         <section class="panel" data-step="1">
-          <h2>The business</h2>
-          <p class="help">The name and the kind of room. English only, for now.</p>
+          <h2>Business</h2>
           <div class="fields">
             <label class="span-2">Business name
               <input name="name" type="text" autocomplete="organization" required />
@@ -57,7 +54,7 @@ const listLabel: Record<string, string> = {
             </label>
             <label>Folder name
               <input name="slug" type="text" autocomplete="off" spellcheck="false" />
-              <span class="hint">Lowercase, used in the repo. Filled from the name until you edit it.</span>
+              <span class="hint">From the name, until you change it.</span>
               <span class="error" data-error-for="slug"></span>
             </label>
             <fieldset class="span-2">
@@ -69,9 +66,8 @@ const listLabel: Record<string, string> = {
               </div>
               <span class="error" data-error-for="type"></span>
             </fieldset>
-            <label class="span-2">A few words for the feel
-              <input name="vibe" type="text" maxlength="80" />
-              <span class="hint">Starting points, editable.</span>
+            <label class="span-2">Feel
+              <input name="vibe" type="text" maxlength="80" placeholder="warm, quiet, neighbourhood" />
               <span class="choices">
                 {VIBE_STARTS.map((vibe) => (
                   <button type="button" class="btn-quiet" data-vibe={vibe}>{vibe}</button>
@@ -84,14 +80,13 @@ const listLabel: Record<string, string> = {
         </section>
 
         <section class="panel" data-step="2" hidden>
-          <h2>How to find you</h2>
-          <p class="help">Public details only. No password, no card, no API key.</p>
+          <h2>Place</h2>
           <div class="fields two">
             <label class="span-2">Web address
               <input name="domain" type="text" inputmode="url" autocapitalize="off" spellcheck="false" placeholder="yourcafe.com" />
               <span class="error" data-error-for="domain"></span>
             </label>
-            <label class="check span-2"><input name="domainPending" type="checkbox" /> I don’t have a domain yet. Use a temporary .example address.</label>
+            <label class="check span-2"><input name="domainPending" type="checkbox" /> No domain yet</label>
             <label>Email
               <input name="email" type="email" autocomplete="email" />
               <span class="error" data-error-for="email"></span>
@@ -100,10 +95,10 @@ const listLabel: Record<string, string> = {
               <input name="phone" type="tel" autocomplete="tel" />
               <span class="error" data-error-for="phone"></span>
             </label>
-            <label>WhatsApp number <span class="hint">optional, public chat link</span>
+            <label>WhatsApp <span class="hint">optional</span>
               <input name="whatsapp" type="tel" autocomplete="tel" />
             </label>
-            <label>Phone numbers are checked for
+            <label>Country
               <select name="phoneRegion">
                 <option value="">Choose a country</option>
                 {COUNTRIES.map((country) => <option value={country.code}>{country.name}</option>)}
@@ -116,12 +111,12 @@ const listLabel: Record<string, string> = {
             </label>
             <label class="span-2">Address
               <textarea name="address" autocomplete="street-address"></textarea>
-              <span class="hint">If you don’t have it yet, write “Address to be added”.</span>
+              <span class="hint">If you don’t have it, say so.</span>
               <span class="error" data-error-for="address"></span>
             </label>
             <label>Weekday hours
               <input name="hoursWeekday" type="text" placeholder="12:00-22:00" inputmode="numeric" />
-              <span class="hint">Monday to Friday, 24-hour. Leave blank if unknown.</span>
+              <span class="hint">Optional. 24-hour.</span>
               <span class="error" data-error-for="hoursWeekday"></span>
             </label>
             <label>Weekend hours
@@ -136,14 +131,14 @@ const listLabel: Record<string, string> = {
               <input name="currency" type="text" list="currencies" maxlength="3" placeholder="GBP" autocapitalize="characters" spellcheck="false" />
               <span class="error" data-error-for="currency"></span>
             </label>
-            <label class="span-2">Instagram <span class="hint">optional, full link</span>
+            <label class="span-2">Instagram <span class="hint">optional</span>
               <input name="instagram" type="url" placeholder="https://instagram.com/yourcafe" />
               <span class="error" data-error-for="instagram"></span>
             </label>
-            <label class="span-2">Known for <span class="hint">optional, comma separated, only what the business says</span>
+            <label class="span-2">Known for <span class="hint">optional</span>
               <input name="specialties" type="text" />
             </label>
-            <label class="span-2">Dashboard email <span class="hint">optional reference. No password.</span>
+            <label class="span-2">Staff email <span class="hint">optional</span>
               <input name="staffEmail" type="email" autocomplete="email" />
               <span class="error" data-error-for="staffEmail"></span>
             </label>
@@ -154,8 +149,7 @@ const listLabel: Record<string, string> = {
         </section>
 
         <section class="panel" data-step="3" hidden>
-          <h2>Look and feel</h2>
-          <p class="help">Starting points you can edit. The kit turns these into theme tokens. It does not invent a logo.</p>
+          <h2>Look</h2>
           <p class="kicker">Palette</p>
           <div class="palettes">
             {PALETTES.map((palette) => (
@@ -182,8 +176,8 @@ const listLabel: Record<string, string> = {
             ))}
           </div>
           <div class="preview-card" id="look-preview" style={`background:${paper.background};color:${paper.foreground}`}>
-            <strong style="font-family:var(--serif)">The name</strong>
-            <span>A sentence in the body type.</span>
+            <strong>The name</strong>
+            <span>A line of text.</span>
             <button type="button" id="look-preview-btn" style={`background:${paper.primary};color:${paper.background}`}>Reserve</button>
           </div>
           <p class="warn" id="contrast-note" hidden></p>
@@ -218,16 +212,16 @@ const listLabel: Record<string, string> = {
             <fieldset class="span-2">
               <legend>Motion</legend>
               <div class="choices">
-                <label class="choice"><input type="radio" name="motion" value="subtle" /> Subtle <span class="hint">No smooth scroll, no 3D</span></label>
-                <label class="choice"><input type="radio" name="motion" value="expressive" checked /> Expressive <span class="hint">Smooth scroll on, 3D off</span></label>
-                <label class="choice"><input type="radio" name="motion" value="awwwards" /> Awwwards <span class="hint">Smooth scroll and 3D allowed</span></label>
+                <label class="choice"><input type="radio" name="motion" value="subtle" /> Quiet</label>
+                <label class="choice"><input type="radio" name="motion" value="expressive" checked /> Lively</label>
+                <label class="choice"><input type="radio" name="motion" value="awwwards" /> Showpiece</label>
               </div>
             </fieldset>
             <fieldset class="span-2">
               <legend>Hosting</legend>
               <div class="choices">
-                <label class="choice"><input type="radio" name="tier" value="free" checked /> Free <span class="hint">Keep-alive cron</span></label>
-                <label class="choice"><input type="radio" name="tier" value="paid" /> Paid <span class="hint">No keep-alive workaround</span></label>
+                <label class="choice"><input type="radio" name="tier" value="free" checked /> Free</label>
+                <label class="choice"><input type="radio" name="tier" value="paid" /> Paid</label>
               </div>
             </fieldset>
           </div>
@@ -236,12 +230,10 @@ const listLabel: Record<string, string> = {
 
         <section class="panel" data-step="4" hidden>
           <h2>Plugins</h2>
-          <p class="help">CMS, the dashboard and the contact form are already in. Booking numbers, rooms and meal-plan prices are not guessed here.</p>
-          <div class="locked">
-            {included.map((entry) => (
-              <span><strong>{entry.name}</strong> · included</span>
-            ))}
-          </div>
+          <p class="help">
+            Already in:
+            {included.map((entry) => entry.name).join(", ")}.
+          </p>
           <div class="picks" style="margin-top:0.9rem">
             {pickable.map((entry) => (
               <div class="pick">
@@ -266,7 +258,6 @@ const listLabel: Record<string, string> = {
                     ))}
                   </div>
                 )}
-                {entry.slug === "whatsapp" && <p class="hint">This is the booking alert, off until env vars exist. The public chat link is the number from the previous step.</p>}
               </div>
             ))}
           </div>
@@ -276,7 +267,7 @@ const listLabel: Record<string, string> = {
             <div style="margin-top:1rem">
               <p class="kicker">Later</p>
               {later.map((entry) => (
-                <p class="locked"><span><strong>{entry.name}</strong> · {entry.description}</span></p>
+                <p class="locked"><strong>{entry.name}</strong> · Not yet</p>
               ))}
             </div>
           )}
@@ -285,37 +276,23 @@ const listLabel: Record<string, string> = {
 
         <section class="panel" data-step="5" hidden>
           <div id="review">
-            <h2>Your file</h2>
-            <p class="help">Create the brief here. You can copy it or download it. It is not sent anywhere.</p>
+            <h2>Your brief</h2>
             <p class="alert" id="form-alert" hidden></p>
             <div class="form-nav">
               <button class="btn-quiet" type="button" data-back>Back</button>
-              <button class="btn" type="submit" id="create-brief">Create client.yaml</button>
+              <button class="btn" type="submit" id="create-brief">Create the file</button>
             </div>
           </div>
           <div id="done" hidden>
-            <h2>The brief is ready.</h2>
-            <p class="help">This is a file. The site has not been deployed, and no email has been sent.</p>
-            <ol class="note-list">
-              <li>Save it, or give it to a Pixelizt teammate.</li>
-              <li>A developer puts it at <code data-slug-path>clients/&lt;slug&gt;/client.yaml</code> in the plugins repo.</li>
-              <li>They run <code data-slug-cmd>node scripts/new-client.mjs &lt;slug&gt;</code>. That creates a project on their computer.</li>
-              <li>Supabase, Resend and Vercel are still set up by a person, afterwards.</li>
-            </ol>
+            <h2>Your brief is ready.</h2>
+            <p class="help">Give this file to your teammate. The site is not live yet.</p>
             <div class="result-actions">
               <button class="btn" type="button" id="copy-yaml">Copy</button>
-              <button class="btn-quiet" type="button" id="download-yaml">Download client.yaml</button>
-              <button class="btn-quiet" type="button" id="edit-brief">Edit answers</button>
+              <button class="btn-quiet" type="button" id="download-yaml">Download</button>
+              <button class="btn-quiet" type="button" id="edit-brief">Edit</button>
             </div>
             <p class="warn" id="contrast-final" hidden></p>
-            <h3>Still to confirm</h3>
-            <ul class="note-list" id="note-list"></ul>
             <pre class="yaml" id="yaml-out" tabindex="0"></pre>
-            <div class="handoff">
-              <h3>If you already work in the repo</h3>
-              <p>You can skip this site. The commands are the same either way.</p>
-              <pre id="cli-out"></pre>
-            </div>
           </div>
         </section>
       </div>

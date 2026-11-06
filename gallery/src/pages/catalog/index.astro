@@ -5,27 +5,17 @@ import { CATEGORIES } from "../../lib/categories.ts";
 import { loadCatalog } from "../../lib/catalog.ts";
 
 const { entries } = loadCatalog();
-const modules = entries.filter((entry) => entry.kind === "module");
-const blocks = entries.filter((entry) => entry.kind === "block");
 ---
-<Base
-  title="Catalog"
-  description="Every Pixelizt Plugins module and registry block, read from catalog.yaml."
->
+<Base title="Catalog" description="Plugins and blocks for a restaurant or café site.">
   <div class="shell">
     <header class="page-intro">
-      <p class="eyebrow">Marketplace</p>
       <h1>Catalog</h1>
-      <p class="lede">
-        {modules.length} modules and {blocks.length} blocks, taken from the repo at build time.
-        Filters narrow the list. Without JavaScript, everything is still here.
-      </p>
     </header>
 
     <div class="toolbar">
       <label>
         <span class="visually-hidden">Search the catalog</span>
-        <input class="search" id="catalog-search" type="search" placeholder="Search plugins and blocks" autocomplete="off" />
+        <input class="search" id="catalog-search" type="search" placeholder="Search" autocomplete="off" />
       </label>
       <div class="filters" role="group" aria-label="Categories">
         {CATEGORIES.map((category) => (
@@ -33,7 +23,7 @@ const blocks = entries.filter((entry) => entry.kind === "block");
         ))}
       </div>
     </div>
-    <p class="empty" id="catalog-empty" hidden>Nothing in the catalog matches that.</p>
+    <p class="empty" id="catalog-empty" hidden>No matches.</p>
     <div class="grid cards" id="catalog-grid">
       {entries.map((entry) => <PluginCard entry={entry} />)}
     </div>

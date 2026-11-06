@@ -16,6 +16,12 @@ Seen: 1   ← bump this when the same learning happens again
 
 <!-- newest first -->
 
+### 2026-11-06 — kit — gallery copy is for the person starting a site
+Rule: On the gallery, one short line per plugin. No repo filenames, CLI blocks, or “what this file is not” essays in the UI. The downloaded `client.yaml` can still carry the build notes.
+Why: The first gallery read like a generated brochure and a developer README at the same time. Nobody was going to read it.
+Where it should live: `gallery/README.md`
+Seen: 1
+
 ### 2026-11-06 — kit — gallery briefs follow module zod, not the example tag list
 Rule: When writing `client.yaml`, check each `modules.<name>` block with that module's schema. `modules.menu.tags` is `{ key, label, filterable }[]`. A list of bare strings fails. Keep the gallery in `gallery/` and do not import it from `starter/` or `new-client`.
 Why: Core `ClientConfig` types `modules` as `z.unknown()`, so `npm run validate` accepts tag strings that `MenuConfig` rejects at build. The example file still shows the string list. The gallery is an extra door; wiring it into the generator would put a marketing site on every client build.

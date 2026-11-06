@@ -12,7 +12,10 @@ export function getStaticPaths() {
 interface Props { entry: CatalogEntry }
 const { entry } = Astro.props;
 const { entries } = loadCatalog();
-const status = STATUS_LABEL[entry.status] ?? entry.status;
+const status = entry.required ? "Included" : (STATUS_LABEL[entry.status] ?? (entry.kind === "block" ? (entry.blockType === "motion" ? "Motion" : "UI") : entry.status));
+const deps = entry.dependsOn
+  .map((slug) => entries.find((item) => item.slug === slug))
+  .filter((item) => item != null);
 ---
 <Base title={entry.name} description={entry.description}>
   <div class="shell">
@@ -21,61 +24,21 @@ const status = STATUS_LABEL[entry.status] ?? entry.status;
     </header>
     <article class="detail">
       <div>
-        <p class="eyebrow">{entry.kind === "module" ? "Plugin" : "Registry block"}</p>
         <h1>{entry.name}</h1>
         <p class="lede">{entry.description}</p>
-        <dl class="facts-list">
-          {entry.kind === "module" && (
-            <>
-              <dt>Status</dt><dd>{status || "—"}{entry.version ? ` · v${entry.version}` : ""}</dd>
-              <dt>Required</dt><dd>{entry.required ? "Yes, on every site" : "Optional"}</dd>
-              <dt>Origin</dt><dd>{entry.origin || "—"}</dd>
-            </>
-          )}
-          {entry.kind === "block" && (
-            <>
-              <dt>Type</dt><dd>{entry.blockType}</dd>
-              {entry.motionLevel && <><dt>Motion</dt><dd>{entry.motionLevel}</dd></>}
-            </>
-          )}
-          <dt>Depends on</dt>
-          <dd>
-            {entry.dependsOn.length === 0 ? "Nothing" : (
-              <ul class="dep-list">
-                {entry.dependsOn.map((slug) => {
-                  const dep = entries.find((item) => item.slug === slug);
-                  return <li>{dep ? <a href={`/catalog/${dep.slug}`}>{dep.name}</a> : slug}</li>;
-                })}
-              </ul>
-            )}
-          </dd>
-          <dt>In the repo</dt>
-          <dd>{entry.exists && entry.repoPath ? <code>{entry.repoPath}</code> : <span class="missing">No folder yet</span>}</dd>
-          {entry.blockedBy && <><dt>Blocked by</dt><dd>{entry.blockedBy}</dd></>}
-        </dl>
+        <p class="status-line">{status}{entry.version ? ` · v${entry.version}` : ""}</p>
+        {deps.length > 0 && (
+          <p class="with">Works with {deps.map((dep, i) => <>{i > 0 && ", "}<a href={`/catalog/${dep.slug}`}>{dep.name}</a></>)}.</p>
+        )}
+        {entry.status === "later" ? (
+          <p class="callout">Not available yet.</p>
+        ) : entry.kind === "module" && !entry.required ? (
+          <p><a class="btn" href="/start#plugins">Add to your site</a></p>
+        ) : (
+          <p><a class="btn-quiet" href="/catalog">Back to the catalog</a></p>
+        )}
       </div>
       <Sketch kind={sketchKind(entry)} title={entry.name} />
     </article>
-    <div class="prose">
-      {entry.body && entry.body !== entry.description && (
-        <>
-          <h2>What it does</h2>
-          <p>{entry.body}</p>
-        </>
-      )}
-      {entry.briefNote && (
-        <>
-          <h2>{entry.kind === "module" ? "In the brief" : "In a client project"}</h2>
-          <p>{entry.briefNote}</p>
-        </>
-      )}
-      {entry.status === "later" ? (
-        <p class="callout">This is listed as later{entry.blockedBy ? ` (${entry.blockedBy})` : ""}. The start form cannot turn it on.</p>
-      ) : entry.kind === "module" && !entry.required ? (
-        <p><a class="btn" href="/start#plugins">Add it when you start a site</a></p>
-      ) : (
-        <p><a class="btn-quiet" href="/catalog">Back to the catalog</a></p>
-      )}
-    </div>
   </div>
 </Base>

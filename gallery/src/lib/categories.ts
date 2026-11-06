@@ -75,24 +75,43 @@ export const STATUS_LABEL: Record<string, string> = {
   later: "Later",
 };
 
-/**
- * Short factual notes for the detail page. Omitted modules get no extra claim.
- * Kept here (not in catalog.yaml) because they describe how the brief uses a module.
- */
-export const BRIEF_NOTES: Record<string, string> = {
-  starter: "Every client project is a copy of starter/. Brand, pages, motion and hosting in the brief are read from client.yaml at build.",
-  cms: "Always installed. The brief lists modules.cms as an empty block. Staff edit documents in the dashboard; Publish rebuilds the site.",
-  admin: "Always installed. The dashboard is at /admin. The brief does not collect a password. Staff accounts are created in Supabase by a person.",
-  forms: "Always installed. The contact form is listed under modules.forms.forms. Phone numbers are checked for the country chosen in the brief.",
-  menu: "Optional. modules.menu holds price display, allergen display and the tag vocabulary. Currency comes from client.currency, not from this block.",
-  "content-lists": "Optional. modules.content-lists.enabled names which lists are live (events, offers, faqs, reviews, gallery, posts). A list that is off cannot be placed on a page.",
-  "booking-core": "Installed when table booking or space booking is on. It is the shared engine (availability, capacity, emails). It has no public page of its own.",
-  "table-booking": "Optional. The section stays hidden until capacity is set (covers per slot, or table groups) and opening hours are known. The gallery does not invent those numbers.",
-  "space-booking": "Optional. Rooms, capacity and a guide price are filled in later with the business. Prices are display only. Nothing is charged online.",
-  "meal-plans": "Optional. The builder stays hidden until slots, plans and lengths are filled from the business's own price sheet. Requests are priced again on the server. Nothing is charged online.",
-  whatsapp: "The public click-to-chat link uses client.contact.whatsapp and does not need this module. The module is only the optional booking alert, which stays off until a developer sets the WhatsApp env vars.",
-  payments: "Listed in catalog.yaml as later, blocked on an open provider question. There is no module folder and the brief cannot turn it on.",
-  i18n: "Listed in catalog.yaml as later. The kit is English only. There is no module folder and the brief cannot turn it on.",
+/** One line for the gallery. The catalog still decides what exists. */
+export const SUMMARY: Record<string, string> = {
+  starter: "The base of every site.",
+  cms: "Edit the words, then publish.",
+  admin: "The dashboard for staff.",
+  forms: "A contact form that sends email.",
+  menu: "The menu, with search and tags.",
+  "content-lists": "Events, offers, reviews, and photos.",
+  "booking-core": "Shared booking for tables and rooms.",
+  "table-booking": "Book a table.",
+  "space-booking": "Book a private room.",
+  "meal-plans": "Meal-plan requests. Nothing is charged.",
+  whatsapp: "A WhatsApp link for guests.",
+  payments: "Not available yet.",
+  i18n: "English only, for now.",
+  "pill-nav": "Navigation in a pill.",
+  button: "A button.",
+  card: "A card with a title.",
+  "card-grid": "A grid of cards.",
+  section: "A page section.",
+  "section-head": "A section heading.",
+  "announcement-strip": "A short notice along the top.",
+  "mobile-action-bar": "Call, directions, and book on a phone.",
+  lightbox: "A photo, opened large.",
+  chip: "A small tag.",
+  "menu-tabs": "Menu categories as tabs.",
+  "hours-map": "Opening hours and a map.",
+  reviews: "What guests said.",
+  gallery: "A grid of photos.",
+  "instagram-feed": "Photos, plus a link to Instagram.",
+  "book-bar": "A bar that leads to booking.",
+  "whatsapp-link": "A link that opens WhatsApp.",
+  reveal: "A quiet fade on scroll.",
+  marquee: "A slow line of text.",
+  float: "A slight lift on hover.",
+  "scroll-drift": "A small shift as you scroll.",
+  "hero-stagger": "The hero arrives in steps.",
 };
 
 export function categoryLabel(id: string): string {
