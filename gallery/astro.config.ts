@@ -10,12 +10,20 @@ export default defineConfig({
   trailingSlash: "never",
   fonts: [
     {
-      provider: fontProviders.google(),
-      name: "Host Grotesk",
-      cssVariable: "--font-host",
-      weights: [400, 500, 600],
+      provider: fontProviders.fontshare(),
+      name: "Pally",
+      cssVariable: "--font-pally",
+      weights: [400, 500, 700],
       styles: ["normal"],
       fallbacks: ["Avenir Next", "Segoe UI", "sans-serif"],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "Source Sans 3",
+      cssVariable: "--font-source",
+      weights: [400, 500],
+      styles: ["normal"],
+      fallbacks: ["Segoe UI", "sans-serif"],
     },
   ],
   vite: {

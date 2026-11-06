@@ -2,6 +2,7 @@
 
 | Date | File | Change | By (agent/human) |
 |---|---|---|---|
+| 2026-11-06 | gallery/ | Headlines and the wordmark use Pally; body stays Source Sans 3 | agent |
 | 2026-11-06 | gallery/ | Removed eyebrow labels, status stamps, and sketch captions | agent |
 | 2026-11-06 | gallery/ | Cut gallery copy to one line per card and switched type to Host Grotesk | agent |
 | 2026-11-06 | gallery/, README, catalog.yaml, LEARNINGS | Optional gallery that writes a client.yaml from the repo catalog. CLI path unchanged | agent |
