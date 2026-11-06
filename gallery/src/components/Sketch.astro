@@ -75,17 +75,16 @@ const { kind, title = "Block" } = Astro.props;
   )}
   {kind === "later" && (
     <div class="sk">
-      <p class="sk-note">Not in the repo yet.</p>
+      <p class="sk-note">Not available yet.</p>
       <div class="sk-rule"></div>
-      <p>Listed in the catalog so the status stays visible. The brief cannot turn it on.</p>
+      <div class="sk-rule short"></div>
     </div>
   )}
   {kind === "block" && (
     <div class="sk">
-      <div class="sk-nav"><b>{title}</b><span>Block</span></div>
+      <div class="sk-nav"><b>{title}</b></div>
       <div class="sk-rule"></div>
       <div class="sk-rule short"></div>
-      <div class="sk-row"><span class="sk-chip">Token colours</span><span class="sk-chip">No brand hex</span></div>
     </div>
   )}
   {kind === "motion" && (

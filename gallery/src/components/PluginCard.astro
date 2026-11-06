@@ -1,23 +1,12 @@
 ---
 import type { CatalogEntry } from "../lib/catalog.ts";
-import { STATUS_LABEL } from "../lib/categories.ts";
 
 interface Props { entry: CatalogEntry }
 const { entry } = Astro.props;
-const status = entry.required
-  ? "Included"
-  : entry.kind === "module"
-    ? (STATUS_LABEL[entry.status] ?? entry.status)
-    : entry.blockType === "motion"
-      ? "Motion"
-      : "UI";
 ---
 <article class="plugin-card" data-category={entry.category} data-kind={entry.kind} data-search={entry.searchable}>
   <a href={`/catalog/${entry.slug}`}>
-    <div class="card-top">
-      <h3>{entry.name}</h3>
-      <span class="status">{status}</span>
-    </div>
+    <h3>{entry.name}</h3>
     <p>{entry.description}</p>
   </a>
 </article>

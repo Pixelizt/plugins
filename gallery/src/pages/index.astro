@@ -36,16 +36,7 @@ const sampleBlocks = ["menu-tabs", "book-bar", "reviews", "hero-stagger"]
       </div>
     </section>
 
-    <p class="included-line">
-      Every site includes
-      {included.map((entry, i) => (
-        <>
-          {i > 0 && ", "}
-          <a href={`/catalog/${entry.slug}`}>{entry.name}</a>
-        </>
-      ))}
-      .
-    </p>
+    <p class="included-line">Every site includes {included.map((entry, i) => <>{i > 0 && ", "}<a href={`/catalog/${entry.slug}`}>{entry.name}</a></>)}.</p>
 
     <section class="section">
       <div class="section-head">

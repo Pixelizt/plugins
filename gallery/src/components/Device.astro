@@ -1,9 +1,4 @@
----
-interface Props { caption?: string }
-const { caption = "Sketch" } = Astro.props;
----
 <figure class="device">
   <div class="device-chrome" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="device-screen"><slot /></div>
-  <figcaption>{caption}</figcaption>
 </figure>

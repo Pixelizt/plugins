@@ -89,7 +89,7 @@ export const SUMMARY: Record<string, string> = {
   "meal-plans": "Meal-plan requests. Nothing is charged.",
   whatsapp: "A WhatsApp link for guests.",
   payments: "Not available yet.",
-  i18n: "English only, for now.",
+  i18n: "Not available yet.",
   "pill-nav": "Navigation in a pill.",
   button: "A button.",
   card: "A card with a title.",

@@ -1,7 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
 import Sketch from "../../components/Sketch.astro";
-import { STATUS_LABEL } from "../../lib/categories.ts";
 import { loadCatalog, sketchKind, type CatalogEntry } from "../../lib/catalog.ts";
 
 export function getStaticPaths() {
@@ -12,31 +11,21 @@ export function getStaticPaths() {
 interface Props { entry: CatalogEntry }
 const { entry } = Astro.props;
 const { entries } = loadCatalog();
-const status = entry.required ? "Included" : (STATUS_LABEL[entry.status] ?? (entry.kind === "block" ? (entry.blockType === "motion" ? "Motion" : "UI") : entry.status));
 const deps = entry.dependsOn
   .map((slug) => entries.find((item) => item.slug === slug))
   .filter((item) => item != null);
+const offered = entry.status !== "later" && entry.kind === "module" && !entry.required;
 ---
 <Base title={entry.name} description={entry.description}>
   <div class="shell">
-    <header class="page-intro">
-      <p class="crumbs"><a href="/catalog">Catalog</a> / {entry.categoryLabel}</p>
-    </header>
     <article class="detail">
       <div>
         <h1>{entry.name}</h1>
         <p class="lede">{entry.description}</p>
-        <p class="status-line">{status}{entry.version ? ` · v${entry.version}` : ""}</p>
         {deps.length > 0 && (
           <p class="with">Works with {deps.map((dep, i) => <>{i > 0 && ", "}<a href={`/catalog/${dep.slug}`}>{dep.name}</a></>)}.</p>
         )}
-        {entry.status === "later" ? (
-          <p class="callout">Not available yet.</p>
-        ) : entry.kind === "module" && !entry.required ? (
-          <p><a class="btn" href="/start#plugins">Add to your site</a></p>
-        ) : (
-          <p><a class="btn-quiet" href="/catalog">Back to the catalog</a></p>
-        )}
+        {offered && <p><a class="btn" href="/start#plugins">Add to your site</a></p>}
       </div>
       <Sketch kind={sketchKind(entry)} title={entry.name} />
     </article>

@@ -10,7 +10,6 @@ const pickable = ["menu", "content-lists", "table-booking", "space-booking", "me
   .map(bySlug)
   .filter((entry) => entry != null);
 const included = ["starter", "cms", "admin", "forms"].map(bySlug).filter((entry) => entry != null);
-const later = entries.filter((entry) => entry.kind === "module" && entry.status === "later");
 const paper = PALETTES[0].colors;
 const types = Object.entries(TYPE_LABEL) as [BusinessType, string][];
 const listLabel: Record<string, string> = {
@@ -150,7 +149,6 @@ const listLabel: Record<string, string> = {
 
         <section class="panel" data-step="3" hidden>
           <h2>Look</h2>
-          <p class="kicker">Palette</p>
           <div class="palettes">
             {PALETTES.map((palette) => (
               <button type="button" class="palette" data-palette={JSON.stringify(palette.colors)} aria-pressed={palette.id === "paper" ? "true" : "false"}>
@@ -181,8 +179,7 @@ const listLabel: Record<string, string> = {
             <button type="button" id="look-preview-btn" style={`background:${paper.primary};color:${paper.background}`}>Reserve</button>
           </div>
           <p class="warn" id="contrast-note" hidden></p>
-          <p class="kicker" style="margin-top:1rem">Type</p>
-          <div class="choices">
+          <div class="choices" style="margin-top:1rem">
             {FONT_PAIRS.map((pair, index) => (
               <label class="choice">
                 <input type="radio" name="fonts" value={pair.id} data-heading={pair.heading} data-body={pair.body} checked={index === 0} />
@@ -263,14 +260,6 @@ const listLabel: Record<string, string> = {
           </div>
           <span class="error" data-error-for="lists"></span>
           <p class="hint" id="dep-note"></p>
-          {later.length > 0 && (
-            <div style="margin-top:1rem">
-              <p class="kicker">Later</p>
-              {later.map((entry) => (
-                <p class="locked"><strong>{entry.name}</strong> · Not yet</p>
-              ))}
-            </div>
-          )}
           <div class="form-nav"><button class="btn-quiet" type="button" data-back>Back</button><button class="btn" type="button" data-next>Continue</button></div>
         </section>
 
