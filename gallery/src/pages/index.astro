@@ -1,0 +1,126 @@
+---
+import Base from "../layouts/Base.astro";
+import PluginCard from "../components/PluginCard.astro";
+import Sketch from "../components/Sketch.astro";
+import { ALWAYS_ON, FEATURED } from "../lib/categories.ts";
+import { loadCatalog } from "../lib/catalog.ts";
+
+const { entries } = loadCatalog();
+const modules = entries.filter((entry) => entry.kind === "module");
+const blocks = entries.filter((entry) => entry.kind === "block");
+const stable = modules.filter((entry) => entry.status === "stable").length;
+const featured = FEATURED.map((slug) => entries.find((entry) => entry.slug === slug)).filter((entry) => entry != null);
+const included = ALWAYS_ON.map((slug) => entries.find((entry) => entry.slug === slug)).filter((entry) => entry != null);
+const sampleBlocks = ["menu-tabs", "book-bar", "reviews", "hero-stagger"]
+  .map((slug) => entries.find((entry) => entry.slug === slug))
+  .filter((entry) => entry != null);
+---
+<Base
+  title="Pixelizt Plugins"
+  description="A restaurant and café website kit. Browse the plugins, then write a client.yaml brief. The gallery does not deploy a site."
+>
+  <div class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Restaurant website kit</p>
+        <h1>A site for the room, assembled from plugins.</h1>
+        <p class="lede">
+          Browse what the kit actually ships. Answer a short brief. Leave with a <code>client.yaml</code> a teammate can build from.
+          Developers can ignore this page and keep cloning the repo.
+        </p>
+        <div class="actions">
+          <a class="btn" href="/start">Start a site</a>
+          <a class="btn-quiet" href="/catalog">Browse the catalog</a>
+        </div>
+      </div>
+      <Sketch kind="page" />
+    </section>
+
+    <section class="facts" aria-label="What is in the repo">
+      <div><strong>{modules.length}</strong><span>Modules listed in catalog.yaml</span></div>
+      <div><strong>{stable}</strong><span>Marked stable</span></div>
+      <div><strong>{blocks.length}</strong><span>Registry blocks</span></div>
+      <div><strong>0</strong><span>Client sites published in this repo</span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Featured</p>
+          <h2>Plugins a dining room actually uses.</h2>
+        </div>
+        <a href="/catalog">Full catalog</a>
+      </div>
+      <div class="grid cards">
+        {featured.map((entry) => <PluginCard entry={entry} />)}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Every site</p>
+          <h2>Included, whether or not you pick them.</h2>
+        </div>
+      </div>
+      <div class="included">
+        {included.map((entry) => (
+          <a href={`/catalog/${entry.slug}`}>
+            <strong>{entry.name}</strong>
+            <span>{entry.description}</span>
+            <em>{entry.version ? `v${entry.version}` : ""}</em>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Registry</p>
+          <h2>Blocks the generator copies in.</h2>
+        </div>
+        <a href="/catalog?category=ui">See blocks</a>
+      </div>
+      <div class="grid cards">
+        {sampleBlocks.map((entry) => <PluginCard entry={entry} />)}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">How a brief becomes a project</p>
+          <h2>Three steps. Then a person.</h2>
+        </div>
+      </div>
+      <div class="steps-3">
+        <article>
+          <b>01</b>
+          <h3>Browse</h3>
+          <p>The catalog is read from catalog.yaml and each module’s own description. Later items stay visible, and they stay off.</p>
+        </article>
+        <article>
+          <b>02</b>
+          <h3>Write</h3>
+          <p>Name, place, colours, plugins. The file is checked against the kit’s schema in your browser. No account, no payment, no secrets.</p>
+        </article>
+        <article>
+          <b>03</b>
+          <h3>Hand it over</h3>
+          <p>Give the file to a Pixelizt teammate, or run <code>node scripts/new-client.mjs</code> yourself. Supabase, email and hosting come after that.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="band">
+        <div>
+          <h2>Start with the brief.</h2>
+          <p>You can change every answer before you download the file. Nothing is deployed from this page.</p>
+        </div>
+        <a class="btn" href="/start">Start a site</a>
+      </div>
+    </section>
+  </div>
+</Base>

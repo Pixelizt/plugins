@@ -16,6 +16,12 @@ Seen: 1   ← bump this when the same learning happens again
 
 <!-- newest first -->
 
+### 2026-11-06 — kit — gallery briefs follow module zod, not the example tag list
+Rule: When writing `client.yaml`, check each `modules.<name>` block with that module's schema. `modules.menu.tags` is `{ key, label, filterable }[]`. A list of bare strings fails. Keep the gallery in `gallery/` and do not import it from `starter/` or `new-client`.
+Why: Core `ClientConfig` types `modules` as `z.unknown()`, so `npm run validate` accepts tag strings that `MenuConfig` rejects at build. The example file still shows the string list. The gallery is an extra door; wiring it into the generator would put a marketing site on every client build.
+Where it should live: `client.example.yaml` (tag shape — proposed, not changed here), `gallery/README.md`
+Seen: 1
+
 ### 2026-11-05 — kit — do not emit self-serve review schema or put provider secrets on argv
 Rule: Do not add Review or aggregateRating JSON-LD from on-site quotes. Do not pass a database password or API token as a CLI argument. Do not add Remotion or pnpm to the starter.
 Why: Search engines treat a business rating itself as spam (content-lists already skipped it). `supabase projects create` wants `--db-password` on argv, which shows up in the process list, so provisioning only runs `db push` and prints the create command. Remotion is a video toolchain, not a page dependency. The kit package manager is npm (D14).

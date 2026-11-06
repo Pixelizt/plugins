@@ -8,6 +8,9 @@ dist/
 .astro/
 .vercel/
 .playground/
+gallery/node_modules/
+gallery/dist/
+gallery/.astro/
 tools/handover/node_modules/
 tools/handover/out/
 .claude/worktrees/

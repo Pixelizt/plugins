@@ -1,0 +1,17 @@
+---
+const path = Astro.url.pathname;
+const catalog = path.startsWith("/catalog");
+const start = path.startsWith("/start");
+---
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="/">
+      <span class="logo-mark" aria-hidden="true">P</span>
+      <span class="logo-type">Pixelizt <em>Plugins</em></span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/catalog" aria-current={catalog ? "page" : undefined}>Catalog</a>
+      <a class="btn" href="/start" aria-current={start ? "page" : undefined}>Start a site</a>
+    </nav>
+  </div>
+</header>

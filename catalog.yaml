@@ -74,6 +74,12 @@ registry:                    # seed set 2026-11-05 (agency-owned, brand-neutral,
 
 clients: []                  # client briefs live in clients/<slug>/ (git-ignored, never published)
 
+gallery:                     # optional no-code front door. Not a module. Does not replace the CLI.
+  path: gallery
+  stack: [astro, tailwind-v4, typescript]
+  run: "cd gallery && npm install && npm run dev"
+  writes: client.yaml        # in the browser; no Supabase, Vercel or Resend calls
+
 skills: [setup, help-me, setup-guide, sharpen-brief, new-client, reskin, add-ui, add-motion, add-module, unslop, diagram, catch-up, harvest, retro]
 
 docs:

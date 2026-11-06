@@ -1,0 +1,108 @@
+---
+import Device from "./Device.astro";
+interface Props { kind: string; title?: string }
+const { kind, title = "Block" } = Astro.props;
+---
+<Device>
+  {kind === "menu" && (
+    <div class="sk sk-menu">
+      <div class="sk-search">Search the menu</div>
+      <div class="sk-tabs"><b>Category</b><span>Category</span><span>Category</span></div>
+      <div class="sk-line"><span>Item</span><span class="sk-chip">Tag</span><i></i></div>
+      <div class="sk-line"><span>Item</span><span class="sk-chip">Tag</span><i></i></div>
+      <div class="sk-line"><span>Item</span><span class="sk-chip">Tag</span><i></i></div>
+    </div>
+  )}
+  {kind === "booking" && (
+    <div class="sk">
+      <div class="sk-row"><b>Date</b><b>Guests</b><b>Time</b></div>
+      <div class="sk-rule"></div>
+      <div class="sk-tabs"><b>18:30</b><span>19:00</span><span>19:30</span><span>20:00</span></div>
+      <div class="sk-field">Name</div>
+      <div class="sk-field">Email</div>
+    </div>
+  )}
+  {kind === "admin" && (
+    <div class="sk">
+      <div class="sk-nav"><b>Dashboard</b><span>Publish</span></div>
+      <div class="sk-table">
+        <div class="head"><span></span><span></span><span></span></div>
+        <div><span></span><span></span><span></span></div>
+        <div><span></span><span></span><span></span></div>
+        <div><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  )}
+  {kind === "form" && (
+    <div class="sk">
+      <div class="sk-field">Name</div>
+      <div class="sk-field">Email</div>
+      <div class="sk-field">Message</div>
+      <div class="sk-row"><span class="sk-chip">Send</span><span>No account required</span></div>
+    </div>
+  )}
+  {kind === "cms" && (
+    <div class="sk">
+      <div class="sk-nav"><b>Document</b><span>History</span></div>
+      <div class="sk-rule"></div>
+      <div class="sk-rule short"></div>
+      <div class="sk-rule"></div>
+      <p class="sk-note">Save, then publish.</p>
+    </div>
+  )}
+  {kind === "plans" && (
+    <div class="sk">
+      <div class="sk-tabs"><b>Weekdays</b><span>Length</span><span>Meals</span></div>
+      <div class="sk-line"><span>Day</span><span>Choice</span><i></i></div>
+      <div class="sk-line"><span>Day</span><span>Choice</span><i></i></div>
+      <div class="sk-row"><span>Price checked again on the server</span></div>
+    </div>
+  )}
+  {kind === "chat" && (
+    <div class="sk">
+      <p class="sk-note">Chat on WhatsApp</p>
+      <div class="sk-rule short"></div>
+      <p>A public link from the number in the brief. Alerts are a separate opt-in.</p>
+    </div>
+  )}
+  {kind === "lists" && (
+    <div class="sk">
+      <div class="sk-tabs"><b>Events</b><span>Questions</span><span>Photos</span></div>
+      <div class="sk-line"><span>Title</span><span>Date</span></div>
+      <div class="sk-line"><span>Title</span><span>Date</span></div>
+      <div class="sk-line"><span>Title</span><span>Date</span></div>
+    </div>
+  )}
+  {kind === "later" && (
+    <div class="sk">
+      <p class="sk-note">Not in the repo yet.</p>
+      <div class="sk-rule"></div>
+      <p>Listed in the catalog so the status stays visible. The brief cannot turn it on.</p>
+    </div>
+  )}
+  {kind === "block" && (
+    <div class="sk">
+      <div class="sk-nav"><b>{title}</b><span>Block</span></div>
+      <div class="sk-rule"></div>
+      <div class="sk-rule short"></div>
+      <div class="sk-row"><span class="sk-chip">Token colours</span><span class="sk-chip">No brand hex</span></div>
+    </div>
+  )}
+  {kind === "motion" && (
+    <div class="sk">
+      <p class="sk-note">{title}</p>
+      <div class="sk-rule"></div>
+      <div class="sk-rule short"></div>
+      <p>Runs only at the motion level named in the registry, and stays still when reduced motion is on.</p>
+    </div>
+  )}
+  {kind === "page" && (
+    <div class="sk">
+      <div class="sk-nav"><b>Name</b><span>Menu</span><span>Book</span></div>
+      <p class="sk-hero">A page from the brief.</p>
+      <div class="sk-rule"></div>
+      <div class="sk-rule short"></div>
+      <div class="sk-row"><span class="sk-chip">Section</span><span class="sk-chip">Section</span></div>
+    </div>
+  )}
+</Device>
