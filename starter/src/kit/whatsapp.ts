@@ -39,7 +39,7 @@ export async function sendBookingAlert(body: string, env: Record<string, string 
   const to = (env.WHATSAPP_TO ?? "").replace(/\D/g, "");
   if (!token || !phoneId || !to) return "off";
   try {
-    const res = await fetchImpl(`https://graph.facebook.com/v21.0/${phoneId}/messages`, {
+    const res = await fetchImpl(`https://graph.facebook.com/v26.0/${phoneId}/messages`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       body: JSON.stringify({ messaging_product: "whatsapp", to, type: "text", text: { preview_url: false, body } }),
