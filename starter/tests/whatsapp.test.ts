@@ -28,7 +28,7 @@ describe("WhatsApp", () => {
       return new Response("{}", { status: 200 });
     }) as typeof fetch);
     expect(status).toBe("ok");
-    expect(url).toBe("https://graph.facebook.com/v21.0/123/messages");
+    expect(url).toBe("https://graph.facebook.com/v26.0/123/messages");
     expect(url).not.toContain("secret-token");
     expect(auth).toBe("Bearer secret-token");
     expect(alertBody({ reference: "AB12", label: "Table", when: "Monday", status: "pending", name: "Ada" })).not.toMatch(/notes/i);
